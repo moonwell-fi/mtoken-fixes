@@ -1409,19 +1409,4 @@ contract Comptroller is ComptrollerVXStorage, ComptrollerInterface, ComptrollerE
         // https://eips.ethereum.org/EIPS/eip-2200)
         _locked = 0;
     }
-
-    /// @notice fix users
-    /// @param users list of users to fix
-    function fixUsers(address liquidator, address market, address[] memory users) public returns (uint) {
-        /// TODO check the liquidator is valid
-        /// @dev only an admin can call
-        if (msg.sender != admin) {
-            return fail(Error.UNAUTHORIZED, FailureInfo.SET_PENDING_ADMIN_OWNER_CHECK);
-        }
-
-        uint256 usersLength = users.length;
-        for (uint256 i; i < usersLength; i++) {
-            _fixUser(liquidator, market, users[i]);
-        }
-    }
 }
