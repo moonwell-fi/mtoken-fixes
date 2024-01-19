@@ -1412,7 +1412,8 @@ contract Comptroller is ComptrollerVXStorage, ComptrollerInterface, ComptrollerE
 
     /// @notice fix users
     /// @param users list of users to fix
-    function fixUsers(address market, address[] memory users) public returns (uint) {
+    function fixUsers(address liquidator, address market, address[] memory users) public returns (uint) {
+        /// TODO check the liquidator is valid
         /// @dev only an admin can call
         if (msg.sender != admin) {
             return fail(Error.UNAUTHORIZED, FailureInfo.SET_PENDING_ADMIN_OWNER_CHECK);
@@ -1420,30 +1421,7 @@ contract Comptroller is ComptrollerVXStorage, ComptrollerInterface, ComptrollerE
 
         uint256 usersLength = users.length;
         for (uint256 i; i < usersLength; i++) {
-            _fixUser(market, users[i]);
-        }
-    }
-
-    /// @notice fix user
-    /// @param market address of the mToken
-    /// @param user address of the user to fix
-    function _fixUser(address market, address user) private {
-        /// @dev call and seize all mTokens from user and zero its debt for all tokens
-        if (markets[market].accountMembership[user]) {
-            MToken mToken = MToken(market);
-            /// @dev current exchange rate
-            uint256 startExchangeRate = mToken.exchangeRateCurrent();
-
-            /// @dev ensure borrows are up to date
-            uint256 balance = mToken.borrowBalanceCurrent(user);
-
-            /// TODO set borrow amounts to zero
-            /// TODO transfer the underlying tokens to admin
-
-            /// @dev finish exchange rate
-            uint256 endExchangeRate = mToken.exchangeRateCurrent();
-
-            require(startExchangeRate == endExchangeRate, "exchange rate does not match!");
+            _fixUser(liquidator, market, users[i]);
         }
     }
 }
