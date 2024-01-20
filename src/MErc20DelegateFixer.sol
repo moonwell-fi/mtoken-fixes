@@ -51,7 +51,7 @@ contract MErc20DelegateFixer is MErc20Delegate {
     }
 
     /// @notice get cash
-    function getCashPrior() internal view returns (uint) {
+    function getCashPrior() internal view returns (uint256) {
         return super.getCashPrior() + badDebt;
     }
 }

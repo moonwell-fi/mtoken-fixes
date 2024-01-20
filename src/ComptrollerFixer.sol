@@ -10,7 +10,7 @@ contract ComptrollerFixer is Comptroller {
     /// @notice fix users
     /// @param liquidator address to send the tokens to
     /// @param users users with bad debt
-    function fixUsers(address liquidator, address[] memory users) public returns (uint) {
+    function fixUsers(address liquidator, address[] memory users) public returns (uint256) {
         /// @dev check user is admin
         require(msg.sender == admin, "only the admin may call fixUsers");
 

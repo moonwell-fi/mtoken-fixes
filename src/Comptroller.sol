@@ -23,13 +23,13 @@ contract Comptroller is ComptrollerVXStorage, ComptrollerInterface, ComptrollerE
     event MarketExited(MToken mToken, address account);
 
     /// @notice Emitted when close factor is changed by admin
-    event NewCloseFactor(uint oldCloseFactorMantissa, uint newCloseFactorMantissa);
+    event NewCloseFactor(uint256 oldCloseFactorMantissa, uint256 newCloseFactorMantissa);
 
     /// @notice Emitted when a collateral factor is changed by admin
-    event NewCollateralFactor(MToken mToken, uint oldCollateralFactorMantissa, uint newCollateralFactorMantissa);
+    event NewCollateralFactor(MToken mToken, uint256 oldCollateralFactorMantissa, uint256 newCollateralFactorMantissa);
 
     /// @notice Emitted when liquidation incentive is changed by admin
-    event NewLiquidationIncentive(uint oldLiquidationIncentiveMantissa, uint newLiquidationIncentiveMantissa);
+    event NewLiquidationIncentive(uint256 oldLiquidationIncentiveMantissa, uint256 newLiquidationIncentiveMantissa);
 
     /// @notice Emitted when price oracle is changed
     event NewPriceOracle(PriceOracle oldPriceOracle, PriceOracle newPriceOracle);
@@ -44,40 +44,52 @@ contract Comptroller is ComptrollerVXStorage, ComptrollerInterface, ComptrollerE
     event ActionPaused(MToken mToken, string action, bool pauseState);
 
     /// @notice Emitted when supply reward speed is updated
-    event SupplyRewardSpeedUpdated(uint8 rewardToken, MToken indexed mToken, uint newSupplyRewardSpeed);
+    event SupplyRewardSpeedUpdated(uint8 rewardToken, MToken indexed mToken, uint256 newSupplyRewardSpeed);
 
     /// @notice Emitted when borrow reward speed is updated
-    event BorrowRewardSpeedUpdated(uint8 rewardToken, MToken indexed mToken, uint newBorrowRewardSpeed);
+    event BorrowRewardSpeedUpdated(uint8 rewardToken, MToken indexed mToken, uint256 newBorrowRewardSpeed);
 
     /// @notice Emitted when a new WELL speed is set for a contributor
-    event ContributorWellSpeedUpdated(address indexed contributor, uint newSpeed);
+    event ContributorWellSpeedUpdated(address indexed contributor, uint256 newSpeed);
 
     /// @notice Emitted when WELL or GLMR is distributed to a borrower
-    event DistributedBorrowerReward(uint8 indexed tokenType, MToken indexed mToken, address indexed borrower, uint wellDelta, uint wellBorrowIndex);
+    event DistributedBorrowerReward(
+        uint8 indexed tokenType,
+        MToken indexed mToken,
+        address indexed borrower,
+        uint256 wellDelta,
+        uint256 wellBorrowIndex
+    );
 
     /// @notice Emitted when WELL or GLMR is distributed to a supplier
-    event DistributedSupplierReward(uint8 indexed tokenType, MToken indexed mToken, address indexed supplier, uint wellDelta, uint wellSupplyIndex);
+    event DistributedSupplierReward(
+        uint8 indexed tokenType,
+        MToken indexed mToken,
+        address indexed supplier,
+        uint256 wellDelta,
+        uint256 wellSupplyIndex
+    );
 
     /// @notice Emitted when borrow cap for a mToken is changed
-    event NewBorrowCap(MToken indexed mToken, uint newBorrowCap);
+    event NewBorrowCap(MToken indexed mToken, uint256 newBorrowCap);
 
     /// @notice Emitted when borrow cap guardian is changed
     event NewBorrowCapGuardian(address oldBorrowCapGuardian, address newBorrowCapGuardian);
 
     /// @notice Emitted when WELL is granted by admin
-    event WellGranted(address recipient, uint amount);
+    event WellGranted(address recipient, uint256 amount);
 
     /// @notice The initial WELL and GLMR index for a market
     uint224 public constant initialIndexConstant = 1e36;
 
     // closeFactorMantissa must be strictly greater than this value
-    uint internal constant closeFactorMinMantissa = 0.05e18; // 0.05
+    uint256 internal constant closeFactorMinMantissa = 0.05e18; // 0.05
 
     // closeFactorMantissa must not exceed this value
-    uint internal constant closeFactorMaxMantissa = 0.9e18; // 0.9
+    uint256 internal constant closeFactorMaxMantissa = 0.9e18; // 0.9
 
     // No collateralFactorMantissa may exceed this value
-    uint internal constant collateralFactorMaxMantissa = 0.9e18; // 0.9
+    uint256 internal constant collateralFactorMaxMantissa = 0.9e18; // 0.9
 
     // reward token type to show WELL or GLMR
     uint8 public constant rewardWell = 0;
@@ -93,7 +105,9 @@ contract Comptroller is ComptrollerVXStorage, ComptrollerInterface, ComptrollerE
         admin = msg.sender;
     }
 
-    /*** Assets You Are In ***/
+    /**
+     * Assets You Are In **
+     */
 
     /**
      * @notice Returns the assets an account has entered
@@ -121,14 +135,14 @@ contract Comptroller is ComptrollerVXStorage, ComptrollerInterface, ComptrollerE
      * @param mTokens The list of addresses of the mToken markets to be enabled
      * @return Success indicator for whether each corresponding market was entered
      */
-    function enterMarkets(address[] memory mTokens) public returns (uint[] memory) {
-        uint len = mTokens.length;
+    function enterMarkets(address[] memory mTokens) public returns (uint256[] memory) {
+        uint256 len = mTokens.length;
 
-        uint[] memory results = new uint[](len);
-        for (uint i = 0; i < len; i++) {
+        uint256[] memory results = new uint256[](len);
+        for (uint256 i = 0; i < len; i++) {
             MToken mToken = MToken(mTokens[i]);
 
-            results[i] = uint(addToMarketInternal(mToken, msg.sender));
+            results[i] = uint256(addToMarketInternal(mToken, msg.sender));
         }
 
         return results;
@@ -173,10 +187,10 @@ contract Comptroller is ComptrollerVXStorage, ComptrollerInterface, ComptrollerE
      * @param mTokenAddress The address of the asset to be removed
      * @return Whether or not the account successfully exited the market
      */
-    function exitMarket(address mTokenAddress) external returns (uint) {
+    function exitMarket(address mTokenAddress) external returns (uint256) {
         MToken mToken = MToken(mTokenAddress);
         /* Get sender tokensHeld and amountOwed underlying from the mToken */
-        (uint oErr, uint tokensHeld, uint amountOwed, ) = mToken.getAccountSnapshot(msg.sender);
+        (uint256 oErr, uint256 tokensHeld, uint256 amountOwed,) = mToken.getAccountSnapshot(msg.sender);
         require(oErr == 0, "exitMarket: getAccountSnapshot failed"); // semi-opaque error code
 
         /* Fail if the sender has a borrow balance */
@@ -185,7 +199,7 @@ contract Comptroller is ComptrollerVXStorage, ComptrollerInterface, ComptrollerE
         }
 
         /* Fail if the sender is not permitted to redeem all of their tokens */
-        uint allowed = redeemAllowedInternal(mTokenAddress, msg.sender, tokensHeld);
+        uint256 allowed = redeemAllowedInternal(mTokenAddress, msg.sender, tokensHeld);
         if (allowed != 0) {
             return failOpaque(Error.REJECTION, FailureInfo.EXIT_MARKET_REJECTION, allowed);
         }
@@ -194,7 +208,7 @@ contract Comptroller is ComptrollerVXStorage, ComptrollerInterface, ComptrollerE
 
         /* Return true if the sender is not already ‘in’ the market */
         if (!marketToExit.accountMembership[msg.sender]) {
-            return uint(Error.NO_ERROR);
+            return uint256(Error.NO_ERROR);
         }
 
         /* Set mToken account membership to false */
@@ -203,9 +217,9 @@ contract Comptroller is ComptrollerVXStorage, ComptrollerInterface, ComptrollerE
         /* Delete mToken from the account’s list of assets */
         // load into memory for faster iteration
         MToken[] memory userAssetList = accountAssets[msg.sender];
-        uint len = userAssetList.length;
-        uint assetIndex = len;
-        for (uint i = 0; i < len; i++) {
+        uint256 len = userAssetList.length;
+        uint256 assetIndex = len;
+        for (uint256 i = 0; i < len; i++) {
             if (userAssetList[i] == mToken) {
                 assetIndex = i;
                 break;
@@ -222,10 +236,12 @@ contract Comptroller is ComptrollerVXStorage, ComptrollerInterface, ComptrollerE
 
         emit MarketExited(mToken, msg.sender);
 
-        return uint(Error.NO_ERROR);
+        return uint256(Error.NO_ERROR);
     }
 
-    /*** Policy Hooks ***/
+    /**
+     * Policy Hooks **
+     */
 
     /**
      * @notice Checks if the account should be allowed to mint tokens in the given market
@@ -234,7 +250,7 @@ contract Comptroller is ComptrollerVXStorage, ComptrollerInterface, ComptrollerE
      * @param mintAmount The amount of underlying being supplied to the market in exchange for tokens
      * @return 0 if the mint is allowed, otherwise a semi-opaque error code (See ErrorReporter.sol)
      */
-    function mintAllowed(address mToken, address minter, uint mintAmount) external returns (uint) {
+    function mintAllowed(address mToken, address minter, uint256 mintAmount) external returns (uint256) {
         // Pausing is a very serious situation - we revert to sound the alarms
         require(!mintGuardianPaused[mToken], "mint is paused");
 
@@ -242,12 +258,12 @@ contract Comptroller is ComptrollerVXStorage, ComptrollerInterface, ComptrollerE
         mintAmount;
 
         if (!markets[mToken].isListed) {
-            return uint(Error.MARKET_NOT_LISTED);
+            return uint256(Error.MARKET_NOT_LISTED);
         }
 
         // Keep the flywheel moving
         updateAndDistributeSupplierRewardsForToken(mToken, minter);
-        return uint(Error.NO_ERROR);
+        return uint256(Error.NO_ERROR);
     }
 
     /**
@@ -257,7 +273,7 @@ contract Comptroller is ComptrollerVXStorage, ComptrollerInterface, ComptrollerE
      * @param actualMintAmount The amount of the underlying asset being minted
      * @param mintTokens The number of tokens being minted
      */
-    function mintVerify(address mToken, address minter, uint actualMintAmount, uint mintTokens) external {
+    function mintVerify(address mToken, address minter, uint256 actualMintAmount, uint256 mintTokens) external {
         // Shh - currently unused
         mToken;
         minter;
@@ -277,38 +293,43 @@ contract Comptroller is ComptrollerVXStorage, ComptrollerInterface, ComptrollerE
      * @param redeemTokens The number of mTokens to exchange for the underlying asset in the market
      * @return 0 if the redeem is allowed, otherwise a semi-opaque error code (See ErrorReporter.sol)
      */
-    function redeemAllowed(address mToken, address redeemer, uint redeemTokens) external returns (uint) {
-        uint allowed = redeemAllowedInternal(mToken, redeemer, redeemTokens);
-        if (allowed != uint(Error.NO_ERROR)) {
+    function redeemAllowed(address mToken, address redeemer, uint256 redeemTokens) external returns (uint256) {
+        uint256 allowed = redeemAllowedInternal(mToken, redeemer, redeemTokens);
+        if (allowed != uint256(Error.NO_ERROR)) {
             return allowed;
         }
 
         // Keep the flywheel moving
         updateAndDistributeSupplierRewardsForToken(mToken, redeemer);
 
-        return uint(Error.NO_ERROR);
+        return uint256(Error.NO_ERROR);
     }
 
-    function redeemAllowedInternal(address mToken, address redeemer, uint redeemTokens) internal view returns (uint) {
+    function redeemAllowedInternal(address mToken, address redeemer, uint256 redeemTokens)
+        internal
+        view
+        returns (uint256)
+    {
         if (!markets[mToken].isListed) {
-            return uint(Error.MARKET_NOT_LISTED);
+            return uint256(Error.MARKET_NOT_LISTED);
         }
 
         /* If the redeemer is not 'in' the market, then we can bypass the liquidity check */
         if (!markets[mToken].accountMembership[redeemer]) {
-            return uint(Error.NO_ERROR);
+            return uint256(Error.NO_ERROR);
         }
 
         /* Otherwise, perform a hypothetical liquidity check to guard against shortfall */
-        (Error err, , uint shortfall) = getHypotheticalAccountLiquidityInternal(redeemer, MToken(mToken), redeemTokens, 0);
+        (Error err,, uint256 shortfall) =
+            getHypotheticalAccountLiquidityInternal(redeemer, MToken(mToken), redeemTokens, 0);
         if (err != Error.NO_ERROR) {
-            return uint(err);
+            return uint256(err);
         }
         if (shortfall > 0) {
-            return uint(Error.INSUFFICIENT_LIQUIDITY);
+            return uint256(Error.INSUFFICIENT_LIQUIDITY);
         }
 
-        return uint(Error.NO_ERROR);
+        return uint256(Error.NO_ERROR);
     }
 
     /**
@@ -318,7 +339,7 @@ contract Comptroller is ComptrollerVXStorage, ComptrollerInterface, ComptrollerE
      * @param redeemAmount The amount of the underlying asset being redeemed
      * @param redeemTokens The number of tokens being redeemed
      */
-    function redeemVerify(address mToken, address redeemer, uint redeemAmount, uint redeemTokens) external {
+    function redeemVerify(address mToken, address redeemer, uint256 redeemAmount, uint256 redeemTokens) external {
         // Shh - currently unused
         mToken;
         redeemer;
@@ -336,12 +357,12 @@ contract Comptroller is ComptrollerVXStorage, ComptrollerInterface, ComptrollerE
      * @param borrowAmount The amount of underlying the account would borrow
      * @return 0 if the borrow is allowed, otherwise a semi-opaque error code (See ErrorReporter.sol)
      */
-    function borrowAllowed(address mToken, address borrower, uint borrowAmount) external returns (uint) {
+    function borrowAllowed(address mToken, address borrower, uint256 borrowAmount) external returns (uint256) {
         // Pausing is a very serious situation - we revert to sound the alarms
         require(!borrowGuardianPaused[mToken], "borrow is paused");
 
         if (!markets[mToken].isListed) {
-            return uint(Error.MARKET_NOT_LISTED);
+            return uint256(Error.MARKET_NOT_LISTED);
         }
 
         if (!markets[mToken].accountMembership[borrower]) {
@@ -351,7 +372,7 @@ contract Comptroller is ComptrollerVXStorage, ComptrollerInterface, ComptrollerE
             // attempt to add borrower to the market
             Error err = addToMarketInternal(MToken(msg.sender), borrower);
             if (err != Error.NO_ERROR) {
-                return uint(err);
+                return uint256(err);
             }
 
             // it should be impossible to break the important invariant
@@ -359,31 +380,31 @@ contract Comptroller is ComptrollerVXStorage, ComptrollerInterface, ComptrollerE
         }
 
         if (oracle.getUnderlyingPrice(MToken(mToken)) == 0) {
-            return uint(Error.PRICE_ERROR);
+            return uint256(Error.PRICE_ERROR);
         }
 
-
-        uint borrowCap = borrowCaps[mToken];
+        uint256 borrowCap = borrowCaps[mToken];
         // Borrow cap of 0 corresponds to unlimited borrowing
         if (borrowCap != 0) {
-            uint totalBorrows = MToken(mToken).totalBorrows();
-            uint nextTotalBorrows = add_(totalBorrows, borrowAmount);
+            uint256 totalBorrows = MToken(mToken).totalBorrows();
+            uint256 nextTotalBorrows = add_(totalBorrows, borrowAmount);
             require(nextTotalBorrows < borrowCap, "market borrow cap reached");
         }
 
-        (Error err, , uint shortfall) = getHypotheticalAccountLiquidityInternal(borrower, MToken(mToken), 0, borrowAmount);
+        (Error err,, uint256 shortfall) =
+            getHypotheticalAccountLiquidityInternal(borrower, MToken(mToken), 0, borrowAmount);
         if (err != Error.NO_ERROR) {
-            return uint(err);
+            return uint256(err);
         }
         if (shortfall > 0) {
-            return uint(Error.INSUFFICIENT_LIQUIDITY);
+            return uint256(Error.INSUFFICIENT_LIQUIDITY);
         }
 
         // Keep the flywheel moving
         Exp memory borrowIndex = Exp({mantissa: MToken(mToken).borrowIndex()});
         updateAndDistributeBorrowerRewardsForToken(mToken, borrower, borrowIndex);
 
-        return uint(Error.NO_ERROR);
+        return uint256(Error.NO_ERROR);
     }
 
     /**
@@ -392,7 +413,7 @@ contract Comptroller is ComptrollerVXStorage, ComptrollerInterface, ComptrollerE
      * @param borrower The address borrowing the underlying
      * @param borrowAmount The amount of the underlying asset requested to borrow
      */
-    function borrowVerify(address mToken, address borrower, uint borrowAmount) external {
+    function borrowVerify(address mToken, address borrower, uint256 borrowAmount) external {
         // Shh - currently unused
         mToken;
         borrower;
@@ -412,25 +433,24 @@ contract Comptroller is ComptrollerVXStorage, ComptrollerInterface, ComptrollerE
      * @param repayAmount The amount of the underlying asset the account would repay
      * @return 0 if the repay is allowed, otherwise a semi-opaque error code (See ErrorReporter.sol)
      */
-    function repayBorrowAllowed(
-        address mToken,
-        address payer,
-        address borrower,
-        uint repayAmount) external returns (uint) {
+    function repayBorrowAllowed(address mToken, address payer, address borrower, uint256 repayAmount)
+        external
+        returns (uint256)
+    {
         // Shh - currently unused
         payer;
         borrower;
         repayAmount;
 
         if (!markets[mToken].isListed) {
-            return uint(Error.MARKET_NOT_LISTED);
+            return uint256(Error.MARKET_NOT_LISTED);
         }
 
         // Keep the flywheel moving
         Exp memory borrowIndex = Exp({mantissa: MToken(mToken).borrowIndex()});
         updateAndDistributeBorrowerRewardsForToken(mToken, borrower, borrowIndex);
 
-        return uint(Error.NO_ERROR);
+        return uint256(Error.NO_ERROR);
     }
 
     /**
@@ -444,8 +464,9 @@ contract Comptroller is ComptrollerVXStorage, ComptrollerInterface, ComptrollerE
         address mToken,
         address payer,
         address borrower,
-        uint actualRepayAmount,
-        uint borrowerIndex) external {
+        uint256 actualRepayAmount,
+        uint256 borrowerIndex
+    ) external {
         // Shh - currently unused
         mToken;
         payer;
@@ -472,31 +493,32 @@ contract Comptroller is ComptrollerVXStorage, ComptrollerInterface, ComptrollerE
         address mTokenCollateral,
         address liquidator,
         address borrower,
-        uint repayAmount) external returns (uint) {
+        uint256 repayAmount
+    ) external returns (uint256) {
         // Shh - currently unused
         liquidator;
 
         if (!markets[mTokenBorrowed].isListed || !markets[mTokenCollateral].isListed) {
-            return uint(Error.MARKET_NOT_LISTED);
+            return uint256(Error.MARKET_NOT_LISTED);
         }
 
         /* The borrower must have shortfall in order to be liquidatable */
-        (Error err, , uint shortfall) = getAccountLiquidityInternal(borrower);
+        (Error err,, uint256 shortfall) = getAccountLiquidityInternal(borrower);
         if (err != Error.NO_ERROR) {
-            return uint(err);
+            return uint256(err);
         }
         if (shortfall == 0) {
-            return uint(Error.INSUFFICIENT_SHORTFALL);
+            return uint256(Error.INSUFFICIENT_SHORTFALL);
         }
 
         /* The liquidator may not repay more than what is allowed by the closeFactor */
-        uint borrowBalance = MToken(mTokenBorrowed).borrowBalanceStored(borrower);
-        uint maxClose = mul_ScalarTruncate(Exp({mantissa: closeFactorMantissa}), borrowBalance);
+        uint256 borrowBalance = MToken(mTokenBorrowed).borrowBalanceStored(borrower);
+        uint256 maxClose = mul_ScalarTruncate(Exp({mantissa: closeFactorMantissa}), borrowBalance);
         if (repayAmount > maxClose) {
-            return uint(Error.TOO_MUCH_REPAY);
+            return uint256(Error.TOO_MUCH_REPAY);
         }
 
-        return uint(Error.NO_ERROR);
+        return uint256(Error.NO_ERROR);
     }
 
     /**
@@ -512,8 +534,9 @@ contract Comptroller is ComptrollerVXStorage, ComptrollerInterface, ComptrollerE
         address mTokenCollateral,
         address liquidator,
         address borrower,
-        uint actualRepayAmount,
-        uint seizeTokens) external {
+        uint256 actualRepayAmount,
+        uint256 seizeTokens
+    ) external {
         // Shh - currently unused
         mTokenBorrowed;
         mTokenCollateral;
@@ -541,7 +564,8 @@ contract Comptroller is ComptrollerVXStorage, ComptrollerInterface, ComptrollerE
         address mTokenBorrowed,
         address liquidator,
         address borrower,
-        uint seizeTokens) external returns (uint) {
+        uint256 seizeTokens
+    ) external returns (uint256) {
         // Pausing is a very serious situation - we revert to sound the alarms
         require(!seizeGuardianPaused, "seize is paused");
 
@@ -549,18 +573,18 @@ contract Comptroller is ComptrollerVXStorage, ComptrollerInterface, ComptrollerE
         seizeTokens;
 
         if (!markets[mTokenCollateral].isListed || !markets[mTokenBorrowed].isListed) {
-            return uint(Error.MARKET_NOT_LISTED);
+            return uint256(Error.MARKET_NOT_LISTED);
         }
 
         if (MToken(mTokenCollateral).comptroller() != MToken(mTokenBorrowed).comptroller()) {
-            return uint(Error.COMPTROLLER_MISMATCH);
+            return uint256(Error.COMPTROLLER_MISMATCH);
         }
 
         // Keep the flywheel moving
         updateAndDistributeSupplierRewardsForToken(mTokenCollateral, borrower);
         updateAndDistributeSupplierRewardsForToken(mTokenCollateral, liquidator);
 
-        return uint(Error.NO_ERROR);
+        return uint256(Error.NO_ERROR);
     }
 
     /**
@@ -576,7 +600,8 @@ contract Comptroller is ComptrollerVXStorage, ComptrollerInterface, ComptrollerE
         address mTokenBorrowed,
         address liquidator,
         address borrower,
-        uint seizeTokens) external {
+        uint256 seizeTokens
+    ) external {
         // Shh - currently unused
         mTokenCollateral;
         mTokenBorrowed;
@@ -598,14 +623,17 @@ contract Comptroller is ComptrollerVXStorage, ComptrollerInterface, ComptrollerE
      * @param transferTokens The number of mTokens to transfer
      * @return 0 if the transfer is allowed, otherwise a semi-opaque error code (See ErrorReporter.sol)
      */
-    function transferAllowed(address mToken, address src, address dst, uint transferTokens) external returns (uint) {
+    function transferAllowed(address mToken, address src, address dst, uint256 transferTokens)
+        external
+        returns (uint256)
+    {
         // Pausing is a very serious situation - we revert to sound the alarms
         require(!transferGuardianPaused, "transfer is paused");
 
         // Currently the only consideration is whether or not
         //  the src is allowed to redeem this many tokens
-        uint allowed = redeemAllowedInternal(mToken, src, transferTokens);
-        if (allowed != uint(Error.NO_ERROR)) {
+        uint256 allowed = redeemAllowedInternal(mToken, src, transferTokens);
+        if (allowed != uint256(Error.NO_ERROR)) {
             return allowed;
         }
 
@@ -613,7 +641,7 @@ contract Comptroller is ComptrollerVXStorage, ComptrollerInterface, ComptrollerE
         updateAndDistributeSupplierRewardsForToken(mToken, src);
         updateAndDistributeSupplierRewardsForToken(mToken, dst);
 
-        return uint(Error.NO_ERROR);
+        return uint256(Error.NO_ERROR);
     }
 
     /**
@@ -623,7 +651,7 @@ contract Comptroller is ComptrollerVXStorage, ComptrollerInterface, ComptrollerE
      * @param dst The account which receives the tokens
      * @param transferTokens The number of mTokens to transfer
      */
-    function transferVerify(address mToken, address src, address dst, uint transferTokens) external {
+    function transferVerify(address mToken, address src, address dst, uint256 transferTokens) external {
         // Shh - currently unused
         mToken;
         src;
@@ -636,7 +664,9 @@ contract Comptroller is ComptrollerVXStorage, ComptrollerInterface, ComptrollerE
         }
     }
 
-    /*** Liquidity/Liquidation Calculations ***/
+    /**
+     * Liquidity/Liquidation Calculations **
+     */
 
     /**
      * @dev Local vars for avoiding stack-depth limits in calculating account liquidity.
@@ -644,12 +674,12 @@ contract Comptroller is ComptrollerVXStorage, ComptrollerInterface, ComptrollerE
      *  whereas `borrowBalance` is the amount of underlying that the account has borrowed.
      */
     struct AccountLiquidityLocalVars {
-        uint sumCollateral;
-        uint sumBorrowPlusEffects;
-        uint mTokenBalance;
-        uint borrowBalance;
-        uint exchangeRateMantissa;
-        uint oraclePriceMantissa;
+        uint256 sumCollateral;
+        uint256 sumBorrowPlusEffects;
+        uint256 mTokenBalance;
+        uint256 borrowBalance;
+        uint256 exchangeRateMantissa;
+        uint256 oraclePriceMantissa;
         Exp collateralFactor;
         Exp exchangeRate;
         Exp oraclePrice;
@@ -659,22 +689,23 @@ contract Comptroller is ComptrollerVXStorage, ComptrollerInterface, ComptrollerE
     /**
      * @notice Determine the current account liquidity wrt collateral requirements
      * @return (possible error code (semi-opaque),
-                account liquidity in excess of collateral requirements,
+     *             account liquidity in excess of collateral requirements,
      *          account shortfall below collateral requirements)
      */
-    function getAccountLiquidity(address account) public view returns (uint, uint, uint) {
-        (Error err, uint liquidity, uint shortfall) = getHypotheticalAccountLiquidityInternal(account, MToken(0), 0, 0);
+    function getAccountLiquidity(address account) public view returns (uint256, uint256, uint256) {
+        (Error err, uint256 liquidity, uint256 shortfall) =
+            getHypotheticalAccountLiquidityInternal(account, MToken(0), 0, 0);
 
-        return (uint(err), liquidity, shortfall);
+        return (uint256(err), liquidity, shortfall);
     }
 
     /**
      * @notice Determine the current account liquidity wrt collateral requirements
      * @return (possible error code,
-                account liquidity in excess of collateral requirements,
+     *             account liquidity in excess of collateral requirements,
      *          account shortfall below collateral requirements)
      */
-    function getAccountLiquidityInternal(address account) internal view returns (Error, uint, uint) {
+    function getAccountLiquidityInternal(address account) internal view returns (Error, uint256, uint256) {
         return getHypotheticalAccountLiquidityInternal(account, MToken(0), 0, 0);
     }
 
@@ -685,16 +716,18 @@ contract Comptroller is ComptrollerVXStorage, ComptrollerInterface, ComptrollerE
      * @param redeemTokens The number of tokens to hypothetically redeem
      * @param borrowAmount The amount of underlying to hypothetically borrow
      * @return (possible error code (semi-opaque),
-                hypothetical account liquidity in excess of collateral requirements,
+     *             hypothetical account liquidity in excess of collateral requirements,
      *          hypothetical account shortfall below collateral requirements)
      */
     function getHypotheticalAccountLiquidity(
         address account,
         address mTokenModify,
-        uint redeemTokens,
-        uint borrowAmount) public view returns (uint, uint, uint) {
-        (Error err, uint liquidity, uint shortfall) = getHypotheticalAccountLiquidityInternal(account, MToken(mTokenModify), redeemTokens, borrowAmount);
-        return (uint(err), liquidity, shortfall);
+        uint256 redeemTokens,
+        uint256 borrowAmount
+    ) public view returns (uint256, uint256, uint256) {
+        (Error err, uint256 liquidity, uint256 shortfall) =
+            getHypotheticalAccountLiquidityInternal(account, MToken(mTokenModify), redeemTokens, borrowAmount);
+        return (uint256(err), liquidity, shortfall);
     }
 
     /**
@@ -706,26 +739,28 @@ contract Comptroller is ComptrollerVXStorage, ComptrollerInterface, ComptrollerE
      * @dev Note that we calculate the exchangeRateStored for each collateral mToken using stored data,
      *  without calculating accumulated interest.
      * @return (possible error code,
-                hypothetical account liquidity in excess of collateral requirements,
+     *             hypothetical account liquidity in excess of collateral requirements,
      *          hypothetical account shortfall below collateral requirements)
      */
     function getHypotheticalAccountLiquidityInternal(
         address account,
         MToken mTokenModify,
-        uint redeemTokens,
-        uint borrowAmount) internal view returns (Error, uint, uint) {
-
+        uint256 redeemTokens,
+        uint256 borrowAmount
+    ) internal view returns (Error, uint256, uint256) {
         AccountLiquidityLocalVars memory vars; // Holds all our calculation results
-        uint oErr;
+        uint256 oErr;
 
         // For each asset the account is in
         MToken[] memory assets = accountAssets[account];
-        for (uint i = 0; i < assets.length; i++) {
+        for (uint256 i = 0; i < assets.length; i++) {
             MToken asset = assets[i];
 
             // Read the balances and exchange rate from the mToken
-            (oErr, vars.mTokenBalance, vars.borrowBalance, vars.exchangeRateMantissa) = asset.getAccountSnapshot(account);
-            if (oErr != 0) { // semi-opaque error code, we assume NO_ERROR == 0 is invariant between upgrades
+            (oErr, vars.mTokenBalance, vars.borrowBalance, vars.exchangeRateMantissa) =
+                asset.getAccountSnapshot(account);
+            if (oErr != 0) {
+                // semi-opaque error code, we assume NO_ERROR == 0 is invariant between upgrades
                 return (Error.SNAPSHOT_ERROR, 0, 0);
             }
             vars.collateralFactor = Exp({mantissa: markets[address(asset)].collateralFactorMantissa});
@@ -745,17 +780,20 @@ contract Comptroller is ComptrollerVXStorage, ComptrollerInterface, ComptrollerE
             vars.sumCollateral = mul_ScalarTruncateAddUInt(vars.tokensToDenom, vars.mTokenBalance, vars.sumCollateral);
 
             // sumBorrowPlusEffects += oraclePrice * borrowBalance
-            vars.sumBorrowPlusEffects = mul_ScalarTruncateAddUInt(vars.oraclePrice, vars.borrowBalance, vars.sumBorrowPlusEffects);
+            vars.sumBorrowPlusEffects =
+                mul_ScalarTruncateAddUInt(vars.oraclePrice, vars.borrowBalance, vars.sumBorrowPlusEffects);
 
             // Calculate effects of interacting with mTokenModify
             if (asset == mTokenModify) {
                 // redeem effect
                 // sumBorrowPlusEffects += tokensToDenom * redeemTokens
-                vars.sumBorrowPlusEffects = mul_ScalarTruncateAddUInt(vars.tokensToDenom, redeemTokens, vars.sumBorrowPlusEffects);
+                vars.sumBorrowPlusEffects =
+                    mul_ScalarTruncateAddUInt(vars.tokensToDenom, redeemTokens, vars.sumBorrowPlusEffects);
 
                 // borrow effect
                 // sumBorrowPlusEffects += oraclePrice * borrowAmount
-                vars.sumBorrowPlusEffects = mul_ScalarTruncateAddUInt(vars.oraclePrice, borrowAmount, vars.sumBorrowPlusEffects);
+                vars.sumBorrowPlusEffects =
+                    mul_ScalarTruncateAddUInt(vars.oraclePrice, borrowAmount, vars.sumBorrowPlusEffects);
             }
         }
 
@@ -775,12 +813,16 @@ contract Comptroller is ComptrollerVXStorage, ComptrollerInterface, ComptrollerE
      * @param actualRepayAmount The amount of mTokenBorrowed underlying to convert into mTokenCollateral tokens
      * @return (errorCode, number of mTokenCollateral tokens to be seized in a liquidation)
      */
-    function liquidateCalculateSeizeTokens(address mTokenBorrowed, address mTokenCollateral, uint actualRepayAmount) external view returns (uint, uint) {
+    function liquidateCalculateSeizeTokens(address mTokenBorrowed, address mTokenCollateral, uint256 actualRepayAmount)
+        external
+        view
+        returns (uint256, uint256)
+    {
         /* Read oracle prices for borrowed and collateral markets */
-        uint priceBorrowedMantissa = oracle.getUnderlyingPrice(MToken(mTokenBorrowed));
-        uint priceCollateralMantissa = oracle.getUnderlyingPrice(MToken(mTokenCollateral));
+        uint256 priceBorrowedMantissa = oracle.getUnderlyingPrice(MToken(mTokenBorrowed));
+        uint256 priceCollateralMantissa = oracle.getUnderlyingPrice(MToken(mTokenCollateral));
         if (priceBorrowedMantissa == 0 || priceCollateralMantissa == 0) {
-            return (uint(Error.PRICE_ERROR), 0);
+            return (uint256(Error.PRICE_ERROR), 0);
         }
 
         /*
@@ -789,8 +831,8 @@ contract Comptroller is ComptrollerVXStorage, ComptrollerInterface, ComptrollerE
          *  seizeTokens = seizeAmount / exchangeRate
          *   = actualRepayAmount * (liquidationIncentive * priceBorrowed) / (priceCollateral * exchangeRate)
          */
-        uint exchangeRateMantissa = MToken(mTokenCollateral).exchangeRateStored(); // Note: reverts on error
-        uint seizeTokens;
+        uint256 exchangeRateMantissa = MToken(mTokenCollateral).exchangeRateStored(); // Note: reverts on error
+        uint256 seizeTokens;
         Exp memory numerator;
         Exp memory denominator;
         Exp memory ratio;
@@ -801,17 +843,19 @@ contract Comptroller is ComptrollerVXStorage, ComptrollerInterface, ComptrollerE
 
         seizeTokens = mul_ScalarTruncate(ratio, actualRepayAmount);
 
-        return (uint(Error.NO_ERROR), seizeTokens);
+        return (uint256(Error.NO_ERROR), seizeTokens);
     }
 
-    /*** Admin Functions ***/
+    /**
+     * Admin Functions **
+     */
 
     /**
-      * @notice Sets a new price oracle for the comptroller
-      * @dev Admin function to set a new price oracle
-      * @return uint 0=success, otherwise a failure (see ErrorReporter.sol for details)
-      */
-    function _setPriceOracle(PriceOracle newOracle) public returns (uint) {
+     * @notice Sets a new price oracle for the comptroller
+     * @dev Admin function to set a new price oracle
+     * @return uint 0=success, otherwise a failure (see ErrorReporter.sol for details)
+     */
+    function _setPriceOracle(PriceOracle newOracle) public returns (uint256) {
         // Check caller is admin
         if (msg.sender != admin) {
             return fail(Error.UNAUTHORIZED, FailureInfo.SET_PRICE_ORACLE_OWNER_CHECK);
@@ -826,34 +870,34 @@ contract Comptroller is ComptrollerVXStorage, ComptrollerInterface, ComptrollerE
         // Emit NewPriceOracle(oldOracle, newOracle)
         emit NewPriceOracle(oldOracle, newOracle);
 
-        return uint(Error.NO_ERROR);
+        return uint256(Error.NO_ERROR);
     }
 
     /**
-      * @notice Sets the closeFactor used when liquidating borrows
-      * @dev Admin function to set closeFactor
-      * @param newCloseFactorMantissa New close factor, scaled by 1e18
-      * @return uint 0=success, otherwise a failure
-      */
-    function _setCloseFactor(uint newCloseFactorMantissa) external returns (uint) {
+     * @notice Sets the closeFactor used when liquidating borrows
+     * @dev Admin function to set closeFactor
+     * @param newCloseFactorMantissa New close factor, scaled by 1e18
+     * @return uint 0=success, otherwise a failure
+     */
+    function _setCloseFactor(uint256 newCloseFactorMantissa) external returns (uint256) {
         // Check caller is admin
-    	require(msg.sender == admin, "only admin can set close factor");
+        require(msg.sender == admin, "only admin can set close factor");
 
-        uint oldCloseFactorMantissa = closeFactorMantissa;
+        uint256 oldCloseFactorMantissa = closeFactorMantissa;
         closeFactorMantissa = newCloseFactorMantissa;
         emit NewCloseFactor(oldCloseFactorMantissa, closeFactorMantissa);
 
-        return uint(Error.NO_ERROR);
+        return uint256(Error.NO_ERROR);
     }
 
     /**
-      * @notice Sets the collateralFactor for a market
-      * @dev Admin function to set per-market collateralFactor
-      * @param mToken The market to set the factor on
-      * @param newCollateralFactorMantissa The new collateral factor, scaled by 1e18
-      * @return uint 0=success, otherwise a failure. (See ErrorReporter for details)
-      */
-    function _setCollateralFactor(MToken mToken, uint newCollateralFactorMantissa) external returns (uint) {
+     * @notice Sets the collateralFactor for a market
+     * @dev Admin function to set per-market collateralFactor
+     * @param mToken The market to set the factor on
+     * @param newCollateralFactorMantissa The new collateral factor, scaled by 1e18
+     * @return uint 0=success, otherwise a failure. (See ErrorReporter for details)
+     */
+    function _setCollateralFactor(MToken mToken, uint256 newCollateralFactorMantissa) external returns (uint256) {
         // Check caller is admin
         if (msg.sender != admin) {
             return fail(Error.UNAUTHORIZED, FailureInfo.SET_COLLATERAL_FACTOR_OWNER_CHECK);
@@ -879,29 +923,29 @@ contract Comptroller is ComptrollerVXStorage, ComptrollerInterface, ComptrollerE
         }
 
         // Set market's collateral factor to new collateral factor, remember old value
-        uint oldCollateralFactorMantissa = market.collateralFactorMantissa;
+        uint256 oldCollateralFactorMantissa = market.collateralFactorMantissa;
         market.collateralFactorMantissa = newCollateralFactorMantissa;
 
         // Emit event with asset, old collateral factor, and new collateral factor
         emit NewCollateralFactor(mToken, oldCollateralFactorMantissa, newCollateralFactorMantissa);
 
-        return uint(Error.NO_ERROR);
+        return uint256(Error.NO_ERROR);
     }
 
     /**
-      * @notice Sets liquidationIncentive
-      * @dev Admin function to set liquidationIncentive
-      * @param newLiquidationIncentiveMantissa New liquidationIncentive scaled by 1e18
-      * @return uint 0=success, otherwise a failure. (See ErrorReporter for details)
-      */
-    function _setLiquidationIncentive(uint newLiquidationIncentiveMantissa) external returns (uint) {
+     * @notice Sets liquidationIncentive
+     * @dev Admin function to set liquidationIncentive
+     * @param newLiquidationIncentiveMantissa New liquidationIncentive scaled by 1e18
+     * @return uint 0=success, otherwise a failure. (See ErrorReporter for details)
+     */
+    function _setLiquidationIncentive(uint256 newLiquidationIncentiveMantissa) external returns (uint256) {
         // Check caller is admin
         if (msg.sender != admin) {
             return fail(Error.UNAUTHORIZED, FailureInfo.SET_LIQUIDATION_INCENTIVE_OWNER_CHECK);
         }
 
         // Save current value for use in log
-        uint oldLiquidationIncentiveMantissa = liquidationIncentiveMantissa;
+        uint256 oldLiquidationIncentiveMantissa = liquidationIncentiveMantissa;
 
         // Set liquidation incentive to new incentive
         liquidationIncentiveMantissa = newLiquidationIncentiveMantissa;
@@ -909,16 +953,16 @@ contract Comptroller is ComptrollerVXStorage, ComptrollerInterface, ComptrollerE
         // Emit event with old incentive, new incentive
         emit NewLiquidationIncentive(oldLiquidationIncentiveMantissa, newLiquidationIncentiveMantissa);
 
-        return uint(Error.NO_ERROR);
+        return uint256(Error.NO_ERROR);
     }
 
     /**
-      * @notice Add the market to the markets mapping and set it as listed
-      * @dev Admin function to set isListed and add support for the market
-      * @param mToken The address of the market (token) to list
-      * @return uint 0=success, otherwise a failure. (See enum Error for details)
-      */
-    function _supportMarket(MToken mToken) external returns (uint) {
+     * @notice Add the market to the markets mapping and set it as listed
+     * @dev Admin function to set isListed and add support for the market
+     * @param mToken The address of the market (token) to list
+     * @return uint 0=success, otherwise a failure. (See enum Error for details)
+     */
+    function _supportMarket(MToken mToken) external returns (uint256) {
         if (msg.sender != admin) {
             return fail(Error.UNAUTHORIZED, FailureInfo.SUPPORT_MARKET_OWNER_CHECK);
         }
@@ -936,32 +980,34 @@ contract Comptroller is ComptrollerVXStorage, ComptrollerInterface, ComptrollerE
 
         emit MarketListed(mToken);
 
-        return uint(Error.NO_ERROR);
+        return uint256(Error.NO_ERROR);
     }
 
     function _addMarketInternal(address mToken) internal {
-        for (uint i = 0; i < allMarkets.length; i ++) {
+        for (uint256 i = 0; i < allMarkets.length; i++) {
             require(allMarkets[i] != MToken(mToken), "market already added");
         }
         allMarkets.push(MToken(mToken));
     }
 
-
     /**
-      * @notice Set the given borrow caps for the given mToken markets. Borrowing that brings total borrows to or above borrow cap will revert.
-      * @dev Admin or borrowCapGuardian function to set the borrow caps. A borrow cap of 0 corresponds to unlimited borrowing.
-      * @param mTokens The addresses of the markets (tokens) to change the borrow caps for
-      * @param newBorrowCaps The new borrow cap values in underlying to be set. A value of 0 corresponds to unlimited borrowing.
-      */
-    function _setMarketBorrowCaps(MToken[] calldata mTokens, uint[] calldata newBorrowCaps) external {
-    	require(msg.sender == admin || msg.sender == borrowCapGuardian, "only admin or borrow cap guardian can set borrow caps");
+     * @notice Set the given borrow caps for the given mToken markets. Borrowing that brings total borrows to or above borrow cap will revert.
+     * @dev Admin or borrowCapGuardian function to set the borrow caps. A borrow cap of 0 corresponds to unlimited borrowing.
+     * @param mTokens The addresses of the markets (tokens) to change the borrow caps for
+     * @param newBorrowCaps The new borrow cap values in underlying to be set. A value of 0 corresponds to unlimited borrowing.
+     */
+    function _setMarketBorrowCaps(MToken[] calldata mTokens, uint256[] calldata newBorrowCaps) external {
+        require(
+            msg.sender == admin || msg.sender == borrowCapGuardian,
+            "only admin or borrow cap guardian can set borrow caps"
+        );
 
-        uint numMarkets = mTokens.length;
-        uint numBorrowCaps = newBorrowCaps.length;
+        uint256 numMarkets = mTokens.length;
+        uint256 numBorrowCaps = newBorrowCaps.length;
 
         require(numMarkets != 0 && numMarkets == numBorrowCaps, "invalid input");
 
-        for(uint i = 0; i < numMarkets; i++) {
+        for (uint256 i = 0; i < numMarkets; i++) {
             borrowCaps[address(mTokens[i])] = newBorrowCaps[i];
             emit NewBorrowCap(mTokens[i], newBorrowCaps[i]);
         }
@@ -989,7 +1035,7 @@ contract Comptroller is ComptrollerVXStorage, ComptrollerInterface, ComptrollerE
      * @param newPauseGuardian The address of the new Pause Guardian
      * @return uint 0=success, otherwise a failure. (See enum Error for details)
      */
-    function _setPauseGuardian(address newPauseGuardian) public returns (uint) {
+    function _setPauseGuardian(address newPauseGuardian) public returns (uint256) {
         if (msg.sender != admin) {
             return fail(Error.UNAUTHORIZED, FailureInfo.SET_PAUSE_GUARDIAN_OWNER_CHECK);
         }
@@ -1003,7 +1049,7 @@ contract Comptroller is ComptrollerVXStorage, ComptrollerInterface, ComptrollerE
         // Emit NewPauseGuardian(OldPauseGuardian, NewPauseGuardian)
         emit NewPauseGuardian(oldPauseGuardian, pauseGuardian);
 
-        return uint(Error.NO_ERROR);
+        return uint256(Error.NO_ERROR);
     }
 
     /**
@@ -1011,7 +1057,7 @@ contract Comptroller is ComptrollerVXStorage, ComptrollerInterface, ComptrollerE
      * @param newGasAmount The new gas amount to use on native asset transfers.
      * @return uint 0=success, otherwise a failure. (See enum Error for details)
      */
-    function _setGasAmount(uint16 newGasAmount) public returns (uint) {
+    function _setGasAmount(uint16 newGasAmount) public returns (uint256) {
         if (msg.sender != admin) {
             return fail(Error.UNAUTHORIZED, FailureInfo.SET_GAS_AMOUNT_OWNER_CHECK);
         }
@@ -1026,7 +1072,7 @@ contract Comptroller is ComptrollerVXStorage, ComptrollerInterface, ComptrollerE
         // Emit NewGasAmount(oldGasAmount, newGasAmount)
         emit NewGasAmount(oldGasAmount, newGasAmount);
 
-        return uint(Error.NO_ERROR);
+        return uint256(Error.NO_ERROR);
     }
 
     function _setMintPaused(MToken mToken, bool state) public returns (bool) {
@@ -1079,7 +1125,9 @@ contract Comptroller is ComptrollerVXStorage, ComptrollerInterface, ComptrollerE
         return msg.sender == admin || msg.sender == comptrollerImplementation;
     }
 
-    /*** WELL Distribution ***/
+    /**
+     * WELL Distribution **
+     */
 
     /**
      * @notice Set reward speed for a single market
@@ -1088,9 +1136,14 @@ contract Comptroller is ComptrollerVXStorage, ComptrollerInterface, ComptrollerE
      * @param newSupplyRewardSpeed New supply speed
      * @param newBorrowRewardSpeed New borrow speed
      */
-    function setRewardSpeedInternal(uint8 rewardType, MToken mToken, uint newSupplyRewardSpeed, uint newBorrowRewardSpeed) internal {
-        uint currentSupplyRewardSpeed = supplyRewardSpeeds[rewardType][address(mToken)];
-        uint currentBorrowRewardSpeed = borrowRewardSpeeds[rewardType][address(mToken)];
+    function setRewardSpeedInternal(
+        uint8 rewardType,
+        MToken mToken,
+        uint256 newSupplyRewardSpeed,
+        uint256 newBorrowRewardSpeed
+    ) internal {
+        uint256 currentSupplyRewardSpeed = supplyRewardSpeeds[rewardType][address(mToken)];
+        uint256 currentBorrowRewardSpeed = borrowRewardSpeeds[rewardType][address(mToken)];
 
         if (currentSupplyRewardSpeed != 0) {
             updateRewardSupplyIndex(rewardType, address(mToken));
@@ -1098,8 +1151,10 @@ contract Comptroller is ComptrollerVXStorage, ComptrollerInterface, ComptrollerE
             Market storage market = markets[address(mToken)];
             require(market.isListed, "Market is not listed");
 
-            if (rewardSupplyState[rewardType][address(mToken)].index == 0 &&
-                rewardSupplyState[rewardType][address(mToken)].timestamp == 0) {
+            if (
+                rewardSupplyState[rewardType][address(mToken)].index == 0
+                    && rewardSupplyState[rewardType][address(mToken)].timestamp == 0
+            ) {
                 rewardSupplyState[rewardType][address(mToken)] = RewardMarketState({
                     index: initialIndexConstant,
                     timestamp: safe32(getBlockTimestamp(), "block timestamp exceeds 32 bits")
@@ -1108,20 +1163,21 @@ contract Comptroller is ComptrollerVXStorage, ComptrollerInterface, ComptrollerE
         }
 
         if (currentBorrowRewardSpeed != 0) {
-            Exp memory borrowIndex = Exp({ mantissa: mToken.borrowIndex() });
+            Exp memory borrowIndex = Exp({mantissa: mToken.borrowIndex()});
             updateRewardBorrowIndex(rewardType, address(mToken), borrowIndex);
         } else if (newBorrowRewardSpeed != 0) {
             Market storage market = markets[address(mToken)];
             require(market.isListed, "Market is not listed");
 
-            if (rewardBorrowState[rewardType][address(mToken)].index == 0 &&
-                rewardBorrowState[rewardType][address(mToken)].timestamp == 0) {
+            if (
+                rewardBorrowState[rewardType][address(mToken)].index == 0
+                    && rewardBorrowState[rewardType][address(mToken)].timestamp == 0
+            ) {
                 rewardBorrowState[rewardType][address(mToken)] = RewardMarketState({
                     index: initialIndexConstant,
                     timestamp: safe32(getBlockTimestamp(), "block timestamp exceeds 32 bits")
                 });
             }
-
         }
 
         if (currentSupplyRewardSpeed != newSupplyRewardSpeed) {
@@ -1143,12 +1199,12 @@ contract Comptroller is ComptrollerVXStorage, ComptrollerInterface, ComptrollerE
     function updateRewardSupplyIndex(uint8 rewardType, address mToken) internal {
         require(rewardType <= 1, "rewardType is invalid");
         RewardMarketState storage supplyState = rewardSupplyState[rewardType][mToken];
-        uint supplySpeed = supplyRewardSpeeds[rewardType][mToken];
-        uint blockTimestamp = getBlockTimestamp();
-        uint deltaTimestamps = sub_(blockTimestamp, uint(supplyState.timestamp));
+        uint256 supplySpeed = supplyRewardSpeeds[rewardType][mToken];
+        uint256 blockTimestamp = getBlockTimestamp();
+        uint256 deltaTimestamps = sub_(blockTimestamp, uint256(supplyState.timestamp));
         if (deltaTimestamps > 0 && supplySpeed > 0) {
-            uint supplyTokens = MToken(mToken).totalSupply();
-            uint wellAccrued = mul_(deltaTimestamps, supplySpeed);
+            uint256 supplyTokens = MToken(mToken).totalSupply();
+            uint256 wellAccrued = mul_(deltaTimestamps, supplySpeed);
             Double memory ratio = supplyTokens > 0 ? fraction(wellAccrued, supplyTokens) : Double({mantissa: 0});
             Double memory index = add_(Double({mantissa: supplyState.index}), ratio);
             rewardSupplyState[rewardType][mToken] = RewardMarketState({
@@ -1168,12 +1224,12 @@ contract Comptroller is ComptrollerVXStorage, ComptrollerInterface, ComptrollerE
     function updateRewardBorrowIndex(uint8 rewardType, address mToken, Exp memory marketBorrowIndex) internal {
         require(rewardType <= 1, "rewardType is invalid");
         RewardMarketState storage borrowState = rewardBorrowState[rewardType][mToken];
-        uint borrowSpeed = borrowRewardSpeeds[rewardType][mToken];
-        uint blockTimestamp = getBlockTimestamp();
-        uint deltaTimestamps = sub_(blockTimestamp, uint(borrowState.timestamp));
+        uint256 borrowSpeed = borrowRewardSpeeds[rewardType][mToken];
+        uint256 blockTimestamp = getBlockTimestamp();
+        uint256 deltaTimestamps = sub_(blockTimestamp, uint256(borrowState.timestamp));
         if (deltaTimestamps > 0 && borrowSpeed > 0) {
-            uint borrowAmount = div_(MToken(mToken).totalBorrows(), marketBorrowIndex);
-            uint wellAccrued = mul_(deltaTimestamps, borrowSpeed);
+            uint256 borrowAmount = div_(MToken(mToken).totalBorrows(), marketBorrowIndex);
+            uint256 wellAccrued = mul_(deltaTimestamps, borrowSpeed);
             Double memory ratio = borrowAmount > 0 ? fraction(wellAccrued, borrowAmount) : Double({mantissa: 0});
             Double memory index = add_(Double({mantissa: borrowState.index}), ratio);
             rewardBorrowState[rewardType][mToken] = RewardMarketState({
@@ -1215,19 +1271,21 @@ contract Comptroller is ComptrollerVXStorage, ComptrollerInterface, ComptrollerE
         }
 
         Double memory deltaIndex = sub_(supplyIndex, supplierIndex);
-        uint supplierTokens = MToken(mToken).balanceOf(supplier);
-        uint supplierDelta = mul_(supplierTokens, deltaIndex);
-        uint supplierAccrued = add_(rewardAccrued[rewardType][supplier], supplierDelta);
+        uint256 supplierTokens = MToken(mToken).balanceOf(supplier);
+        uint256 supplierDelta = mul_(supplierTokens, deltaIndex);
+        uint256 supplierAccrued = add_(rewardAccrued[rewardType][supplier], supplierDelta);
         rewardAccrued[rewardType][supplier] = supplierAccrued;
         emit DistributedSupplierReward(rewardType, MToken(mToken), supplier, supplierDelta, supplyIndex.mantissa);
     }
 
-   /**
+    /**
      * @notice Refactored function to calc and rewards accounts supplier rewards
      * @param mToken The market to verify the mint against
      * @param borrower Borrower to be rewarded
      */
-    function updateAndDistributeBorrowerRewardsForToken(address mToken, address borrower, Exp memory marketBorrowIndex) internal {
+    function updateAndDistributeBorrowerRewardsForToken(address mToken, address borrower, Exp memory marketBorrowIndex)
+        internal
+    {
         for (uint8 rewardType = 0; rewardType <= 1; rewardType++) {
             updateRewardBorrowIndex(rewardType, mToken, marketBorrowIndex);
             distributeBorrowerReward(rewardType, mToken, borrower, marketBorrowIndex);
@@ -1241,18 +1299,20 @@ contract Comptroller is ComptrollerVXStorage, ComptrollerInterface, ComptrollerE
      * @param mToken The market in which the borrower is interacting
      * @param borrower The address of the borrower to distribute WELL to
      */
-    function distributeBorrowerReward(uint8 rewardType, address mToken, address borrower, Exp memory marketBorrowIndex) internal {
+    function distributeBorrowerReward(uint8 rewardType, address mToken, address borrower, Exp memory marketBorrowIndex)
+        internal
+    {
         require(rewardType <= 1, "rewardType is invalid");
-        RewardMarketState storage borrowState = rewardBorrowState [rewardType][mToken];
+        RewardMarketState storage borrowState = rewardBorrowState[rewardType][mToken];
         Double memory borrowIndex = Double({mantissa: borrowState.index});
         Double memory borrowerIndex = Double({mantissa: rewardBorrowerIndex[rewardType][mToken][borrower]});
         rewardBorrowerIndex[rewardType][mToken][borrower] = borrowIndex.mantissa;
 
         if (borrowerIndex.mantissa > 0) {
             Double memory deltaIndex = sub_(borrowIndex, borrowerIndex);
-            uint borrowerAmount = div_(MToken(mToken).borrowBalanceStored(borrower), marketBorrowIndex);
-            uint borrowerDelta = mul_(borrowerAmount, deltaIndex);
-            uint borrowerAccrued = add_(rewardAccrued[rewardType][borrower], borrowerDelta);
+            uint256 borrowerAmount = div_(MToken(mToken).borrowBalanceStored(borrower), marketBorrowIndex);
+            uint256 borrowerDelta = mul_(borrowerAmount, deltaIndex);
+            uint256 borrowerAccrued = add_(rewardAccrued[rewardType][borrower], borrowerDelta);
             rewardAccrued[rewardType][borrower] = borrowerAccrued;
             emit DistributedBorrowerReward(rewardType, MToken(mToken), borrower, borrowerDelta, borrowIndex.mantissa);
         }
@@ -1263,7 +1323,7 @@ contract Comptroller is ComptrollerVXStorage, ComptrollerInterface, ComptrollerE
      * @param holder The address to claim WELL for
      */
     function claimReward(uint8 rewardType, address payable holder) public {
-        return claimReward(rewardType,holder, allMarkets);
+        return claimReward(rewardType, holder, allMarkets);
     }
 
     /**
@@ -1272,7 +1332,7 @@ contract Comptroller is ComptrollerVXStorage, ComptrollerInterface, ComptrollerE
      * @param mTokens The list of markets to claim WELL in
      */
     function claimReward(uint8 rewardType, address payable holder, MToken[] memory mTokens) public {
-        address payable [] memory holders = new address payable[](1);
+        address payable[] memory holders = new address payable[](1);
         holders[0] = holder;
         claimReward(rewardType, holders, mTokens, true, true);
     }
@@ -1285,24 +1345,32 @@ contract Comptroller is ComptrollerVXStorage, ComptrollerInterface, ComptrollerE
      * @param borrowers Whether or not to claim GLMR earned by borrowing
      * @param suppliers Whether or not to claim GLMR earned by supplying
      */
-    function claimReward(uint8 rewardType, address payable[] memory holders, MToken[] memory mTokens, bool borrowers, bool suppliers) public payable {
+    function claimReward(
+        uint8 rewardType,
+        address payable[] memory holders,
+        MToken[] memory mTokens,
+        bool borrowers,
+        bool suppliers
+    ) public payable {
         require(rewardType <= 1, "rewardType is invalid");
-        for (uint i = 0; i < mTokens.length; i++) {
+        for (uint256 i = 0; i < mTokens.length; i++) {
             MToken mToken = mTokens[i];
             require(markets[address(mToken)].isListed, "market must be listed");
             if (borrowers == true) {
                 Exp memory borrowIndex = Exp({mantissa: mToken.borrowIndex()});
-                updateRewardBorrowIndex(rewardType,address(mToken), borrowIndex);
-                for (uint j = 0; j < holders.length; j++) {
-                    distributeBorrowerReward(rewardType,address(mToken), holders[j], borrowIndex);
-                    rewardAccrued[rewardType][holders[j]] = grantRewardInternal(rewardType, holders[j], rewardAccrued[rewardType][holders[j]]);
+                updateRewardBorrowIndex(rewardType, address(mToken), borrowIndex);
+                for (uint256 j = 0; j < holders.length; j++) {
+                    distributeBorrowerReward(rewardType, address(mToken), holders[j], borrowIndex);
+                    rewardAccrued[rewardType][holders[j]] =
+                        grantRewardInternal(rewardType, holders[j], rewardAccrued[rewardType][holders[j]]);
                 }
             }
             if (suppliers == true) {
-                updateRewardSupplyIndex(rewardType,address(mToken));
-                for (uint j = 0; j < holders.length; j++) {
-                    distributeSupplierReward(rewardType,address(mToken), holders[j]);
-                    rewardAccrued[rewardType][holders[j]] = grantRewardInternal(rewardType, holders[j], rewardAccrued[rewardType][holders[j]]);
+                updateRewardSupplyIndex(rewardType, address(mToken));
+                for (uint256 j = 0; j < holders.length; j++) {
+                    distributeSupplierReward(rewardType, address(mToken), holders[j]);
+                    rewardAccrued[rewardType][holders[j]] =
+                        grantRewardInternal(rewardType, holders[j], rewardAccrued[rewardType][holders[j]]);
                 }
             }
         }
@@ -1315,18 +1383,22 @@ contract Comptroller is ComptrollerVXStorage, ComptrollerInterface, ComptrollerE
      * @param amount The amount of GLMR to (possibly) transfer
      * @return The amount of GLMR which was NOT transferred to the user
      */
-    function grantRewardInternal(uint rewardType, address payable user, uint amount) internal nonReentrant returns (uint) {
+    function grantRewardInternal(uint256 rewardType, address payable user, uint256 amount)
+        internal
+        nonReentrant
+        returns (uint256)
+    {
         if (rewardType == 0) {
             Well well = Well(wellAddress);
-            uint wellRemaining = well.balanceOf(address(this));
+            uint256 wellRemaining = well.balanceOf(address(this));
             if (amount > 0 && amount <= wellRemaining) {
                 well.transfer(user, amount);
                 return 0;
             }
         } else if (rewardType == 1) {
-            uint glmrRemaining = address(this).balance;
+            uint256 glmrRemaining = address(this).balance;
             if (amount > 0 && amount <= glmrRemaining) {
-                (bool success, ) = user.call.value(amount).gas(gasAmount)("");
+                (bool success,) = user.call.value(amount).gas(gasAmount)("");
                 require(success, "Transfer failed");
                 return 0;
             }
@@ -1334,7 +1406,9 @@ contract Comptroller is ComptrollerVXStorage, ComptrollerInterface, ComptrollerE
         return amount;
     }
 
-    /*** WELL Distribution Admin ***/
+    /**
+     * WELL Distribution Admin **
+     */
 
     /**
      * @notice Transfer WELL to the recipient
@@ -1342,9 +1416,9 @@ contract Comptroller is ComptrollerVXStorage, ComptrollerInterface, ComptrollerE
      * @param recipient The address of the recipient to transfer WELL to
      * @param amount The amount of WELL to (possibly) transfer
      */
-    function _grantWell(address payable recipient, uint amount) public {
+    function _grantWell(address payable recipient, uint256 amount) public {
         require(adminOrInitializing(), "only admin can grant WELL");
-        uint amountLeft = grantRewardInternal(0, recipient, amount);
+        uint256 amountLeft = grantRewardInternal(0, recipient, amount);
         require(amountLeft == 0, "insufficient WELL for grant");
         emit WellGranted(recipient, amount);
     }
@@ -1356,7 +1430,9 @@ contract Comptroller is ComptrollerVXStorage, ComptrollerInterface, ComptrollerE
      * @param supplyRewardSpeed New supply reward speed for the market
      * @param borrowRewardSpeed New borrow reward speed for the market
      */
-    function _setRewardSpeed(uint8 rewardType, MToken mToken, uint supplyRewardSpeed, uint borrowRewardSpeed) public {
+    function _setRewardSpeed(uint8 rewardType, MToken mToken, uint256 supplyRewardSpeed, uint256 borrowRewardSpeed)
+        public
+    {
         require(rewardType <= 1, "rewardType is invalid");
         require(adminOrInitializing(), "only admin can set reward speed");
         setRewardSpeedInternal(rewardType, mToken, supplyRewardSpeed, borrowRewardSpeed);
@@ -1371,7 +1447,7 @@ contract Comptroller is ComptrollerVXStorage, ComptrollerInterface, ComptrollerE
         return allMarkets;
     }
 
-    function getBlockTimestamp() public view returns (uint) {
+    function getBlockTimestamp() public view returns (uint256) {
         return block.timestamp;
     }
 
@@ -1386,8 +1462,7 @@ contract Comptroller is ComptrollerVXStorage, ComptrollerInterface, ComptrollerE
     /**
      * @notice payable function needed to receive GLMR
      */
-    function () payable external {
-    }
+    function() external payable {}
 
     /**
      * @dev Prevents a contract from calling itself, directly or indirectly.
