@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity 0.8.19;
+pragma solidity 0.5.17;
 
 contract SigUtils {
     bytes32 internal DOMAIN_SEPARATOR;

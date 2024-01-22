@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: BSD-3-Clause
-pragma solidity 0.8.19;
+pragma solidity >= 0.5.17;
 
-import "@openzeppelin/contracts/token/ERC20/extensions/draft-ERC20Permit.sol";
+import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Permit.sol";
 
 contract StandardToken is ERC20 {
     uint8 _decimals;
