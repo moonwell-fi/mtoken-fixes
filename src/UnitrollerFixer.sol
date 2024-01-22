@@ -1,10 +1,10 @@
 pragma solidity 0.5.17;
 
-import "./Comptroller.sol";
+import "./Unitroller.sol";
 import "./MErc20DelegateFixer.sol";
 
-/// @title Comptroller fixer contract
-contract ComptrollerFixer is Comptroller {
+/// @title Unitroller fixer contract
+contract UnitrollerFixer is Unitroller {
     /// TODO add all markets
     address[] public fixMarkets = [0x948CCfff51F894DBA5C250aa2844d58E169f8aD9];
 
