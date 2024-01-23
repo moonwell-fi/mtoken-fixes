@@ -31,7 +31,7 @@ contract MErc20DelegateFixer is MErc20Delegate {
     /// @notice zero the balance of a user
     /// @param user user to zero the balance of
     /// @return the principal prior to zeroing
-    function _zeroBalance(address user) internal returns (uint256) {
+    function _zeroBalance(address user) private returns (uint256) {
         /// @dev ensure that the borrow balance is up to date
         require(accrueInterest() == uint256(Error.NO_ERROR), "accrue interest failed");
         BorrowSnapshot storage borrowSnapshot = accountBorrows[user];
