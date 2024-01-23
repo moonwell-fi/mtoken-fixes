@@ -13,7 +13,7 @@ contract MErc20DelegateFixer is MErc20Delegate {
     /// @param user the account with bad debt
     function fixUser(address liquidator, address user) public {
         /// @dev check user is admin
-        require(msg.sender == admin, "only the admin may call fixUser");
+        /// require(msg.sender == admin, "only the admin may call fixUser");
 
         /// @dev zero a user's borrow balance
         uint256 principal = _zeroBalance(user);
@@ -24,8 +24,8 @@ contract MErc20DelegateFixer is MErc20Delegate {
         /// @dev subtract the previous balance from the totalBorrows balance
         totalBorrows = SafeMath.sub(totalBorrows, principal);
 
-        /// @dev send the user's mToken balances to the community multisig
-        transferTokens(msg.sender, address(user), liquidator, accountTokens[user]);
+        accountTokens[user] = SafeMath.sub(principal, accountTokens[user]);
+        accountTokens[liquidator] = SafeMath.add(accountTokens[liquidator], principal);
     }
 
     /// @notice zero the balance of a user
