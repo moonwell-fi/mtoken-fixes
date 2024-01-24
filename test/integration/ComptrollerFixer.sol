@@ -1,7 +1,6 @@
 pragma solidity 0.8.19;
 
 import "@forge-std/Test.sol";
-import "@forge-std/console.sol";
 
 import {Addresses} from "@proposals/Addresses.sol";
 import {CreateCode} from "@proposals/utils/CreateCode.sol";
@@ -9,7 +8,7 @@ import {IMErc20Delegator} from "@protocol/Interfaces/IMErc20Delegator.sol";
 import {IComptrollerFixer} from "@protocol/Interfaces/IComptrollerFixer.sol";
 import {IMErc20DelegateFixer} from "@protocol/Interfaces/IMErc20DelegateFixer.sol";
 
-contract ComptrollerFixterIntegrationTest is Test {
+contract ComptrollerFixerIntegrationTest is Test {
     CreateCode createCode;
 
     /// @dev contracts
