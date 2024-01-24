@@ -7,7 +7,7 @@ env:
   FOUNDRY_PROFILE: ci
 
 jobs:
-  build:
+  test:
     strategy:
       fail-fast: true
 
@@ -17,13 +17,18 @@ jobs:
         with:
           submodules: recursive
 
-      - name: Install Foundry
+      - name: install
         uses: foundry-rs/foundry-toolchain@v1
         with:
           version: nightly
 
-      - name: Run Forge build
+      - name: build
         run: |
           forge --version
           forge build
         id: build
+
+      - name: test
+        run: |
+          forge test --match-contract ComptrollerFixerIntegrationTest --fork-url https://rpc.api.moonbeam.network
+          forge test --match-contract MErc20DelegateMadFixerIntegrationTest --fork-url https://rpc.api.moonbeam.network
