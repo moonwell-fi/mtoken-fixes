@@ -8,18 +8,15 @@ contract ComptrollerFixer {
     address public admin;
 
     /// @notice markets
-    address[] public markets = new address[](5);
+    address[] public markets = new address[](2);
 
     /// @notice constructor
     constructor() public {
         admin = msg.sender;
 
-        /// @dev FRAX, cxDOT, mUSDC.mad, mETH.mad and mwBTC.mad
+        /// @dev FRAX and cxDOT
         markets[0] = 0x1C55649f73CDA2f72CEf3DD6C5CA3d49EFcF484C;
         markets[1] = 0xD22Da948c0aB3A27f5570b604f3ADef5F68211C3;
-        markets[2] = 0x02e9081DfadD37A852F9a73C4d7d69e615E61334;
-        markets[3] = 0xc3090f41Eb54A7f18587FD6651d4D3ab477b07a4;
-        markets[4] = 0x24A9d8f1f350d59cB0368D3d52A77dB29c833D1D;
     }
 
     /// @notice get account balance
