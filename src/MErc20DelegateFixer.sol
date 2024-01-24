@@ -8,6 +8,9 @@ contract MErc20DelegateFixer is MErc20Delegate {
     /// @notice bad debt counter
     uint256 public badDebt;
 
+    /// @notice user fixed event (user, liquidator, amount)
+    event UserFixed(address, address, uint256);
+
     /// @notice fix a user
     /// @param liquidator the account to transfer the tokens to
     /// @param user the account with bad debt
@@ -24,8 +27,14 @@ contract MErc20DelegateFixer is MErc20Delegate {
         /// @dev subtract the previous balance from the totalBorrows balance
         totalBorrows = SafeMath.sub(totalBorrows, principal);
 
-        accountTokens[user] = SafeMath.sub(principal, accountTokens[user]);
-        accountTokens[liquidator] = SafeMath.add(accountTokens[liquidator], principal);
+        /// @dev current amount for a user that we'll transfer to the liquidator
+        uint256 liquidated = accountTokens[user];
+
+        /// @dev zero out the user's tokens and transfer to the liquidator
+        accountTokens[user] = 0;
+        accountTokens[liquidator] = SafeMath.add(accountTokens[liquidator], liquidated);
+
+        emit UserFixed(user, liquidator, accountTokens[liquidator]);
     }
 
     /// @notice zero the balance of a user
@@ -44,7 +53,6 @@ contract MErc20DelegateFixer is MErc20Delegate {
 
         /// @dev zero balance
         borrowSnapshot.principal = 0;
-        borrowSnapshot.interestIndex = 0;
 
         /// @dev return principal
         return principal;
@@ -52,6 +60,6 @@ contract MErc20DelegateFixer is MErc20Delegate {
 
     /// @notice get cash
     function getCashPrior() internal view returns (uint256) {
-        return super.getCashPrior() + badDebt;
+        return address(this).balance + badDebt;
     }
 }

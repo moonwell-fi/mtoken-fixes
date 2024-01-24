@@ -37,9 +37,7 @@ abstract contract MIPProposal is Script {
 
     constructor() {
         // Default behavior: use Anvil 0 private key
-        PRIVATE_KEY = uint256(
-            vm.envOr("ETH_PRIVATE_KEY", bytes32(type(uint256).max))
-        );
+        PRIVATE_KEY = uint256(vm.envOr("ETH_PRIVATE_KEY", bytes32(type(uint256).max)));
 
         DEBUG = vm.envOr("DEBUG", true);
         DO_DEPLOY = vm.envOr("DO_DEPLOY", true);
@@ -76,10 +74,7 @@ abstract contract MIPProposal is Script {
         }
 
         if (DO_DEPLOY) {
-            (
-                string[] memory recordedNames,
-                address[] memory recordedAddresses
-            ) = addresses.getRecordedAddresses();
+            (string[] memory recordedNames, address[] memory recordedAddresses) = addresses.getRecordedAddresses();
             for (uint256 i = 0; i < recordedNames.length; i++) {
                 console.log("Deployed", recordedAddresses[i], recordedNames[i]);
             }

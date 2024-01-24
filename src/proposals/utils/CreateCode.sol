@@ -34,8 +34,7 @@ contract CreateCode is Test {
 
         /// sanity check that deployment succeeded
         require(
-            deployedAddress != address(0),
-            "Contract deployment failed, are you sure you passed a valid proposal path?"
+            deployedAddress != address(0), "Contract deployment failed, are you sure you passed a valid proposal path?"
         );
 
         return deployedAddress;

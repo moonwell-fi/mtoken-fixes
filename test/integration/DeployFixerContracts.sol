@@ -1,23 +1,23 @@
 pragma solidity 0.5.17;
 
 import "@protocol/ComptrollerFixer.sol";
-// import "@protocol/MErc20DelegateFixer.sol";
-// import "@protocol/MErc20DelegateMadFixer.sol";
 
+/// @notice deploy fixer contracts
 contract DeployFixerContracts {
     ComptrollerFixer comptroller;
-    // MErc20DelegateFixer merc20Delegate;
-    // MErc20DelegateMadFixer merc20DelegateMad;
 
-    function deployUnitrollerFixer() public {
-        comptroller = new ComptrollerFixer();
+    /// @notice contract creation event
+    event ContractCreated(address);
+
+    constructor() public {
+        _deployComptrollerFixer();
     }
 
-    // function deployMErc20DelegateFixer() public {
+    /// @notice deploy comptroller fixer contract
+    function _deployComptrollerFixer() private {
+        comptroller = new ComptrollerFixer();
+        require(address(comptroller) != address(0));
 
-    // }
-
-    // function deployMErc20DelegateMadFixer() public {
-
-    // }
+        emit ContractCreated(address(comptroller));
+    }
 }
