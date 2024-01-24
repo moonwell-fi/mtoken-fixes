@@ -7,7 +7,7 @@ contract MErc20DelegateMadFixer is MErc20Delegate {
     /// @notice user fixed event (user, liquidator, amount)
     event TokensSwept(address, uint256);
 
-    /// @notice sweep underlying nomad ERC-20 tokens
+    /// @notice sweep underlying tokens
     /// @param sweeper address of the sweeper
     function sweepAll(address sweeper) public {
         /// @dev checks
@@ -22,13 +22,13 @@ contract MErc20DelegateMadFixer is MErc20Delegate {
         token.transferFrom(address(this), sweeper, amount);
     }
 
-    /// @notice mUSDC.mad balance
+    /// @notice balance
     /// @return balance held by the contract
     function balance() public view returns (uint256) {
         return EIP20Interface(underlying).balanceOf(address(this));
     }
 
-    /// @notice mUSDC.mad balance for a given account
+    /// @notice balance for a given account
     /// @param account to get the balance of
     /// @return balance held by the account
     function balanceOf(address account) public view returns (uint256) {
