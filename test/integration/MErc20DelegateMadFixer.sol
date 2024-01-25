@@ -76,7 +76,9 @@ contract MErc20DelegateMadFixerIntegrationTest is Test {
         mwETHMadDelegator.sweepAll(addresses.getAddress("NOMAD_REALLOCATION_MULTISIG"));
 
         assertEq(mwETHMadDelegator.balance(), 0);
-        assertEq(mwETHMadDelegator.balanceOf(addresses.getAddress("NOMAD_REALLOCATION_MULTISIG")), 2269023468465447134524);
+        assertEq(
+            mwETHMadDelegator.balanceOf(addresses.getAddress("NOMAD_REALLOCATION_MULTISIG")), 2269023468465447134524
+        );
 
         vm.stopPrank();
     }

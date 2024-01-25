@@ -14,6 +14,9 @@ interface IMErc20Delegator {
     /// @notice get cash amount
     function getCash() external returns (uint256);
 
+    /// @notice get cash amount
+    function getCashPrior() external returns (uint256);
+
     /// @notice balance of the underlying token held by the contract
     function balance() external returns (uint256);
 

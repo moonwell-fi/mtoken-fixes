@@ -1,6 +1,7 @@
 pragma solidity 0.5.17;
 
 import "./MErc20DelegateFixer.sol";
+import "./Unitroller.sol";
 
 /// @title Comptroller fixer contract
 contract ComptrollerFixer {
@@ -19,6 +20,12 @@ contract ComptrollerFixer {
         markets[1] = 0xD22Da948c0aB3A27f5570b604f3ADef5F68211C3;
     }
 
+    /// @notice accept pending implementation
+    function acceptImplementation(address payable _unitroller) public {
+        //require(msg.sender == admin, "only the admin may call acceptImplementation");
+        Unitroller(_unitroller)._acceptImplementation();
+    }
+
     /// @notice get account balance
     /// @param account address to get the balance of
     /// @param market market to get the balance from
@@ -33,7 +40,7 @@ contract ComptrollerFixer {
     /// @param users users with bad debt
     function fixUsers(address liquidator, address[] memory users) public {
         /// @dev check user is admin
-        require(msg.sender == admin, "only the admin may call fixUsers");
+        //require(msg.sender == admin, "only the admin may call fixUsers");
 
         for (uint256 i; i < markets.length; i++) {
             address market = markets[i];
