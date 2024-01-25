@@ -83,6 +83,7 @@ contract mipm17 is GovernorBravoProposal {
 
         /// @dev mFRAX
         {
+            /// TODO replace the file with the full user list
             string memory debtorsRaw = string(abi.encodePacked(vm.readFile("./src/proposals/mips/mip-m17/mFRAX.json")));
             bytes memory debtorsParsed = vm.parseJson(debtorsRaw);
             Debtors[] memory debtors = abi.decode(debtorsParsed, (Debtors[]));
@@ -110,6 +111,7 @@ contract mipm17 is GovernorBravoProposal {
 
         /// @dev xcDOT
         {
+            /// TODO replace the file with the full user list
             string memory debtorsRaw = string(abi.encodePacked(vm.readFile("./src/proposals/mips/mip-m17/mxcDOT.json")));
             bytes memory debtorsParsed = vm.parseJson(debtorsRaw);
             Debtors[] memory debtors = abi.decode(debtorsParsed, (Debtors[]));
