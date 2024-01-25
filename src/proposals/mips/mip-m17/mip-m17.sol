@@ -44,7 +44,7 @@ contract mipm17 is GovernorBravoProposal {
                         "liquidateBorrow(address,uint256,address)",
                         mFRAXDebtors[i].addr,
                         balance,
-                        addresses.getAddress("MOONWELL_mFRAX")
+                        addresses.getAddress("FRAX")
                     ),
                     "Liquidate mFRAX"
                 );
@@ -70,7 +70,7 @@ contract mipm17 is GovernorBravoProposal {
                         "liquidateBorrow(address,uint256,address)",
                         mxcDOTDebtors[i].addr,
                         balance,
-                        addresses.getAddress("MOONWELL_mxcDOT")
+                        addresses.getAddress("xcDOT")
                     ),
                     "Liquidate mxcDOT"
                 );
