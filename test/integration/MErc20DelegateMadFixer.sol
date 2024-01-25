@@ -3,10 +3,11 @@ pragma solidity 0.8.19;
 import "@forge-std/Test.sol";
 import "@forge-std/console.sol";
 
-import {Addresses} from "@proposals/Addresses.sol";
-import {CreateCode} from "@proposals/utils/CreateCode.sol";
+import {CreateCode} from "@protocol/proposals/utils/CreateCode.sol";
 import {IMErc20Delegator} from "@protocol/Interfaces/IMErc20Delegator.sol";
 import {IMErc20DelegateMadFixer} from "@protocol/Interfaces/IMErc20DelegateMadFixer.sol";
+
+import {Addresses} from "@forge-proposal-simulator/addresses/Addresses.sol";
 
 contract MErc20DelegateMadFixerIntegrationTest is Test {
     CreateCode createCode;
@@ -27,7 +28,7 @@ contract MErc20DelegateMadFixerIntegrationTest is Test {
     address mwBTCMadDelegatorAddress = 0x24A9d8f1f350d59cB0368D3d52A77dB29c833D1D;
 
     function setUp() public {
-        addresses = new Addresses();
+        addresses = new Addresses("./addresses/addresses.json");
         createCode = new CreateCode();
 
         /// @dev load the bytecode for MErc20DelegateMadFixer.sol

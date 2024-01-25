@@ -11,6 +11,9 @@ interface IMErc20Delegator {
     /// @notice sweep all tokens to a given address
     function sweepAll(address) external;
 
+    /// @notice get cash amount
+    function getCash() external returns (uint256);
+
     /// @notice balance of the underlying token held by the contract
     function balance() external returns (uint256);
 

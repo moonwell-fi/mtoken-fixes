@@ -630,6 +630,16 @@
         "name": "MOONWELL_mwBTC"
     },
     {
+        "addr": "0x1C55649f73CDA2f72CEf3DD6C5CA3d49EFcF484C",
+        "chainId": 1284,
+        "name": "MOONWELL_mFRAX"
+    },
+    {
+        "addr": "0xD22Da948c0aB3A27f5570b604f3ADef5F68211C3",
+        "chainId": 1284,
+        "name": "MOONWELL_mxcDOT"
+    },
+    {
         "addr": "0x8f552a71efe5eefc207bf75485b356a0b3f01ec9",
         "chainId": 1284,
         "name": "madUSDC"

@@ -2,11 +2,12 @@ pragma solidity 0.8.19;
 
 import "@forge-std/Test.sol";
 
-import {Addresses} from "@proposals/Addresses.sol";
-import {CreateCode} from "@proposals/utils/CreateCode.sol";
+import {CreateCode} from "@protocol/proposals/utils/CreateCode.sol";
 import {IMErc20Delegator} from "@protocol/Interfaces/IMErc20Delegator.sol";
 import {IComptrollerFixer} from "@protocol/Interfaces/IComptrollerFixer.sol";
 import {IMErc20DelegateFixer} from "@protocol/Interfaces/IMErc20DelegateFixer.sol";
+
+import {Addresses} from "@forge-proposal-simulator/addresses/Addresses.sol";
 
 contract ComptrollerFixerIntegrationTest is Test {
     CreateCode createCode;
@@ -33,7 +34,7 @@ contract ComptrollerFixerIntegrationTest is Test {
     address liquidator;
 
     function setUp() public {
-        addresses = new Addresses();
+        addresses = new Addresses("./addresses/addresses.json");
         createCode = new CreateCode();
 
         /// @dev load the bytecode for ComptrollerFixer.sol
