@@ -3,7 +3,7 @@ pragma solidity 0.8.19;
 
 import "@forge-std/Test.sol";
 
-import {IMErc20Delegator} from "@protocol/interfaces/IMErc20Delegator.sol";
+import {IMErc20Delegator} from "@protocol/Interfaces/IMErc20Delegator.sol";
 
 import {Addresses} from "@forge-proposal-simulator/addresses/Addresses.sol";
 import {GovernorBravoProposal} from "@forge-proposal-simulator/proposals/GovernorBravoProposal.sol";
