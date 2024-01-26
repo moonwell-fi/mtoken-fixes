@@ -6,6 +6,7 @@ import "@forge-std/console.sol";
 import {PostProposalCheck} from "@tests/integration/PostProposalCheck.sol";
 
 import {IMErc20Delegator} from "@protocol/Interfaces/IMErc20Delegator.sol";
+import {IMErc20DelegateFixer} from "@protocol/Interfaces/IMErc20DelegateFixer.sol";
 
 contract MIPM17IntegrationTest is PostProposalCheck {
     /// @dev debtors list
@@ -48,6 +49,8 @@ contract MIPM17IntegrationTest is PostProposalCheck {
         for (uint256 i = 0; i < debtors.length; i++) {
             assertEq(mErc20Delegator.balanceOf(debtors[i].addr), 0);
         }
+
+        assertEq(mErc20Delegator.badDebt(), 357392405781480063721876);
     }
 
     function testBadmxcDOTDebtLiquidated() public {
@@ -59,5 +62,7 @@ contract MIPM17IntegrationTest is PostProposalCheck {
         for (uint256 i = 0; i < debtors.length; i++) {
             assertEq(mErc20Delegator.balanceOf(debtors[i].addr), 0);
         }
+
+        assertEq(mErc20Delegator.badDebt(), 252390068440489);
     }
 }
