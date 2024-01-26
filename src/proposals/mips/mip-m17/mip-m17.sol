@@ -12,7 +12,6 @@ import {GovernorBravoProposal} from "@forge-proposal-simulator/proposals/Governo
 
 contract mipm17 is GovernorBravoProposal {
     /// @dev addresses
-    address comptrollerFixerAddress;
     address mErc20DelegateFixerAddress;
     address mErc20DelegateMadFixerAddress;
 
@@ -33,9 +32,6 @@ contract mipm17 is GovernorBravoProposal {
 
     function _deploy(Addresses addresses, address) internal override {
         CreateCode createCode = new CreateCode();
-
-        bytes memory comptrollerFixerCode = createCode.getCode("ComptrollerFixer.sol");
-        comptrollerFixerAddress = createCode.deployCode(comptrollerFixerCode);
 
         bytes memory mErc20DelegateFixerCode = createCode.getCode("MErc20DelegateFixer.sol");
         mErc20DelegateFixerAddress = createCode.deployCode(mErc20DelegateFixerCode);
