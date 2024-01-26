@@ -5,6 +5,9 @@ interface IMErc20Delegator {
     /// @notice get the admin address
     function admin() external returns (address);
 
+    /// @notice get the badDebt
+    function badDebt() external returns (uint256);
+
     /// @notice get the underlying ERC20 address
     function underlying() external returns (address);
 

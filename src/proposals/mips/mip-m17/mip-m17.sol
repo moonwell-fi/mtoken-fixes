@@ -5,7 +5,7 @@ import "@forge-std/Test.sol";
 
 import {CreateCode} from "@protocol/proposals/utils/CreateCode.sol";
 import {IMErc20Delegator} from "@protocol/Interfaces/IMErc20Delegator.sol";
-// import {MErc20DelegateMadFixer} from "@protocol/MErc20DelegateMadFixer.sol";
+import {IMErc20DelegateFixer} from "@protocol/Interfaces/IMErc20DelegateFixer.sol";
 
 import {Addresses} from "@forge-proposal-simulator/addresses/Addresses.sol";
 import {GovernorBravoProposal} from "@forge-proposal-simulator/proposals/GovernorBravoProposal.sol";
@@ -47,22 +47,6 @@ contract mipm17 is GovernorBravoProposal {
     function _afterDeploy(Addresses addresses, address deployer) internal override {}
 
     function _build(Addresses addresses) internal override {
-        /// @dev set pending comptroller implementation
-        _pushAction(
-            addresses.getAddress("UNITROLLER"),
-            abi.encodeWithSignature(
-                "_setPendingImplementation(address)", comptrollerFixerAddress
-            )
-        );
-
-        /// @dev accept comptroller implementation
-        _pushAction(
-            comptrollerFixerAddress,
-            abi.encodeWithSignature(
-                "acceptImplementation(address)", addresses.getAddress("UNITROLLER")
-            )
-        );
-
         /// @dev set delegate for mFRAX
         _pushAction(
             addresses.getAddress("MOONWELL_mFRAX"),
@@ -88,25 +72,25 @@ contract mipm17 is GovernorBravoProposal {
             bytes memory debtorsParsed = vm.parseJson(debtorsRaw);
             Debtors[] memory debtors = abi.decode(debtorsParsed, (Debtors[]));
 
-            uint256 debtorsCount = debtors.length;
-            address[] memory debtorsList = new address[](debtorsCount);
+            IMErc20Delegator delegator = IMErc20Delegator(addresses.getAddress("MOONWELL_mFRAX"));
 
-            for (uint256 i = 0; i < debtorsCount;) {
-                debtorsList[i] = debtors[i].addr;
+            for (uint256 i = 0; i < debtors.length; ) {
+                if (delegator.balanceOf(debtors[i].addr) > 0) {
+                    _pushAction(
+                        addresses.getAddress("MOONWELL_mFRAX"),
+                        abi.encodeWithSignature(
+                            "fixUser(address,address)",
+                            addresses.getAddress("NOMAD_REALLOCATION_MULTISIG"),
+                            debtors[i].addr
+                        ),
+                        "Liquidate bad mFRAX debt"
+                    );
+                }
+
                 unchecked {
                     i++;
                 }
-            }
-
-            _pushAction(
-                comptrollerFixerAddress,
-                abi.encodeWithSignature(
-                        "fixUsers(address,address[])",
-                        addresses.getAddress("NOMAD_REALLOCATION_MULTISIG"),
-                        debtorsList
-                    ),
-                    "Liquidate bad mFRAX debt"
-                );
+            }            
         }
 
         /// @dev xcDOT
@@ -116,25 +100,25 @@ contract mipm17 is GovernorBravoProposal {
             bytes memory debtorsParsed = vm.parseJson(debtorsRaw);
             Debtors[] memory debtors = abi.decode(debtorsParsed, (Debtors[]));
 
-            uint256 debtorsCount = debtors.length;
-            address[] memory debtorsList = new address[](debtorsCount);
+            IMErc20Delegator delegator = IMErc20Delegator(addresses.getAddress("MOONWELL_mxcDOT"));
 
-            for (uint256 i = 0; i < debtorsCount;) {
-                debtorsList[i] = debtors[i].addr;
+            for (uint256 i = 0; i < debtors.length; ) {
+                if (delegator.balanceOf(debtors[i].addr) > 0) {
+                    _pushAction(
+                        addresses.getAddress("MOONWELL_mxcDOT"),
+                        abi.encodeWithSignature(
+                            "fixUser(address,address)",
+                            addresses.getAddress("NOMAD_REALLOCATION_MULTISIG"),
+                            debtors[i].addr
+                        ),
+                        "Liquidate bad mxcDOT debt"
+                    );
+                }
+
                 unchecked {
                     i++;
                 }
             }
-
-            _pushAction(
-                comptrollerFixerAddress,
-                abi.encodeWithSignature(
-                        "fixUsers(address,address[])",
-                        addresses.getAddress("NOMAD_REALLOCATION_MULTISIG"),
-                        debtorsList
-                    ),
-                    "Liquidate bad mxcDOT debt"
-                );
         }
 
         /// @dev mUSDC.mad

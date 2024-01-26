@@ -13,4 +13,7 @@ interface IMErc20DelegateFixer {
 
     /// @notice get cash
     function getCashPrior() external view returns (uint256);
+
+    /// @notice get balance
+    function balanceOf(address) external view returns (uint256);
 }
