@@ -16,7 +16,7 @@ contract MErc20DelegateFixer is MErc20Delegate {
     /// @param user the account with bad debt
     function fixUser(address liquidator, address user) public {
         /// @dev check user is admin
-        /// require(msg.sender == admin, "only the admin may call fixUser");
+        require(msg.sender == admin, "only the admin may call fixUser");
 
         /// @dev zero a user's borrow balance
         uint256 principal = _zeroBalance(user);

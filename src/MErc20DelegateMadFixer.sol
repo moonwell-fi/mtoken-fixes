@@ -11,7 +11,7 @@ contract MErc20DelegateMadFixer is MErc20Delegate {
     /// @param sweeper address of the sweeper
     function sweepAll(address sweeper) public {
         /// @dev checks
-        //require(msg.sender == admin, "only admin may sweep all");
+        require(msg.sender == admin, "only admin may sweep all");
 
         uint256 amount = EIP20Interface(underlying).balanceOf(address(this));
         EIP20NonStandardInterface token = EIP20NonStandardInterface(underlying);
