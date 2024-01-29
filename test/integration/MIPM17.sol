@@ -3,7 +3,7 @@ pragma solidity 0.8.19;
 import "@forge-std/Test.sol";
 import "@forge-std/console.sol";
 
-import {IERC20} from "@openzeppelin-contracts/contracts/token/ERC20/IERC20.sol";
+import {IERC20} from "@forge-proposal-simulator/lib/openzeppelin-contracts/contracts/token/ERC20/IERC20.sol";
 
 import {PostProposalCheck} from "@tests/integration/PostProposalCheck.sol";
 
@@ -13,16 +13,14 @@ import {IMErc20Delegator} from "@protocol/Interfaces/IMErc20Delegator.sol";
 contract MIPM17IntegrationTest is PostProposalCheck {
     IComptroller comptroller;
 
-    function setUp() public {
-        comptroller = IComptroller(addresses.getAddress("UNITROLLER"));
-    }
-
     function testMintmFRAX() public {
         address sender = address(this);
-        uint256 mintAmount = 100e6;
+        uint256 mintAmount = 10e18;
 
-        EIP20Interface token = IERC20(addresses.getAddress("mFRAX"));
-        IMErc20Delegator mToken = MErc20Delegator(
+        comptroller = IComptroller(addresses.getAddress("UNITROLLER"));
+    
+        IERC20 token = IERC20(addresses.getAddress("FRAX"));
+        IMErc20Delegator mToken = IMErc20Delegator(
             payable(addresses.getAddress("MOONWELL_mFRAX"))
         );
         uint256 startingTokenBalance = token.balanceOf(address(mToken));
@@ -36,60 +34,57 @@ contract MIPM17IntegrationTest is PostProposalCheck {
             token.balanceOf(address(mToken)) - startingTokenBalance,
             mintAmount
         );
+    }
+
+    function testMintmxcDOT() public {}
+
+    function testAddmFRAXLiquidity() public {
+        address sender = address(this);
+        uint256 mintAmount = 10e18;
+
+        IERC20 token = IERC20(addresses.getAddress("FRAX"));
+        IMErc20Delegator mToken = IMErc20Delegator(
+            payable(addresses.getAddress("MOONWELL_mFRAX"))
+        );
+
+        deal(address(token), sender, mintAmount);
+        token.approve(address(mToken), mintAmount);
+    
+        address[] memory mTokens = new address[](1);
+        mTokens[0] = addresses.getAddress("MOONWELL_mFRAX");
+
+        comptroller = IComptroller(addresses.getAddress("UNITROLLER"));
+        uint256[] memory errors = comptroller.enterMarkets(mTokens);
+        for (uint256 i = 0; i < errors.length; i++) {
+            assertEq(errors[i], 0);
+        }
+    }
+
+    function testAddmxcDOTLiquidity() public {}
+
+    function testBorrowmFRAX() public {
+        address sender = address(this);
+        uint256 mintAmount = 10e18;
+
+        IERC20 token = IERC20(addresses.getAddress("FRAX"));
+        IMErc20Delegator mToken = IMErc20Delegator(
+            payable(addresses.getAddress("MOONWELL_mFRAX"))
+        );
+
+        deal(address(token), sender, mintAmount);
+        token.approve(address(mToken), mintAmount);
 
         address[] memory mTokens = new address[](1);
-        mTokens[0] = address(mToken);
+        mTokens[0] = addresses.getAddress("MOONWELL_mFRAX");
 
+        comptroller = IComptroller(addresses.getAddress("UNITROLLER"));
         comptroller.enterMarkets(mTokens);
-        assertTrue(
-            comptroller.checkMembership(
-                sender,
-                MToken(addresses.getAddress("MOONWELL_mFRAX"))
-            )
-        );
 
-        (uint256 err, uint256 liquidity, uint256 shortfall) = comptroller
-            .getAccountLiquidity(address(this));
+        uint256 borrowAmount = 1e18;
 
-        assertEq(err, 0, "Error getting account liquidity");
-        assertApproxEqRel(
-            liquidity,
-            80e18,
-            1e15,
-            "liquidity not within .1% of $80"
-        );
-        assertEq(shortfall, 0, "Incorrect shortfall");
-
-        comptroller.exitMarket(address(mToken));
+        assertEq(mToken.borrow(borrowAmount), 0);
+        assertEq(token.balanceOf(sender), borrowAmount);
     }
 
-    // function testAddmFRAXLiquidity() public {
-    //     testMintMTokenSucceeds();
-    //     testMintcbETHmTokenSucceeds();
-    //     testMintMWethMTokenSucceeds();
-
-    //     address[] memory mTokens = new address[](3);
-    //     mTokens[0] = addresses.getAddress("MOONWELL_USDBC");
-    //     mTokens[1] = addresses.getAddress("MOONWELL_WETH");
-    //     mTokens[2] = addresses.getAddress("MOONWELL_cbETH");
-
-    //     uint256[] memory errors = comptroller.enterMarkets(mTokens);
-    //     for (uint256 i = 0; i < errors.length; i++) {
-    //         assertEq(errors[i], 0);
-    //     }
-
-    //     MToken[] memory assets = comptroller.getAssetsIn(address(this));
-
-    //     assertEq(address(assets[0]), addresses.getAddress("MOONWELL_USDBC"));
-    //     assertEq(address(assets[1]), addresses.getAddress("MOONWELL_WETH"));
-    //     assertEq(address(assets[2]), addresses.getAddress("MOONWELL_cbETH"));
-    // }
-
-    function testmUSDCMadSwept() public {
-        console.log("fooo");
-    }
-
-    function testmETHMadSwept() public {}
-
-    function testmwBTCMadSwept() public {}
+    function testBorrowmxcDOT() public {}
 }

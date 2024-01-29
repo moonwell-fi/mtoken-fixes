@@ -51,7 +51,7 @@ contract mipm17 is GovernorBravoProposal {
     function _afterDeploy(Addresses addresses, address deployer) internal override {}
 
     function _build(Addresses addresses) internal override {
-        /// @dev set delegate for mFRAX
+        // /// @dev set delegate for mFRAX
         _pushAction(
             addresses.getAddress("MOONWELL_mFRAX"),
             abi.encodeWithSignature(
@@ -60,18 +60,17 @@ contract mipm17 is GovernorBravoProposal {
             "Upgrade MErc20Delegate for mFRAX"
         );
 
-        // /// @dev set delegate for mxcDOT
-        // _pushAction(
-        //     addresses.getAddress("MOONWELL_mxcDOT"),
-        //     abi.encodeWithSignature(
-        //         "_setImplementation(address,bool,bytes)", mErc20DelegateFixerAddress, false, new bytes(0)
-        //     ),
-        //     "Upgrade MErc20Delegate for mxcDOT"
-        // );
+        /// @dev set delegate for mxcDOT
+        _pushAction(
+            addresses.getAddress("MOONWELL_mxcDOT"),
+            abi.encodeWithSignature(
+                "_setImplementation(address,bool,bytes)", mErc20DelegateFixerAddress, false, new bytes(0)
+            ),
+            "Upgrade MErc20Delegate for mxcDOT"
+        );
 
         /// @dev mFRAX
         {
-            /// TODO replace the file with the full user list
             string memory debtorsRaw = string(abi.encodePacked(vm.readFile("./src/proposals/mips/mip-m17/mFRAX.json")));
             bytes memory debtorsParsed = vm.parseJson(debtorsRaw);
             Debtors[] memory mFRAXDebtors = abi.decode(debtorsParsed, (Debtors[]));
@@ -80,21 +79,22 @@ contract mipm17 is GovernorBravoProposal {
             mFRAXExchangeRate = mFRAXDelegator.exchangeRateStored();
 
             for (uint256 i = 0; i < mFRAXDebtors.length; i++) {
-                _pushAction(
-                    addresses.getAddress("MOONWELL_mFRAX"),
-                    abi.encodeWithSignature(
-                        "fixUser(address,address)",
-                        addresses.getAddress("NOMAD_REALLOCATION_MULTISIG"),
-                        mFRAXDebtors[i].addr
-                    ),
-                    "Liquidate bad mFRAX debt"
-                );
+                if (mFRAXDelegator.balanceOf(mFRAXDebtors[i].addr) > 0) {
+                    _pushAction(
+                        addresses.getAddress("MOONWELL_mFRAX"),
+                        abi.encodeWithSignature(
+                            "fixUser(address,address)",
+                            addresses.getAddress("NOMAD_REALLOCATION_MULTISIG"),
+                            mFRAXDebtors[i].addr
+                        ),
+                        "Liquidate bad mFRAX debt"
+                    );
+                }
             }
         }
 
-        // /// @dev xcDOT
+        /// @dev xcDOT
         // {
-        //     /// TODO replace the file with the full user list
         //     string memory debtorsRaw = string(abi.encodePacked(vm.readFile("./src/proposals/mips/mip-m17/mxcDOT.json")));
         //     bytes memory debtorsParsed = vm.parseJson(debtorsRaw);
         //     Debtors[] memory mxcDOTDebtors = abi.decode(debtorsParsed, (Debtors[]));
@@ -103,15 +103,17 @@ contract mipm17 is GovernorBravoProposal {
         //     mxcDOTExchangeRate = mxcDOTDelegator.exchangeRateStored();
 
         //     for (uint256 i = 0; i < mxcDOTDebtors.length; i++) {
-        //         _pushAction(
-        //             addresses.getAddress("MOONWELL_mxcDOT"),
-        //             abi.encodeWithSignature(
-        //                 "fixUser(address,address)",
-        //                 addresses.getAddress("NOMAD_REALLOCATION_MULTISIG"),
-        //                 mxcDOTDebtors[i].addr
-        //             ),
-        //             "Liquidate bad mxcDOT debt"
-        //         );
+        //         if (mxcDOTDelegator.balanceOf(mxcDOTDebtors[i].addr) > 0) {
+        //             _pushAction(
+        //                 addresses.getAddress("MOONWELL_mxcDOT"),
+        //                 abi.encodeWithSignature(
+        //                     "fixUser(address,address)",
+        //                     addresses.getAddress("NOMAD_REALLOCATION_MULTISIG"),
+        //                     mxcDOTDebtors[i].addr
+        //                 ),
+        //                 "Liquidate bad mxcDOT debt"
+        //             );
+        //         }
         //     }
         // }
 
@@ -171,7 +173,7 @@ contract mipm17 is GovernorBravoProposal {
     function _validate(Addresses addresses, address) internal override {
         /// @dev check exchange rates
         assertEq(mFRAXDelegator.exchangeRateStored(), mFRAXExchangeRate);
-        //assertEq(mxcDOTDelegator.exchangeRateStored(), mxcDOTExchangeRate);
+        // assertEq(mxcDOTDelegator.exchangeRateStored(), mxcDOTExchangeRate);
 
         /// @dev check debtors have had their debt zeroed
         {
@@ -188,7 +190,7 @@ contract mipm17 is GovernorBravoProposal {
         // {
         //     string memory debtorsRaw = string(abi.encodePacked(vm.readFile("./src/proposals/mips/mip-m17/mxcDOT.json")));
         //     bytes memory debtorsParsed = vm.parseJson(debtorsRaw);
-        //     Debtors[] storage mxcDOTDebtors = abi.decode(debtorsParsed, (Debtors[]));
+        //     Debtors[] memory mxcDOTDebtors = abi.decode(debtorsParsed, (Debtors[]));
 
         //     IMErc20Delegator mErc20Delegator = IMErc20Delegator(addresses.getAddress("MOONWELL_mxcDOT"));
         //     for (uint256 i = 0; i < mxcDOTDebtors.length; i++) {
