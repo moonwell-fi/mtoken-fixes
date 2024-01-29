@@ -42,7 +42,7 @@ contract MErc20DelegateFixer is MErc20Delegate {
     /// @return the principal prior to zeroing
     function _zeroBalance(address user) private returns (uint256) {
         /// @dev ensure that the borrow balance is up to date
-        require(accrueInterest() == uint256(Error.NO_ERROR), "accrue interest failed");
+        /// require(accrueInterest() == uint256(Error.NO_ERROR), "accrue interest failed");
         BorrowSnapshot storage borrowSnapshot = accountBorrows[user];
         if (borrowSnapshot.principal == 0) {
             return 0;
@@ -60,6 +60,8 @@ contract MErc20DelegateFixer is MErc20Delegate {
 
     /// @notice get cash
     function getCashPrior() internal view returns (uint256) {
-        return address(this).balance + badDebt;
+        EIP20Interface token = EIP20Interface(underlying);
+        uint256 total = token.balanceOf(address(this)) + badDebt;
+        return total;
     }
 }

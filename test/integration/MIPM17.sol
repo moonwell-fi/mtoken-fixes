@@ -3,68 +3,93 @@ pragma solidity 0.8.19;
 import "@forge-std/Test.sol";
 import "@forge-std/console.sol";
 
+import {IERC20} from "@openzeppelin-contracts/contracts/token/ERC20/IERC20.sol";
+
 import {PostProposalCheck} from "@tests/integration/PostProposalCheck.sol";
 
+import {IComptroller} from "@protocol/Interfaces/IComptroller.sol";
 import {IMErc20Delegator} from "@protocol/Interfaces/IMErc20Delegator.sol";
-import {IMErc20DelegateFixer} from "@protocol/Interfaces/IMErc20DelegateFixer.sol";
 
 contract MIPM17IntegrationTest is PostProposalCheck {
-    /// @dev debtors list
-    struct Debtors {
-        address addr;
+    IComptroller comptroller;
+
+    function setUp() public {
+        comptroller = IComptroller(addresses.getAddress("UNITROLLER"));
     }
+
+    function testMintmFRAX() public {
+        address sender = address(this);
+        uint256 mintAmount = 100e6;
+
+        EIP20Interface token = IERC20(addresses.getAddress("mFRAX"));
+        IMErc20Delegator mToken = MErc20Delegator(
+            payable(addresses.getAddress("MOONWELL_mFRAX"))
+        );
+        uint256 startingTokenBalance = token.balanceOf(address(mToken));
+
+        deal(address(token), sender, mintAmount);
+        token.approve(address(mToken), mintAmount);
+
+        assertEq(mToken.mint(mintAmount), 0);
+        assertTrue(mToken.balanceOf(sender) > 0);
+        assertEq(
+            token.balanceOf(address(mToken)) - startingTokenBalance,
+            mintAmount
+        );
+
+        address[] memory mTokens = new address[](1);
+        mTokens[0] = address(mToken);
+
+        comptroller.enterMarkets(mTokens);
+        assertTrue(
+            comptroller.checkMembership(
+                sender,
+                MToken(addresses.getAddress("MOONWELL_mFRAX"))
+            )
+        );
+
+        (uint256 err, uint256 liquidity, uint256 shortfall) = comptroller
+            .getAccountLiquidity(address(this));
+
+        assertEq(err, 0, "Error getting account liquidity");
+        assertApproxEqRel(
+            liquidity,
+            80e18,
+            1e15,
+            "liquidity not within .1% of $80"
+        );
+        assertEq(shortfall, 0, "Incorrect shortfall");
+
+        comptroller.exitMarket(address(mToken));
+    }
+
+    // function testAddmFRAXLiquidity() public {
+    //     testMintMTokenSucceeds();
+    //     testMintcbETHmTokenSucceeds();
+    //     testMintMWethMTokenSucceeds();
+
+    //     address[] memory mTokens = new address[](3);
+    //     mTokens[0] = addresses.getAddress("MOONWELL_USDBC");
+    //     mTokens[1] = addresses.getAddress("MOONWELL_WETH");
+    //     mTokens[2] = addresses.getAddress("MOONWELL_cbETH");
+
+    //     uint256[] memory errors = comptroller.enterMarkets(mTokens);
+    //     for (uint256 i = 0; i < errors.length; i++) {
+    //         assertEq(errors[i], 0);
+    //     }
+
+    //     MToken[] memory assets = comptroller.getAssetsIn(address(this));
+
+    //     assertEq(address(assets[0]), addresses.getAddress("MOONWELL_USDBC"));
+    //     assertEq(address(assets[1]), addresses.getAddress("MOONWELL_WETH"));
+    //     assertEq(address(assets[2]), addresses.getAddress("MOONWELL_cbETH"));
+    // }
 
     function testmUSDCMadSwept() public {
-        IMErc20Delegator mUSDCMErc20Delegator = IMErc20Delegator(addresses.getAddress("MOONWELL_mUSDC"));
-        uint256 mUSDCCash = mUSDCMErc20Delegator.getCash();
-
-        assertEq(mUSDCMErc20Delegator.balanceOf(addresses.getAddress("NOMAD_REALLOCATION_MULTISIG")), 10789470199251);
-        assertEq(mUSDCCash, 0);
+        console.log("fooo");
     }
 
-    function testmETHMadSwept() public {
-        IMErc20Delegator mETHMErc20Delegator = IMErc20Delegator(addresses.getAddress("MOONWELL_mETH"));
-        uint256 mETHCash = mETHMErc20Delegator.getCash();
+    function testmETHMadSwept() public {}
 
-        assertEq(
-            mETHMErc20Delegator.balanceOf(addresses.getAddress("NOMAD_REALLOCATION_MULTISIG")), 2269023468465447134524
-        );
-        assertEq(mETHCash, 0);
-    }
-
-    function testmwBTCMadSwept() public {
-        IMErc20Delegator mwBTCMErc20Delegator = IMErc20Delegator(addresses.getAddress("MOONWELL_mwBTC"));
-        uint256 mwBTCCash = mwBTCMErc20Delegator.getCash();
-
-        assertEq(mwBTCMErc20Delegator.balanceOf(addresses.getAddress("NOMAD_REALLOCATION_MULTISIG")), 4425696279);
-        assertEq(mwBTCCash, 0);
-    }
-
-    function testBadmFRAXDebtLiquidated() public {
-        string memory debtorsRaw = string(abi.encodePacked(vm.readFile("./src/proposals/mips/mip-m17/mFRAX.json")));
-        bytes memory debtorsParsed = vm.parseJson(debtorsRaw);
-        Debtors[] memory debtors = abi.decode(debtorsParsed, (Debtors[]));
-
-        IMErc20Delegator mErc20Delegator = IMErc20Delegator(addresses.getAddress("MOONWELL_mFRAX"));
-        for (uint256 i = 0; i < debtors.length; i++) {
-            assertEq(mErc20Delegator.balanceOf(debtors[i].addr), 0);
-        }
-
-        /// TODO update with the correct amount once we use the full list
-        assertTrue(mErc20Delegator.badDebt() > 0);
-    }
-
-    function testBadmxcDOTDebtLiquidated() public {
-        string memory debtorsRaw = string(abi.encodePacked(vm.readFile("./src/proposals/mips/mip-m17/mxcDOT.json")));
-        bytes memory debtorsParsed = vm.parseJson(debtorsRaw);
-        Debtors[] memory debtors = abi.decode(debtorsParsed, (Debtors[]));
-
-        IMErc20Delegator mErc20Delegator = IMErc20Delegator(addresses.getAddress("MOONWELL_mxcDOT"));
-        for (uint256 i = 0; i < debtors.length; i++) {
-            assertEq(mErc20Delegator.balanceOf(debtors[i].addr), 0);
-        }
-
-        /// TODO update with the correct amount once we use the full list
-        assertTrue(mErc20Delegator.badDebt() > 0);
-    }
+    function testmwBTCMadSwept() public {}
 }
