@@ -55,4 +55,10 @@ interface IMErc20Delegator {
 
     /// @notice redeem underlying token
     function redeem(uint) external returns (uint);
+
+    /// @notice repay what was borrowed
+    function repayBorrow(uint) external returns (uint);
+
+    /// @notice repay what was borrowed on behalf of another user
+    function repayBorrowBehalf(address, uint) external returns (uint);
 }

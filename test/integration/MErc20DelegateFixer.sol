@@ -96,9 +96,12 @@ contract MErc20DelegateFixerIntegrationTest is Test {
         uint256 startingTokenBalance = token.balanceOf(address(mTokenDelegator));
 
         deal(address(token), sender, mintAmount);
-        token.approve(address(mTokenDelegator), mintAmount);
 
+        vm.startPrank(sender);
+        token.approve(address(mTokenDelegator), mintAmount);
         assertEq(mTokenDelegator.mint(mintAmount), 0);
+        vm.stopPrank();
+
         assertTrue(mTokenDelegator.balanceOf(sender) > 0);
         assertEq(token.balanceOf(address(mTokenDelegator)) - startingTokenBalance, mintAmount);
     }
@@ -107,9 +110,12 @@ contract MErc20DelegateFixerIntegrationTest is Test {
         uint256 startingTokenBalance = _token.balanceOf(address(mTokenDelegator));
 
         deal(address(_token), sender, mintAmount);
-        _token.approve(address(mTokenDelegator), mintAmount);
 
+        vm.startPrank(sender);
+        _token.approve(address(mTokenDelegator), mintAmount);
         assertEq(mTokenDelegator.mint(mintAmount), 0);
+        vm.stopPrank();
+
         assertTrue(mTokenDelegator.balanceOf(sender) > 0);
         assertEq(token.balanceOf(address(mTokenDelegator)) - startingTokenBalance, mintAmount);
     }
@@ -322,13 +328,91 @@ contract MErc20DelegateFixerIntegrationTest is Test {
         /// TODO check reward speed
     }
 
-    function testBorrowMaxAmount() public {}
+    function testBorrowMaxAmount() public {
+        
+    }
 
-    function testBorrowCapExceeded() public {}
+    function testBorrowCapExceeded() public {
 
-    function testRepay() public {}
+    }
 
-    function testRepayMoreThanBorrowed() public {}
+    function testRepay() public {
+        address sender = address(this);
+        uint256 mintAmount = 10e18;
+        uint256 borrowAmount = 50e6;
+
+        _mintAndDeal(sender, mintAmount);
+        _enterMarkets();
+
+        assertTrue(comptroller.checkMembership(sender, IMToken(addresses.getAddress("MOONWELL_mFRAX"))));
+
+        _liquidityShortfall(sender);
+
+        /// @dev unpause market
+        _unpauseMarket(IMToken(addresses.getAddress("MOONWELL_mFRAX")));
+
+        assertEq(mTokenDelegator.borrow(borrowAmount), 0);
+        assertEq(token.balanceOf(sender), borrowAmount);
+
+        token.approve(address(mTokenDelegator), borrowAmount);
+        assertEq(mTokenDelegator.repayBorrow(borrowAmount), 0);
+        assertEq(token.balanceOf(sender), 0);
+    }
+
+    function testRepayOnBehalf() public {
+        address sender = address(this);
+        uint256 mintAmount = 10e18;
+        uint256 borrowAmount = 50e6;
+
+        _mintAndDeal(sender, mintAmount);
+        _enterMarkets();
+
+        assertTrue(comptroller.checkMembership(sender, IMToken(addresses.getAddress("MOONWELL_mFRAX"))));
+
+        _liquidityShortfall(sender);
+
+        /// @dev unpause market
+        _unpauseMarket(IMToken(addresses.getAddress("MOONWELL_mFRAX")));
+
+        assertEq(mTokenDelegator.borrow(borrowAmount), 0);
+        assertEq(token.balanceOf(sender), borrowAmount);
+
+        address payer = address(1);
+
+        vm.startPrank(payer);
+        deal(address(token), payer, mintAmount);
+        token.approve(address(mTokenDelegator), borrowAmount);
+        assertEq(mTokenDelegator.repayBorrowBehalf(address(this), borrowAmount), 0);
+        vm.stopPrank();
+    }
+
+    function testRepayMoreThanBorrowed() public {
+        address sender = address(this);
+        uint256 mintAmount = 10e18;
+        uint256 borrowAmount = 50e6;
+
+        _mintAndDeal(sender, mintAmount);
+        _enterMarkets();
+
+        assertTrue(comptroller.checkMembership(sender, IMToken(addresses.getAddress("MOONWELL_mFRAX"))));
+
+        _liquidityShortfall(sender);
+
+        /// @dev unpause market
+        _unpauseMarket(IMToken(addresses.getAddress("MOONWELL_mFRAX")));
+
+        assertEq(mTokenDelegator.borrow(borrowAmount), 0);
+        assertEq(token.balanceOf(sender), borrowAmount);
+
+        address payer = address(1);
+
+        vm.startPrank(payer);
+        deal(address(token), payer, mintAmount);
+        token.approve(address(mTokenDelegator), borrowAmount + 1_000e6);
+        vm.expectRevert("REPAY_BORROW_NEW_ACCOUNT_BORROW_BALANCE_CALCULATION_FAILED");
+        mTokenDelegator.repayBorrowBehalf(address(this), borrowAmount + 1_000e6);
+        vm.stopPrank();
+    }
 
     function testRedeem() public {
         address sender = address(this);
@@ -340,7 +424,17 @@ contract MErc20DelegateFixerIntegrationTest is Test {
         assertEq(mTokenDelegator.redeem(balance), 0);
     }
 
-    function testRedeemOfMoreTokens() public {
+    function testRedeemZeroTokens() public {
+        address sender = address(this);
+        uint256 mintAmount = 10e18;
+
+        _mintAndDeal(sender, mintAmount);
+
+        uint256 balance = mTokenDelegator.balanceOf(sender);
+        assertEq(mTokenDelegator.redeem(0), 0);
+    }
+
+    function testRedeemMoreTokens() public {
         address sender = address(this);
         uint256 mintAmount = 10e18;
 
@@ -349,8 +443,6 @@ contract MErc20DelegateFixerIntegrationTest is Test {
         uint256 balance = mTokenDelegator.balanceOf(sender);
         assertEq(mTokenDelegator.redeem(balance + 1_000e6), 9);
     }
-
-    function testWithdrawOtherAssets() public {}
 
     function testClaimRewards() public {}
 
