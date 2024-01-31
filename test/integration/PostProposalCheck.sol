@@ -25,5 +25,5 @@ contract PostProposalCheck is Test {
         suite.testProposals();
 
         addresses = suite.addresses();
-    }
+    } 
 }

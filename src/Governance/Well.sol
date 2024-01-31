@@ -329,7 +329,9 @@ contract Well {
 
     function getChainId() internal pure returns (uint) {
         uint256 chainId;
-        assembly { chainId := chainid() }
+        // assembly {
+        //     chainId := chainid()
+        // }
         return chainId;
     }
 }

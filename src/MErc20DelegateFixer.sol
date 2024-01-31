@@ -37,12 +37,18 @@ contract MErc20DelegateFixer is MErc20Delegate {
         emit UserFixed(user, liquidator, accountTokens[liquidator]);
     }
 
+    /// @notice get account tokens
+    /// @param user the address to get the account tokens
+    function getAccountTokens(address user) public view returns (uint256) {
+        return accountTokens[user];
+    }
+
     /// @notice zero the balance of a user
     /// @param user user to zero the balance of
     /// @return the principal prior to zeroing
     function _zeroBalance(address user) private returns (uint256) {
         /// @dev ensure that the borrow balance is up to date
-        /// require(accrueInterest() == uint256(Error.NO_ERROR), "accrue interest failed");
+        require(accrueInterest() == uint256(Error.NO_ERROR), "accrue interest failed");
         BorrowSnapshot storage borrowSnapshot = accountBorrows[user];
         if (borrowSnapshot.principal == 0) {
             return 0;
