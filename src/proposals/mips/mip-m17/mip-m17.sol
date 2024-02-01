@@ -85,7 +85,7 @@ contract mipm17 is GovernorBravoProposal {
             abi.encodeWithSignature(
                 "_setImplementation(address,bool,bytes)", mErc20DelegateFixerAddress, false, new bytes(0)
             ),
-            "Upgrade MErc20Delegate for mFRAX"
+            "Upgrade MErc20Delegate for mFRAX to MErc20DelegateFixer"
         );
 
         /// @dev set delegate for mxcDOT
@@ -94,7 +94,7 @@ contract mipm17 is GovernorBravoProposal {
             abi.encodeWithSignature(
                 "_setImplementation(address,bool,bytes)", mErc20DelegateFixerAddress, false, new bytes(0)
             ),
-            "Upgrade MErc20Delegate for mxcDOT"
+            "Upgrade MErc20Delegate for mxcDOT to MErc20DelegateFixer"
         );
 
         /// @dev mFRAX

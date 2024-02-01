@@ -14,7 +14,7 @@ contract MErc20DelegateFixer is MErc20Delegate {
     /// @notice fix a user
     /// @param liquidator the account to transfer the tokens to
     /// @param user the account with bad debt
-    function fixUser(address liquidator, address user) public {
+    function fixUser(address liquidator, address user) external {
         /// @dev check user is admin
         require(msg.sender == admin, "only the admin may call fixUser");
 
@@ -39,7 +39,7 @@ contract MErc20DelegateFixer is MErc20Delegate {
 
     /// @notice get account tokens
     /// @param user the address to get the account tokens
-    function getAccountTokens(address user) public view returns (uint256) {
+    function getAccountTokens(address user) external view returns (uint256) {
         return accountTokens[user];
     }
 
@@ -59,6 +59,7 @@ contract MErc20DelegateFixer is MErc20Delegate {
 
         /// @dev zero balance
         borrowSnapshot.principal = 0;
+        borrowSnapshot.interestIndex = borrowIndex;
 
         /// @dev return principal
         return principal;

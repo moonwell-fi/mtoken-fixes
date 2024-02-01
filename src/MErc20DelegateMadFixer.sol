@@ -9,7 +9,7 @@ contract MErc20DelegateMadFixer is MErc20Delegate {
 
     /// @notice sweep underlying tokens
     /// @param sweeper address of the sweeper
-    function sweepAll(address sweeper) public {
+    function sweepAll(address sweeper) external {
         /// @dev checks
         require(msg.sender == admin, "only admin may sweep all");
 
