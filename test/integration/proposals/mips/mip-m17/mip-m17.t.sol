@@ -5,7 +5,7 @@ import "@forge-std/console.sol";
 
 import {IERC20} from "@forge-proposal-simulator/lib/openzeppelin-contracts/contracts/token/ERC20/IERC20.sol";
 
-import {PostProposalCheck} from "@tests/integration/PostProposalCheck.sol";
+import {PostProposalCheck} from "@tests/integration/PostProposalCheck.t.sol";
 
 import {IComptroller} from "@protocol/Interfaces/IComptroller.sol";
 import {IMErc20Delegator} from "@protocol/Interfaces/IMErc20Delegator.sol";

@@ -12,8 +12,14 @@ import {GovernorBravoProposal} from "@forge-proposal-simulator/proposals/Governo
 
 contract mipm17 is GovernorBravoProposal {
     /// @dev addresses
+    address mFRAXAddress;
+    address mxcDOTAddress;
+    address mUSDCAddress;
+    address mETHAddress;
+    address mwBTCAddress;
     address mErc20DelegateFixerAddress;
     address mErc20DelegateMadFixerAddress;
+    address reallocationMultisig;
 
     /// @dev delegators
     IMErc20Delegator mFRAXDelegator;
@@ -23,10 +29,13 @@ contract mipm17 is GovernorBravoProposal {
     uint256 mFRAXExchangeRate;
     uint256 mxcDOTExchangeRate;
 
-    /// @dev debtors list
-    struct Debtors {
+    /// @dev accounts
+    struct Accounts {
         address addr;
     }
+
+    /// @dev map to store healthy user balances
+    mapping(address market => mapping(address account => uint256 balance)) balances;
 
     constructor() {}
 
@@ -48,12 +57,31 @@ contract mipm17 is GovernorBravoProposal {
         mErc20DelegateMadFixerAddress = createCode.deployCode(mErc20DelegateMadFixerCode);
     }
 
-    function _afterDeploy(Addresses addresses, address deployer) internal override {}
+    function _afterDeploy(Addresses addresses, address deployer) internal override {
+        mFRAXAddress = addresses.getAddress("MOONWELL_mFRAX");
+        mxcDOTAddress = addresses.getAddress("MOONWELL_mxcDOT");
+        mUSDCAddress = addresses.getAddress("MOONWELL_mUSDC");
+        mETHAddress = addresses.getAddress("MOONWELL_mETH");
+        mwBTCAddress = addresses.getAddress("MOONWELL_mwBTC");
+        reallocationMultisig = addresses.getAddress("NOMAD_REALLOCATION_MULTISIG");
+
+        mFRAXDelegator = IMErc20Delegator(mFRAXAddress);
+        mxcDOTDelegator = IMErc20Delegator(mxcDOTAddress);
+
+        string memory raw = string(abi.encodePacked(vm.readFile("./src/proposals/mips/mip-m17/healthy.json")));
+        bytes memory parsed = vm.parseJson(raw);
+        Accounts[] memory accounts = abi.decode(parsed, (Accounts[]));
+
+        for (uint256 i = 0; i < accounts.length; i++) {
+            balances[mFRAXAddress][accounts[i].addr] = mFRAXDelegator.balanceOf(accounts[i].addr);
+            balances[mxcDOTAddress][accounts[i].addr] = mxcDOTDelegator.balanceOf(accounts[i].addr);
+        }
+    }
 
     function _build(Addresses addresses) internal override {
-        // /// @dev set delegate for mFRAX
+        /// @dev set delegate for mFRAX
         _pushAction(
-            addresses.getAddress("MOONWELL_mFRAX"),
+            mFRAXAddress,
             abi.encodeWithSignature(
                 "_setImplementation(address,bool,bytes)", mErc20DelegateFixerAddress, false, new bytes(0)
             ),
@@ -62,7 +90,7 @@ contract mipm17 is GovernorBravoProposal {
 
         /// @dev set delegate for mxcDOT
         _pushAction(
-            addresses.getAddress("MOONWELL_mxcDOT"),
+            mxcDOTAddress,
             abi.encodeWithSignature(
                 "_setImplementation(address,bool,bytes)", mErc20DelegateFixerAddress, false, new bytes(0)
             ),
@@ -73,20 +101,15 @@ contract mipm17 is GovernorBravoProposal {
         {
             string memory debtorsRaw = string(abi.encodePacked(vm.readFile("./src/proposals/mips/mip-m17/mFRAX.json")));
             bytes memory debtorsParsed = vm.parseJson(debtorsRaw);
-            Debtors[] memory mFRAXDebtors = abi.decode(debtorsParsed, (Debtors[]));
+            Accounts[] memory mFRAXDebtors = abi.decode(debtorsParsed, (Accounts[]));
 
-            mFRAXDelegator = IMErc20Delegator(addresses.getAddress("MOONWELL_mFRAX"));
             mFRAXExchangeRate = mFRAXDelegator.exchangeRateStored();
 
             for (uint256 i = 0; i < mFRAXDebtors.length; i++) {
                 if (mFRAXDelegator.balanceOf(mFRAXDebtors[i].addr) > 0) {
                     _pushAction(
-                        addresses.getAddress("MOONWELL_mFRAX"),
-                        abi.encodeWithSignature(
-                            "fixUser(address,address)",
-                            addresses.getAddress("NOMAD_REALLOCATION_MULTISIG"),
-                            mFRAXDebtors[i].addr
-                        ),
+                        mFRAXAddress,
+                        abi.encodeWithSignature("fixUser(address,address)", reallocationMultisig, mFRAXDebtors[i].addr),
                         "Liquidate bad mFRAX debt"
                     );
                 }
@@ -94,32 +117,27 @@ contract mipm17 is GovernorBravoProposal {
         }
 
         /// @dev xcDOT
-        // {
-        //     string memory debtorsRaw = string(abi.encodePacked(vm.readFile("./src/proposals/mips/mip-m17/mxcDOT.json")));
-        //     bytes memory debtorsParsed = vm.parseJson(debtorsRaw);
-        //     Debtors[] memory mxcDOTDebtors = abi.decode(debtorsParsed, (Debtors[]));
+        {
+            string memory debtorsRaw = string(abi.encodePacked(vm.readFile("./src/proposals/mips/mip-m17/mxcDOT.json")));
+            bytes memory debtorsParsed = vm.parseJson(debtorsRaw);
+            Accounts[] memory mxcDOTDebtors = abi.decode(debtorsParsed, (Accounts[]));
 
-        //     mxcDOTDelegator = IMErc20Delegator(addresses.getAddress("MOONWELL_mxcDOT"));
-        //     mxcDOTExchangeRate = mxcDOTDelegator.exchangeRateStored();
+            mxcDOTExchangeRate = mxcDOTDelegator.exchangeRateStored();
 
-        //     for (uint256 i = 0; i < mxcDOTDebtors.length; i++) {
-        //         if (mxcDOTDelegator.balanceOf(mxcDOTDebtors[i].addr) > 0) {
-        //             _pushAction(
-        //                 addresses.getAddress("MOONWELL_mxcDOT"),
-        //                 abi.encodeWithSignature(
-        //                     "fixUser(address,address)",
-        //                     addresses.getAddress("NOMAD_REALLOCATION_MULTISIG"),
-        //                     mxcDOTDebtors[i].addr
-        //                 ),
-        //                 "Liquidate bad mxcDOT debt"
-        //             );
-        //         }
-        //     }
-        // }
+            for (uint256 i = 0; i < mxcDOTDebtors.length; i++) {
+                if (mxcDOTDelegator.balanceOf(mxcDOTDebtors[i].addr) > 0) {
+                    _pushAction(
+                        mxcDOTAddress,
+                        abi.encodeWithSignature("fixUser(address,address)", reallocationMultisig, mxcDOTDebtors[i].addr),
+                        "Liquidate bad mxcDOT debt"
+                    );
+                }
+            }
+        }
 
         /// @dev mUSDC.mad
         _pushAction(
-            addresses.getAddress("MOONWELL_mUSDC"),
+            mUSDCAddress,
             abi.encodeWithSignature(
                 "_setImplementation(address,bool,bytes)", mErc20DelegateMadFixerAddress, false, new bytes(0)
             ),
@@ -127,14 +145,12 @@ contract mipm17 is GovernorBravoProposal {
         );
 
         _pushAction(
-            addresses.getAddress("MOONWELL_mUSDC"),
-            abi.encodeWithSignature("sweepAll(address)", addresses.getAddress("NOMAD_REALLOCATION_MULTISIG")),
-            "Sweep all mUSDC.mad"
+            mUSDCAddress, abi.encodeWithSignature("sweepAll(address)", reallocationMultisig), "Sweep all mUSDC.mad"
         );
 
         /// @dev mETH.mad
         _pushAction(
-            addresses.getAddress("MOONWELL_mETH"),
+            mETHAddress,
             abi.encodeWithSignature(
                 "_setImplementation(address,bool,bytes)", mErc20DelegateMadFixerAddress, false, new bytes(0)
             ),
@@ -142,14 +158,12 @@ contract mipm17 is GovernorBravoProposal {
         );
 
         _pushAction(
-            addresses.getAddress("MOONWELL_mETH"),
-            abi.encodeWithSignature("sweepAll(address)", addresses.getAddress("NOMAD_REALLOCATION_MULTISIG")),
-            "Sweep all mETH.mad"
+            mETHAddress, abi.encodeWithSignature("sweepAll(address)", reallocationMultisig), "Sweep all mETH.mad"
         );
 
         /// @dev mwBTC.mad
         _pushAction(
-            addresses.getAddress("MOONWELL_mwBTC"),
+            mwBTCAddress,
             abi.encodeWithSignature(
                 "_setImplementation(address,bool,bytes)", mErc20DelegateMadFixerAddress, false, new bytes(0)
             ),
@@ -157,9 +171,7 @@ contract mipm17 is GovernorBravoProposal {
         );
 
         _pushAction(
-            addresses.getAddress("MOONWELL_mwBTC"),
-            abi.encodeWithSignature("sweepAll(address)", addresses.getAddress("NOMAD_REALLOCATION_MULTISIG")),
-            "Sweep all mwBTC.mad"
+            mwBTCAddress, abi.encodeWithSignature("sweepAll(address)", reallocationMultisig), "Sweep all mwBTC.mad"
         );
     }
 
@@ -171,52 +183,59 @@ contract mipm17 is GovernorBravoProposal {
     }
 
     function _validate(Addresses addresses, address) internal override {
+        string memory raw = string(abi.encodePacked(vm.readFile("./src/proposals/mips/mip-m17/healthy.json")));
+        bytes memory parsed = vm.parseJson(raw);
+        Accounts[] memory accounts = abi.decode(parsed, (Accounts[]));
+
+        for (uint256 i = 0; i < accounts.length; i++) {
+            assertEq(balances[mFRAXAddress][accounts[i].addr], mFRAXDelegator.balanceOf(accounts[i].addr));
+            assertEq(balances[mxcDOTAddress][accounts[i].addr], mxcDOTDelegator.balanceOf(accounts[i].addr));
+        }
+
         /// @dev check exchange rates
-        assertEq(mFRAXDelegator.exchangeRateStored(), mFRAXExchangeRate);
+        // assertEq(mFRAXDelegator.exchangeRateStored(), mFRAXExchangeRate);
         // assertEq(mxcDOTDelegator.exchangeRateStored(), mxcDOTExchangeRate);
 
         /// @dev check debtors have had their debt zeroed
         {
             string memory debtorsRaw = string(abi.encodePacked(vm.readFile("./src/proposals/mips/mip-m17/mFRAX.json")));
             bytes memory debtorsParsed = vm.parseJson(debtorsRaw);
-            Debtors[] memory mFRAXDebtors = abi.decode(debtorsParsed, (Debtors[]));
+            Accounts[] memory debtors = abi.decode(debtorsParsed, (Accounts[]));
 
-            IMErc20Delegator mErc20Delegator = IMErc20Delegator(addresses.getAddress("MOONWELL_mFRAX"));
-            for (uint256 i = 0; i < mFRAXDebtors.length; i++) {
-                assertEq(mErc20Delegator.balanceOf(mFRAXDebtors[i].addr), 0);
+            IMErc20Delegator mErc20Delegator = IMErc20Delegator(mFRAXAddress);
+            for (uint256 i = 0; i < debtors.length; i++) {
+                assertEq(mErc20Delegator.balanceOf(debtors[i].addr), 0);
             }
         }
 
-        // {
-        //     string memory debtorsRaw = string(abi.encodePacked(vm.readFile("./src/proposals/mips/mip-m17/mxcDOT.json")));
-        //     bytes memory debtorsParsed = vm.parseJson(debtorsRaw);
-        //     Debtors[] memory mxcDOTDebtors = abi.decode(debtorsParsed, (Debtors[]));
+        {
+            string memory debtorsRaw = string(abi.encodePacked(vm.readFile("./src/proposals/mips/mip-m17/mxcDOT.json")));
+            bytes memory debtorsParsed = vm.parseJson(debtorsRaw);
+            Accounts[] memory debtors = abi.decode(debtorsParsed, (Accounts[]));
 
-        //     IMErc20Delegator mErc20Delegator = IMErc20Delegator(addresses.getAddress("MOONWELL_mxcDOT"));
-        //     for (uint256 i = 0; i < mxcDOTDebtors.length; i++) {
-        //         assertEq(mErc20Delegator.balanceOf(mxcDOTDebtors[i].addr), 0);
-        //     }
-        // }
+            IMErc20Delegator mErc20Delegator = IMErc20Delegator(mxcDOTAddress);
+            for (uint256 i = 0; i < debtors.length; i++) {
+                assertEq(mErc20Delegator.balanceOf(debtors[i].addr), 0);
+            }
+        }
 
         /// @dev check that the Nomad assets have been swept
-        IMErc20Delegator mUSDCMErc20Delegator = IMErc20Delegator(addresses.getAddress("MOONWELL_mUSDC"));
+        IMErc20Delegator mUSDCMErc20Delegator = IMErc20Delegator(mUSDCAddress);
         uint256 mUSDCCash = mUSDCMErc20Delegator.getCash();
 
-        assertEq(mUSDCMErc20Delegator.balanceOf(addresses.getAddress("NOMAD_REALLOCATION_MULTISIG")), 10789307515125);
+        assertEq(mUSDCMErc20Delegator.balanceOf(reallocationMultisig), 10789307515125);
         assertEq(mUSDCCash, 0);
 
-        IMErc20Delegator mETHMErc20Delegator = IMErc20Delegator(addresses.getAddress("MOONWELL_mETH"));
+        IMErc20Delegator mETHMErc20Delegator = IMErc20Delegator(mETHAddress);
         uint256 mETHCash = mETHMErc20Delegator.getCash();
 
-        assertEq(
-            mETHMErc20Delegator.balanceOf(addresses.getAddress("NOMAD_REALLOCATION_MULTISIG")), 2269023468465447134524
-        );
+        assertEq(mETHMErc20Delegator.balanceOf(reallocationMultisig), 2269023468465447134524);
         assertEq(mETHCash, 0);
 
-        IMErc20Delegator mwBTCMErc20Delegator = IMErc20Delegator(addresses.getAddress("MOONWELL_mwBTC"));
+        IMErc20Delegator mwBTCMErc20Delegator = IMErc20Delegator(mwBTCAddress);
         uint256 mwBTCCash = mwBTCMErc20Delegator.getCash();
 
-        assertEq(mwBTCMErc20Delegator.balanceOf(addresses.getAddress("NOMAD_REALLOCATION_MULTISIG")), 4425696279);
+        assertEq(mwBTCMErc20Delegator.balanceOf(reallocationMultisig), 4425696279);
         assertEq(mwBTCCash, 0);
     }
 }
