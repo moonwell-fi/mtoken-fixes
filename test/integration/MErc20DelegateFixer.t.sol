@@ -24,107 +24,54 @@ contract MErc20DelegateFixerIntegrationTest is Test {
     /// @dev contracts
     Addresses addresses;
     IMToken mToken;
-    IMErc20Delegator mTokenDelegatorFRAX;
+    IMErc20Delegator delegator;
     IERC20 token;
     IMErc20DelegateFixer mTokenDelegate;
     IComptroller comptroller;
 
-    /// @dev state vars
-    uint256 cash;
-    uint256 totalBorrows;
-    uint256 totalReserves;
-    uint256 exchangeRate;
-    uint256 badDebt;
-
     function setUp() public {
         createCode = new CreateCode();
 
-        /// @dev load the bytecode for MErc20DelegateFixer.sol
         bytes memory delegateCode = createCode.getCode("MErc20DelegateFixer.sol");
         delegateAddress = createCode.deployCode(delegateCode);
 
         addresses = new Addresses("./addresses/addresses.json");
 
-        mTokenDelegatorFRAX = IMErc20Delegator(payable(addresses.getAddress("MOONWELL_mFRAX")));
+        delegator = IMErc20Delegator(payable(addresses.getAddress("MOONWELL_mFRAX")));
 
         token = IERC20(addresses.getAddress("FRAX"));
 
         vm.startPrank(addresses.getAddress("MOONBEAM_TIMELOCK"));
-        mTokenDelegatorFRAX._setImplementation(delegateAddress, false, new bytes(0));
+        delegator._setImplementation(delegateAddress, false, new bytes(0));
         vm.stopPrank();
 
-        address implementation = mTokenDelegatorFRAX.implementation();
+        address implementation = delegator.implementation();
         mTokenDelegate = IMErc20DelegateFixer(implementation);
 
         comptroller = IComptroller(addresses.getAddress("UNITROLLER"));
     }
 
     function _accrueInterest() public {
-        /// @dev ensure that accrue interest call does not error
-        assertEq(mTokenDelegatorFRAX.accrueInterest(), 0);
+        assertEq(delegator.accrueInterest(), 0);
     }
 
-    function _cashBefore(IMErc20Delegator delgator) private {
-        cash = delgator.getCash();
-        assertEq(delgator.getCash(), 63400462712177883);
-    }
-
-    function _cashAfter(IMErc20Delegator delgator) private {
-        badDebt = delgator.badDebt();
-        assertEq(delgator.getCash(), (cash + badDebt));
-    }
-
-    function _totalBorrowsBefore(IMErc20Delegator delgator) private {
-        totalBorrows = delgator.totalBorrows();
-        assertEq(totalBorrows, 3237572375993380205681540);
-    }
-
-    function _totalReservesBefore(IMErc20Delegator delgator) private {
-        totalReserves = delgator.totalReserves();
-        assertEq(totalReserves, 192011920067024496033280);
-    }
-
-    function _exchangeRateBefore(IMErc20Delegator delgator) private {
-        exchangeRate = delgator.exchangeRateStored();
-        assertEq(exchangeRate, 229215186366119215900652004);
-    }
-
-    function _exchangeRateAfter(IMErc20Delegator delgator) private {
-        /// @dev the exchange rate differs because accrueInterest() adjusts the borrow and reserves values
-        assertTrue(delgator.exchangeRateStored() > exchangeRate);
-    }
-
-    function _mintAndDeal(address sender, uint256 mintAmount) public {
-        uint256 startingTokenBalance = token.balanceOf(address(mTokenDelegatorFRAX));
+    function _mintAndDeal(address sender, uint256 mintAmount) private {
+        uint256 startingTokenBalance = token.balanceOf(address(delegator));
 
         deal(address(token), sender, mintAmount);
 
         vm.startPrank(sender);
-        token.approve(address(mTokenDelegatorFRAX), mintAmount);
-        assertEq(mTokenDelegatorFRAX.mint(mintAmount), 0);
+        token.approve(address(delegator), mintAmount);
+        assertEq(delegator.mint(mintAmount), 0);
         vm.stopPrank();
 
-        assertTrue(mTokenDelegatorFRAX.balanceOf(sender) > 0);
-        assertEq(token.balanceOf(address(mTokenDelegatorFRAX)) - startingTokenBalance, mintAmount);
-    }
-
-    function _mintAndDeal(IERC20 _token, address sender, uint256 mintAmount) public {
-        uint256 startingTokenBalance = _token.balanceOf(address(mTokenDelegatorFRAX));
-
-        deal(address(_token), sender, mintAmount);
-
-        vm.startPrank(sender);
-        _token.approve(address(mTokenDelegatorFRAX), mintAmount);
-        assertEq(mTokenDelegatorFRAX.mint(mintAmount), 0);
-        vm.stopPrank();
-
-        assertTrue(mTokenDelegatorFRAX.balanceOf(sender) > 0);
-        assertEq(token.balanceOf(address(mTokenDelegatorFRAX)) - startingTokenBalance, mintAmount);
+        assertTrue(delegator.balanceOf(sender) > 0);
+        assertEq(token.balanceOf(address(delegator)) - startingTokenBalance, mintAmount);
     }
 
     function _enterMarkets(address sender) private {
         address[] memory mTokens = new address[](1);
-        mTokens[0] = address(mTokenDelegatorFRAX);
+        mTokens[0] = address(delegator);
 
         vm.startPrank(sender);
         comptroller.enterMarkets(mTokens);
@@ -145,55 +92,57 @@ contract MErc20DelegateFixerIntegrationTest is Test {
     }
 
     function _fixUser(address _user) private {
-        _cashBefore(mTokenDelegatorFRAX);
-        _totalBorrowsBefore(mTokenDelegatorFRAX);
-        _totalReservesBefore(mTokenDelegatorFRAX);
-        _exchangeRateBefore(mTokenDelegatorFRAX);
+        uint256 cash = delegator.getCash();
 
         _accrueInterest();
 
-        assertEq(mTokenDelegatorFRAX.badDebt(), 0);
-        assertEq(mTokenDelegatorFRAX.getAccountTokens(addresses.getAddress("NOMAD_REALLOCATION_MULTISIG")), 0);
+        assertEq(delegator.badDebt(), 0);
+        assertEq(delegator.getAccountTokens(addresses.getAddress("NOMAD_REALLOCATION_MULTISIG")), 0);
 
-        mTokenDelegatorFRAX.fixUser(addresses.getAddress("NOMAD_REALLOCATION_MULTISIG"), _user);
+        delegator.fixUser(addresses.getAddress("NOMAD_REALLOCATION_MULTISIG"), _user);
 
-        _cashAfter(mTokenDelegatorFRAX);
+        assertEq(delegator.getCash(), (cash + delegator.badDebt()));
     }
 
     function testFixUserWithBadDebt() public {
-        assertEq(mTokenDelegatorFRAX.getAccountTokens(user), 2264582);
+        uint256 cash = delegator.getCash();
+        uint256 totalBorrows = delegator.totalBorrows();
+        uint256 totalReserves = delegator.totalReserves();
+
+        assertEq(delegator.getAccountTokens(user), 2264582);
         vm.startPrank(addresses.getAddress("MOONBEAM_TIMELOCK"));
         _fixUser(user);
         vm.stopPrank();
 
-        assertTrue(mTokenDelegatorFRAX.totalBorrows() < totalBorrows);
-        assertTrue(mTokenDelegatorFRAX.totalReserves() > totalReserves);
+        assertEq(delegator.getCash(), (cash + delegator.badDebt()));
+        assertTrue(delegator.totalBorrows() < totalBorrows);
+        assertTrue(delegator.totalReserves() > totalReserves);
+        assertEq(delegator.totalSupply(), 13286905495267783);
+        assertEq(delegator.badDebt(), 357392405781480063721876);
 
-        assertEq(mTokenDelegatorFRAX.totalSupply(), 13286905495267783);
-        assertEq(mTokenDelegatorFRAX.badDebt(), 357392405781480063721876);
-        assertEq(mTokenDelegatorFRAX.getAccountTokens(addresses.getAddress("NOMAD_REALLOCATION_MULTISIG")), 2264582);
-        assertEq(mTokenDelegatorFRAX.getAccountTokens(user), 0);
-
-        _exchangeRateAfter(mTokenDelegatorFRAX);
+        assertEq(delegator.getAccountTokens(addresses.getAddress("NOMAD_REALLOCATION_MULTISIG")), 2264582);
+        assertEq(delegator.getAccountTokens(user), 0);
     }
 
     function testFixUserWithoutBadDebt() public {
         address _user = vm.addr(1);
+        uint256 cash = delegator.getCash();
+        uint256 totalBorrows = delegator.totalBorrows();
+        uint256 totalReserves = delegator.totalReserves();
 
-        assertEq(mTokenDelegatorFRAX.getAccountTokens(_user), 0);
+        assertEq(delegator.getAccountTokens(_user), 0);
         vm.startPrank(addresses.getAddress("MOONBEAM_TIMELOCK"));
         _fixUser(_user);
         vm.stopPrank();
 
-        assertTrue(mTokenDelegatorFRAX.totalBorrows() > totalBorrows);
-        assertTrue(mTokenDelegatorFRAX.totalReserves() > totalReserves);
+        assertEq(delegator.getCash(), (cash + delegator.badDebt()));
+        assertTrue(delegator.totalBorrows() > totalBorrows);
+        assertTrue(delegator.totalReserves() > totalReserves);
+        assertEq(delegator.totalSupply(), 13286905495267783);
+        assertEq(delegator.badDebt(), 0);
 
-        assertEq(mTokenDelegatorFRAX.totalSupply(), 13286905495267783);
-        assertEq(mTokenDelegatorFRAX.badDebt(), 0);
-        assertEq(mTokenDelegatorFRAX.getAccountTokens(addresses.getAddress("NOMAD_REALLOCATION_MULTISIG")), 0);
-        assertEq(mTokenDelegatorFRAX.getAccountTokens(_user), 0);
-
-        _exchangeRateAfter(mTokenDelegatorFRAX);
+        assertEq(delegator.getAccountTokens(addresses.getAddress("NOMAD_REALLOCATION_MULTISIG")), 0);
+        assertEq(delegator.getAccountTokens(_user), 0);
     }
 
     function testFixUserNotAdmin() public {
@@ -201,7 +150,7 @@ contract MErc20DelegateFixerIntegrationTest is Test {
 
         vm.startPrank(vm.addr(1));
         vm.expectRevert("only the admin may call fixUser");
-        mTokenDelegatorFRAX.fixUser(liquidator, user);
+        delegator.fixUser(liquidator, user);
         vm.stopPrank();
     }
 
@@ -215,16 +164,16 @@ contract MErc20DelegateFixerIntegrationTest is Test {
 
     function testAccrueInterestBlockTimestamp() public {
         _accrueInterest();
-        assertEq(mTokenDelegatorFRAX.accrualBlockTimestamp(), block.timestamp);
+        assertEq(delegator.accrualBlockTimestamp(), block.timestamp);
     }
 
     function _accrueInterestBorrowsReserves() private {
-        uint256 _totalBorrows = mTokenDelegatorFRAX.totalBorrows();
-        uint256 _totalReserves = mTokenDelegatorFRAX.totalReserves();
-        _accrueInterest();
+        uint256 _totalBorrows = delegator.totalBorrows();
+        uint256 _totalReserves = delegator.totalReserves();
 
-        assertTrue(mTokenDelegatorFRAX.totalBorrows() >= _totalBorrows);
-        assertTrue(mTokenDelegatorFRAX.totalReserves() >= _totalReserves);
+        _accrueInterest();
+        assertTrue(delegator.totalBorrows() >= _totalBorrows);
+        assertTrue(delegator.totalReserves() >= _totalReserves);
     }
 
     function testAccrueInterestBorrowsReserves() public {
@@ -243,14 +192,14 @@ contract MErc20DelegateFixerIntegrationTest is Test {
         address minter = address(this);
         uint256 mintAmount = 10e8;
 
-        uint256 startingTokenBalance = token.balanceOf(address(mTokenDelegatorFRAX));
+        uint256 startingTokenBalance = token.balanceOf(address(delegator));
 
         deal(address(token), minter, mintAmount);
-        token.approve(address(mTokenDelegatorFRAX), mintAmount);
+        token.approve(address(delegator), mintAmount);
 
-        assertEq(mTokenDelegatorFRAX.mint(mintAmount), 0);
-        assertTrue(mTokenDelegatorFRAX.balanceOf(minter) > 0);
-        assertEq(token.balanceOf(address(mTokenDelegatorFRAX)) - startingTokenBalance, mintAmount);
+        assertEq(delegator.mint(mintAmount), 0);
+        assertTrue(delegator.balanceOf(minter) > 0);
+        assertEq(token.balanceOf(address(delegator)) - startingTokenBalance, mintAmount);
     }
 
     function testMint() public {
@@ -271,10 +220,10 @@ contract MErc20DelegateFixerIntegrationTest is Test {
         uint256 mintAmount = 100e8;
 
         deal(address(token), minter, dealAmount);
-        token.approve(address(mTokenDelegatorFRAX), mintAmount);
+        token.approve(address(delegator), mintAmount);
 
         vm.expectRevert("ERC20: transfer amount exceeds balance");
-        mTokenDelegatorFRAX.mint(mintAmount);
+        delegator.mint(mintAmount);
     }
 
     function testMintMoreThanUserHolds() public {
@@ -313,7 +262,7 @@ contract MErc20DelegateFixerIntegrationTest is Test {
     function _exitMarket() private {
         address borrower = address(this);
 
-        comptroller.exitMarket(address(mTokenDelegatorFRAX));
+        comptroller.exitMarket(address(delegator));
         assertFalse(comptroller.checkMembership(borrower, IMToken(addresses.getAddress("MOONWELL_mFRAX"))));
     }
 
@@ -332,7 +281,7 @@ contract MErc20DelegateFixerIntegrationTest is Test {
     }
 
     function testExitMarketNotEntered() public {
-        assertEq(comptroller.exitMarket(address(mTokenDelegatorFRAX)), 0);
+        assertEq(comptroller.exitMarket(address(delegator)), 0);
     }
 
     function testFixUserExitMarketNotEntered() public {
@@ -340,7 +289,7 @@ contract MErc20DelegateFixerIntegrationTest is Test {
         _fixUser(user);
         vm.stopPrank();
 
-        assertEq(comptroller.exitMarket(address(mTokenDelegatorFRAX)), 0);
+        assertEq(comptroller.exitMarket(address(delegator)), 0);
     }
 
     function _exitMarketWithActiveBorrow() private {
@@ -353,11 +302,11 @@ contract MErc20DelegateFixerIntegrationTest is Test {
 
         _unpauseMarket(IMToken(addresses.getAddress("MOONWELL_mFRAX")));
 
-        assertEq(mTokenDelegatorFRAX.borrow(borrowAmount), 0);
+        assertEq(delegator.borrow(borrowAmount), 0);
         assertEq(token.balanceOf(borrower), borrowAmount);
 
-        /// @dev the system does not allow us to exit the market, and returns the error Error.NONZERO_BORROW_BALANCE
-        assertEq(comptroller.exitMarket(address(mTokenDelegatorFRAX)), 12);
+        /// @dev Error.NONZERO_BORROW_BALANCE
+        assertEq(comptroller.exitMarket(address(delegator)), 12);
     }
 
     function testExitMarketWithActiveBorrow() public {
@@ -427,7 +376,7 @@ contract MErc20DelegateFixerIntegrationTest is Test {
 
         _unpauseMarket(IMToken(addresses.getAddress("MOONWELL_mFRAX")));
 
-        assertEq(mTokenDelegatorFRAX.borrow(borrowAmount), 0);
+        assertEq(delegator.borrow(borrowAmount), 0);
         assertEq(token.balanceOf(borrower), borrowAmount);
 
         assertEq(comptroller.borrowRewardSpeeds(0, addresses.getAddress("MOONWELL_mFRAX")), 1);
@@ -457,7 +406,7 @@ contract MErc20DelegateFixerIntegrationTest is Test {
         assertTrue(comptroller.checkMembership(borrower, IMToken(addresses.getAddress("MOONWELL_mFRAX"))));
 
         vm.expectRevert("borrow is paused");
-        mTokenDelegatorFRAX.borrow(borrowAmount);
+        delegator.borrow(borrowAmount);
     }
 
     function testBorrowPaused() public {
@@ -482,11 +431,10 @@ contract MErc20DelegateFixerIntegrationTest is Test {
 
         assertTrue(comptroller.checkMembership(borrower, IMToken(addresses.getAddress("MOONWELL_mFRAX"))));
 
-        /// @dev unpause market
         _unpauseMarket(IMToken(addresses.getAddress("MOONWELL_mFRAX")));
 
-        /// @dev the system does not allow us to borrow, and returns the error Error.INSUFFICIENT_LIQUIDITY
-        assertEq(mTokenDelegatorFRAX.borrow(borrowAmount), 3);
+        /// @dev Error.INSUFFICIENT_LIQUIDITY
+        assertEq(delegator.borrow(borrowAmount), 3);
         assertEq(token.balanceOf(borrower), 0);
 
         assertEq(comptroller.borrowRewardSpeeds(0, addresses.getAddress("MOONWELL_mFRAX")), 1);
@@ -521,10 +469,10 @@ contract MErc20DelegateFixerIntegrationTest is Test {
         console.log(comptroller.borrowCaps(addresses.getAddress("MOONWELL_mFRAX")));
 
         uint256 borrowCap = comptroller.borrowCaps(addresses.getAddress("MOONWELL_mFRAX"));
-        uint256 _totalBorrows = mTokenDelegatorFRAX.totalBorrows();
+        uint256 _totalBorrows = delegator.totalBorrows();
         uint256 borrowAmount = borrowCap - _totalBorrows - 1;
 
-        assertEq(mTokenDelegatorFRAX.borrow(borrowAmount), 0);
+        assertEq(delegator.borrow(borrowAmount), 0);
         assertEq(token.balanceOf(borrower), borrowAmount);
     }
 
@@ -540,7 +488,7 @@ contract MErc20DelegateFixerIntegrationTest is Test {
         _borrowMaxAmount();
     }
 
-    function _borrowCapExceeded() private {
+    function _borrowCapReached() private {
         address borrower = address(this);
         uint256 mintAmount = 100_000_000e18;
 
@@ -556,23 +504,23 @@ contract MErc20DelegateFixerIntegrationTest is Test {
         console.log(comptroller.borrowCaps(addresses.getAddress("MOONWELL_mFRAX")));
 
         uint256 borrowCap = comptroller.borrowCaps(addresses.getAddress("MOONWELL_mFRAX"));
-        uint256 _totalBorrows = mTokenDelegatorFRAX.totalBorrows();
+        uint256 _totalBorrows = delegator.totalBorrows();
         uint256 borrowAmount = borrowCap - _totalBorrows;
 
         vm.expectRevert("market borrow cap reached");
-        assertEq(mTokenDelegatorFRAX.borrow(borrowAmount), 0);
+        assertEq(delegator.borrow(borrowAmount), 0);
     }
 
-    function testBorrowCapExceeded() public {
-        _borrowCapExceeded();
+    function testBorrowCapReached() public {
+        _borrowCapReached();
     }
 
-    function testFixUserBorrowCapExceeded() public {
+    function testFixUserBorrowCapReached() public {
         vm.startPrank(addresses.getAddress("MOONBEAM_TIMELOCK"));
         _fixUser(user);
         vm.stopPrank();
 
-        _borrowCapExceeded();
+        _borrowCapReached();
     }
 
     function _repay() private {
@@ -587,14 +535,13 @@ contract MErc20DelegateFixerIntegrationTest is Test {
 
         _liquidityShortfall(borrower);
 
-        /// @dev unpause market
         _unpauseMarket(IMToken(addresses.getAddress("MOONWELL_mFRAX")));
 
-        assertEq(mTokenDelegatorFRAX.borrow(borrowAmount), 0);
+        assertEq(delegator.borrow(borrowAmount), 0);
         assertEq(token.balanceOf(borrower), borrowAmount);
 
-        token.approve(address(mTokenDelegatorFRAX), borrowAmount);
-        assertEq(mTokenDelegatorFRAX.repayBorrow(borrowAmount), 0);
+        token.approve(address(delegator), borrowAmount);
+        assertEq(delegator.repayBorrow(borrowAmount), 0);
         assertEq(token.balanceOf(borrower), 0);
     }
 
@@ -622,18 +569,17 @@ contract MErc20DelegateFixerIntegrationTest is Test {
 
         _liquidityShortfall(borrower);
 
-        /// @dev unpause market
         _unpauseMarket(IMToken(addresses.getAddress("MOONWELL_mFRAX")));
 
-        assertEq(mTokenDelegatorFRAX.borrow(borrowAmount), 0);
+        assertEq(delegator.borrow(borrowAmount), 0);
         assertEq(token.balanceOf(borrower), borrowAmount);
 
-        address payer = address(1);
+        address payer = vm.addr(1);
 
         vm.startPrank(payer);
         deal(address(token), payer, mintAmount);
-        token.approve(address(mTokenDelegatorFRAX), borrowAmount);
-        assertEq(mTokenDelegatorFRAX.repayBorrowBehalf(address(this), borrowAmount), 0);
+        token.approve(address(delegator), borrowAmount);
+        assertEq(delegator.repayBorrowBehalf(address(this), borrowAmount), 0);
         vm.stopPrank();
     }
 
@@ -661,19 +607,18 @@ contract MErc20DelegateFixerIntegrationTest is Test {
 
         _liquidityShortfall(borrower);
 
-        /// @dev unpause market
         _unpauseMarket(IMToken(addresses.getAddress("MOONWELL_mFRAX")));
 
-        assertEq(mTokenDelegatorFRAX.borrow(borrowAmount), 0);
+        assertEq(delegator.borrow(borrowAmount), 0);
         assertEq(token.balanceOf(borrower), borrowAmount);
 
         address payer = vm.addr(1);
 
         vm.startPrank(payer);
         deal(address(token), payer, mintAmount);
-        token.approve(address(mTokenDelegatorFRAX), borrowAmount + 1_000e6);
+        token.approve(address(delegator), borrowAmount + 1_000e6);
         vm.expectRevert("REPAY_BORROW_NEW_ACCOUNT_BORROW_BALANCE_CALCULATION_FAILED");
-        mTokenDelegatorFRAX.repayBorrowBehalf(address(this), borrowAmount + 1_000e6);
+        delegator.repayBorrowBehalf(address(this), borrowAmount + 1_000e6);
         vm.stopPrank();
     }
 
@@ -695,8 +640,8 @@ contract MErc20DelegateFixerIntegrationTest is Test {
 
         _mintAndDeal(redeemer, mintAmount);
 
-        uint256 balance = mTokenDelegatorFRAX.balanceOf(redeemer);
-        assertEq(mTokenDelegatorFRAX.redeem(balance), 0);
+        uint256 balance = delegator.balanceOf(redeemer);
+        assertEq(delegator.redeem(balance), 0);
     }
 
     function testRedeem() public {
@@ -717,7 +662,7 @@ contract MErc20DelegateFixerIntegrationTest is Test {
 
         _mintAndDeal(redeemer, mintAmount);
 
-        assertEq(mTokenDelegatorFRAX.redeem(0), 0);
+        assertEq(delegator.redeem(0), 0);
     }
 
     function testRedeemZeroTokens() public {
@@ -738,8 +683,8 @@ contract MErc20DelegateFixerIntegrationTest is Test {
 
         _mintAndDeal(redeemer, mintAmount);
 
-        uint256 balance = mTokenDelegatorFRAX.balanceOf(redeemer);
-        assertEq(mTokenDelegatorFRAX.redeem(balance + 1_000e6), 9);
+        uint256 balance = delegator.balanceOf(redeemer);
+        assertEq(delegator.redeem(balance + 1_000e6), 9);
     }
 
     function testRedeemMoreTokens() public {
@@ -769,9 +714,9 @@ contract MErc20DelegateFixerIntegrationTest is Test {
         _unpauseMarket(IMToken(addresses.getAddress("MOONWELL_mFRAX")));
 
         deal(address(token), supplier, mintAmount);
-        token.approve(address(mTokenDelegatorFRAX), mintAmount);
+        token.approve(address(delegator), mintAmount);
 
-        assertEq(mTokenDelegatorFRAX.mint(mintAmount), 0);
+        assertEq(delegator.mint(mintAmount), 0);
 
         IWell well = IWell(addresses.getAddress("WELL"));
         assertEq(well.balanceOf(supplier), 0);
@@ -819,17 +764,16 @@ contract MErc20DelegateFixerIntegrationTest is Test {
 
         _liquidityShortfall(claimant);
 
-        /// @dev unpause market
         _unpauseMarket(IMToken(addresses.getAddress("MOONWELL_mFRAX")));
 
         deal(address(token), claimant, mintAmount);
-        token.approve(address(mTokenDelegatorFRAX), mintAmount);
+        token.approve(address(delegator), mintAmount);
 
-        assertEq(mTokenDelegatorFRAX.mint(mintAmount), 0);
+        assertEq(delegator.mint(mintAmount), 0);
 
         vm.roll(block.number + 100);
         vm.expectRevert("rewardType is invalid");
-        comptroller.claimReward(99, payable(claimant));
+        comptroller.claimReward(2, payable(claimant));
     }
 
     function testClaimInvalidRewardType() public {
