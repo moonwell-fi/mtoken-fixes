@@ -45,7 +45,7 @@ contract MIPM17IntegrationTest is PostProposalCheck {
     /// @dev addresses
     address multisig;
 
-    function setUp() override public {
+    function setUp() public override {
         /// @dev necessary to obtain borrows/reserves/ex.rate/supply before calling the parent setup
         Addresses _addresses = new Addresses("./addresses/addresses.json");
 
@@ -134,7 +134,8 @@ contract MIPM17IntegrationTest is PostProposalCheck {
         token.approve(address(fraxDelegator), mintAmount);
 
         assertEq(fraxDelegator.mint(mintAmount), 0);
-        (,uint256 mintedAmount) = divScalarByExpTruncate(mintAmount, Exp({mantissa: fraxDelegator.exchangeRateStored()}));
+        (, uint256 mintedAmount) =
+            divScalarByExpTruncate(mintAmount, Exp({mantissa: fraxDelegator.exchangeRateStored()}));
         assertEq(fraxDelegator.balanceOf(minter), mintedAmount);
         assertEq(token.balanceOf(address(fraxDelegator)) - startingTokenBalance, mintAmount);
     }
@@ -260,7 +261,8 @@ contract MIPM17IntegrationTest is PostProposalCheck {
         token.approve(address(fraxDelegator), mintAmount);
         assertEq(fraxDelegator.mint(mintAmount), 0);
 
-        (,uint256 mintedAmount) = divScalarByExpTruncate(mintAmount, Exp({mantissa: fraxDelegator.exchangeRateStored()}));
+        (, uint256 mintedAmount) =
+            divScalarByExpTruncate(mintAmount, Exp({mantissa: fraxDelegator.exchangeRateStored()}));
         assertEq(fraxDelegator.balanceOf(borrower), mintedAmount);
         assertEq(token.balanceOf(address(fraxDelegator)) - startingTokenBalance, mintAmount);
 
@@ -287,7 +289,8 @@ contract MIPM17IntegrationTest is PostProposalCheck {
         token.approve(address(fraxDelegator), mintAmount);
         assertEq(fraxDelegator.mint(mintAmount), 0);
 
-        (,uint256 mintedAmount) = divScalarByExpTruncate(mintAmount, Exp({mantissa: fraxDelegator.exchangeRateStored()}));
+        (, uint256 mintedAmount) =
+            divScalarByExpTruncate(mintAmount, Exp({mantissa: fraxDelegator.exchangeRateStored()}));
         assertEq(fraxDelegator.balanceOf(borrower), mintedAmount);
         assertEq(token.balanceOf(address(fraxDelegator)) - startingTokenBalance, mintAmount);
 
@@ -327,11 +330,12 @@ contract MIPM17IntegrationTest is PostProposalCheck {
         testMintEnterMarket();
         testLiquidityShortfall();
         testUnpauseMarket();
-        
+
         address borrower = address(this);
         uint256 mintAmount = 10e18;
         uint256 borrowAmount = 50e6;
         uint256 _totalFRAXBorrows = fraxDelegator.totalBorrows();
+        uint256 balance = fraxDelegator.balanceOf(address(this));
 
         assertEq(fraxDelegator.borrow(borrowAmount), 0);
         assertEq(fraxDelegator.totalBorrows(), (_totalFRAXBorrows + borrowAmount));
@@ -343,8 +347,10 @@ contract MIPM17IntegrationTest is PostProposalCheck {
         deal(address(token), payer, mintAmount);
         token.approve(address(fraxDelegator), borrowAmount);
         assertEq(fraxDelegator.repayBorrowBehalf(address(this), borrowAmount), 0);
-        assertEq(fraxDelegator.totalBorrows(), _totalFRAXBorrows);
         vm.stopPrank();
+
+        assertEq(fraxDelegator.totalBorrows(), _totalFRAXBorrows);
+        assertEq(fraxDelegator.balanceOf(address(this)), balance);
     }
 
     function testMintBorrowRepayMorethanBorrowed() public {
@@ -375,19 +381,31 @@ contract MIPM17IntegrationTest is PostProposalCheck {
         assertEq(comptroller.borrowRewardSpeeds(0, address(fraxDelegator)), 1);
     }
 
-    function testMintRedeem() private {
+    function testMintRedeem() public {
         testMint();
 
         uint256 balance = fraxDelegator.balanceOf(address(this));
+        uint256 _fraxTotalSupply = fraxDelegator.totalSupply();
+
         assertEq(fraxDelegator.redeem(balance), 0);
+
+        (, uint256 redeemed) = mulScalarTruncate(Exp({mantissa: fraxDelegator.exchangeRateStored()}), balance);
+        assertEq(token.balanceOf(address(this)), redeemed);
+        assertEq(fraxDelegator.totalSupply(), (_fraxTotalSupply - balance));
     }
 
-    function testMintRedeemZeroTokens() private {
+    function testMintRedeemZeroTokens() public {
         testMint();
+
+        uint256 balance = fraxDelegator.balanceOf(address(this));
+        uint256 _fraxTotalSupply = fraxDelegator.totalSupply();
+
         assertEq(fraxDelegator.redeem(0), 0);
+        assertEq(fraxDelegator.balanceOf(address(this)), balance);
+        assertEq(fraxDelegator.totalSupply(), _fraxTotalSupply);
     }
 
-     function testMintRedeemMoreTokens() private {
+    function testMintRedeemMoreTokens() public {
         testMint();
 
         uint256 balance = fraxDelegator.balanceOf(address(this));
@@ -412,10 +430,11 @@ contract MIPM17IntegrationTest is PostProposalCheck {
 
         vm.warp(block.timestamp + 10);
         comptroller.claimReward(0, payable(supplier));
+        /// TODO correctly calculate the rewards distributed
         assertTrue(well.balanceOf(supplier) > 0);
     }
 
-    function testMintClaimInvalidRewardType() private {
+    function testMintClaimInvalidRewardType() public {
         testMintEnterMarket();
         testLiquidityShortfall();
         testUnpauseMarket();
