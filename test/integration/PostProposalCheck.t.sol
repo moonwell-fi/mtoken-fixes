@@ -4,11 +4,12 @@ import "@forge-std/Test.sol";
 import "@forge-std/console.sol";
 
 import {mipm17} from "@protocol/proposals/mips/mip-m17/mip-m17.sol";
+import {Exponential} from "@protocol/proposals/utils/Exponential.sol";
 
 import {Addresses} from "@forge-proposal-simulator/addresses/Addresses.sol";
 import {TestSuite} from "@forge-proposal-simulator/test/TestSuite.t.sol";
 
-contract PostProposalCheck is Test {
+contract PostProposalCheck is Test, Exponential {
     string public constant ADDRESSES_PATH = "./addresses/addresses.json";
     TestSuite public suite;
     Addresses public addresses;
