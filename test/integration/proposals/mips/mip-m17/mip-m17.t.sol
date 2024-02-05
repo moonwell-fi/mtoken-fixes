@@ -32,7 +32,6 @@ contract MIPM17IntegrationTest is PostProposalCheck {
     /// @dev values prior to calling parent setup
     uint256 fraxTotalBorrows;
     uint256 fraxTotalReserves;
-    uint256 fraxExchangeRate;
     uint256 fraxTotalSupply;
     uint256 fraxBorrowIndex;
     uint256 fraxSupplyRewardSpeeds;
@@ -80,10 +79,9 @@ contract MIPM17IntegrationTest is PostProposalCheck {
         token = IERC20(_addresses.getAddress("FRAX"));
         comptroller = IComptroller(_addresses.getAddress("UNITROLLER"));
 
-        /// @dev reserves, borrows, exchange rate and supply prior to running the prop
+        /// @dev borrows, reserves, supply and friends - prior to running the prop
         fraxTotalBorrows = fraxDelegator.totalBorrows();
         fraxTotalReserves = fraxDelegator.totalReserves();
-        fraxExchangeRate = fraxDelegator.exchangeRateStored();
         fraxTotalSupply = fraxDelegator.totalSupply();
         fraxBorrowIndex = fraxDelegator.borrowIndex();
         fraxSupplyRewardSpeeds = comptroller.supplyRewardSpeeds(0, address(fraxDelegator));
