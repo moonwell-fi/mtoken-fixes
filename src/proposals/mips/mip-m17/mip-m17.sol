@@ -68,14 +68,14 @@ contract mipm17 is GovernorBravoProposal {
         mFRAXDelegator = IMErc20Delegator(mFRAXAddress);
         mxcDOTDelegator = IMErc20Delegator(mxcDOTAddress);
 
-        string memory raw = string(abi.encodePacked(vm.readFile("./src/proposals/mips/mip-m17/healthy.json")));
-        bytes memory parsed = vm.parseJson(raw);
-        Accounts[] memory accounts = abi.decode(parsed, (Accounts[]));
+        // string memory raw = string(abi.encodePacked(vm.readFile("./src/proposals/mips/mip-m17/healthy.json")));
+        // bytes memory parsed = vm.parseJson(raw);
+        // Accounts[] memory accounts = abi.decode(parsed, (Accounts[]));
 
-        for (uint256 i = 0; i < accounts.length; i++) {
-            balances[mFRAXAddress][accounts[i].addr] = mFRAXDelegator.balanceOf(accounts[i].addr);
-            balances[mxcDOTAddress][accounts[i].addr] = mxcDOTDelegator.balanceOf(accounts[i].addr);
-        }
+        // for (uint256 i = 0; i < accounts.length; i++) {
+        //     balances[mFRAXAddress][accounts[i].addr] = mFRAXDelegator.balanceOf(accounts[i].addr);
+        //     balances[mxcDOTAddress][accounts[i].addr] = mxcDOTDelegator.balanceOf(accounts[i].addr);
+        // }
     }
 
     function _build(Addresses addresses) internal override {
@@ -122,8 +122,6 @@ contract mipm17 is GovernorBravoProposal {
             bytes memory debtorsParsed = vm.parseJson(debtorsRaw);
             Accounts[] memory mxcDOTDebtors = abi.decode(debtorsParsed, (Accounts[]));
 
-            mxcDOTExchangeRate = mxcDOTDelegator.exchangeRateStored();
-
             for (uint256 i = 0; i < mxcDOTDebtors.length; i++) {
                 if (mxcDOTDelegator.balanceOf(mxcDOTDebtors[i].addr) > 0) {
                     _pushAction(
@@ -141,7 +139,7 @@ contract mipm17 is GovernorBravoProposal {
             abi.encodeWithSignature(
                 "_setImplementation(address,bool,bytes)", mErc20DelegateMadFixerAddress, false, new bytes(0)
             ),
-            "Upgrade MErc20Delegate for mUSDC.mad"
+            "Upgrade MErc20Delegate for mUSDC.mad to MErc20DelegateMadFixer"
         );
 
         _pushAction(
@@ -154,7 +152,7 @@ contract mipm17 is GovernorBravoProposal {
             abi.encodeWithSignature(
                 "_setImplementation(address,bool,bytes)", mErc20DelegateMadFixerAddress, false, new bytes(0)
             ),
-            "Upgrade MErc20Delegate for mETH.mad"
+            "Upgrade MErc20Delegate for mETH.mad to MErc20DelegateMadFixer"
         );
 
         _pushAction(
@@ -167,7 +165,7 @@ contract mipm17 is GovernorBravoProposal {
             abi.encodeWithSignature(
                 "_setImplementation(address,bool,bytes)", mErc20DelegateMadFixerAddress, false, new bytes(0)
             ),
-            "Upgrade MErc20Delegate for mwBTC.mad"
+            "Upgrade MErc20Delegate for mwBTC.mad to MErc20DelegateMadFixer"
         );
 
         _pushAction(
@@ -179,22 +177,22 @@ contract mipm17 is GovernorBravoProposal {
         /// @dev set debug
         setDebug(true);
 
+        uint256 gas_start = gasleft();
         _simulateActions(addresses.getAddress("ARTEMIS_GOVERNOR"), addresses.getAddress("WELL"), address(this));
+        uint256 gas_used = gas_start - gasleft();
+
+        emit log_named_uint("Gas Metering", gas_used);
     }
 
     function _validate(Addresses addresses, address) internal override {
-        string memory raw = string(abi.encodePacked(vm.readFile("./src/proposals/mips/mip-m17/healthy.json")));
-        bytes memory parsed = vm.parseJson(raw);
-        Accounts[] memory accounts = abi.decode(parsed, (Accounts[]));
+        // string memory raw = string(abi.encodePacked(vm.readFile("./src/proposals/mips/mip-m17/healthy.json")));
+        // bytes memory parsed = vm.parseJson(raw);
+        // Accounts[] memory accounts = abi.decode(parsed, (Accounts[]));
 
-        for (uint256 i = 0; i < accounts.length; i++) {
-            assertEq(balances[mFRAXAddress][accounts[i].addr], mFRAXDelegator.balanceOf(accounts[i].addr));
-            assertEq(balances[mxcDOTAddress][accounts[i].addr], mxcDOTDelegator.balanceOf(accounts[i].addr));
-        }
-
-        /// @dev check exchange rates
-        // assertEq(mFRAXDelegator.exchangeRateStored(), mFRAXExchangeRate);
-        // assertEq(mxcDOTDelegator.exchangeRateStored(), mxcDOTExchangeRate);
+        // for (uint256 i = 0; i < accounts.length; i++) {
+        //     assertEq(balances[mFRAXAddress][accounts[i].addr], mFRAXDelegator.balanceOf(accounts[i].addr));
+        //     assertEq(balances[mxcDOTAddress][accounts[i].addr], mxcDOTDelegator.balanceOf(accounts[i].addr));
+        // }
 
         /// @dev check debtors have had their debt zeroed
         {

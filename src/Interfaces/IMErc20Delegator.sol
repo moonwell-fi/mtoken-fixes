@@ -43,6 +43,9 @@ interface IMErc20Delegator {
     /// @notice total borrows
     function totalBorrows() external returns (uint256);
 
+    /// @notice borrow balanace stored
+    function borrowBalanceStored(address) external view returns (uint);
+
     /// @notice total supply
     function totalSupply() external returns (uint256);
 
