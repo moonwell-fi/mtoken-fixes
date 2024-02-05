@@ -12,14 +12,14 @@ import {IWell} from "@protocol/Interfaces/IWell.sol";
 import {IMToken} from "@protocol/Interfaces/IMToken.sol";
 import {IComptroller} from "@protocol/Interfaces/IComptroller.sol";
 import {IMErc20Delegator} from "@protocol/Interfaces/IMErc20Delegator.sol";
+import {IInterestRateModel} from "@protocol/Interfaces/IInterestRateModel.sol";
 import {IMErc20DelegateFixer} from "@protocol/Interfaces/IMErc20DelegateFixer.sol";
 
 /// @title MIP-M17 integration tests
 /// @dev to run:
 /// `forge test \
 ///     --match-contract MIPM17IntegrationTest \
-///     --fork-url {rpc-url} \
-///     --fork-block-number 5453110`
+///     --fork-url {rpc-url}`
 contract MIPM17IntegrationTest is PostProposalCheck {
     /// @dev contracts
     IMErc20Delegator fraxDelegator;
@@ -30,11 +30,14 @@ contract MIPM17IntegrationTest is PostProposalCheck {
     IComptroller comptroller;
 
     /// @dev values prior to calling parent setup
-    uint256 totalFRAXReserves;
-    uint256 totalFRAXBorrows;
+    uint256 fraxTotalBorrows;
+    uint256 fraxTotalReserves;
     uint256 fraxExchangeRate;
     uint256 fraxTotalSupply;
+    uint256 fraxBorrowIndex;
     uint256 fraxSupplyRewardSpeeds;
+    uint256 fraxAccrualBlockTimestampPrior;
+    uint256 fraxBorrowRateMantissa;
     uint256 nomadUSDCBalance;
     uint256 nomadETHBalance;
     uint256 nomadBTCBalance;
@@ -77,29 +80,44 @@ contract MIPM17IntegrationTest is PostProposalCheck {
         token = IERC20(_addresses.getAddress("FRAX"));
         comptroller = IComptroller(_addresses.getAddress("UNITROLLER"));
 
-        fraxDelegator.accrueInterest();
-
         /// @dev reserves, borrows, exchange rate and supply prior to running the prop
-        totalFRAXReserves = fraxDelegator.totalReserves();
-        totalFRAXBorrows = fraxDelegator.totalBorrows();
+        fraxTotalBorrows = fraxDelegator.totalBorrows();
+        fraxTotalReserves = fraxDelegator.totalReserves();
         fraxExchangeRate = fraxDelegator.exchangeRateStored();
         fraxTotalSupply = fraxDelegator.totalSupply();
+        fraxBorrowIndex = fraxDelegator.borrowIndex();
         fraxSupplyRewardSpeeds = comptroller.supplyRewardSpeeds(0, address(fraxDelegator));
+        fraxAccrualBlockTimestampPrior = fraxDelegator.accrualBlockTimestamp();
 
+        IInterestRateModel interestRateModel = fraxDelegator.interestRateModel();
+        uint256 fraxCashPrior = token.balanceOf(_addresses.getAddress("MOONWELL_mFRAX"));
+        fraxBorrowRateMantissa = interestRateModel.getBorrowRate(fraxCashPrior, fraxTotalBorrows, fraxTotalReserves);
+
+        /// @dev accrueInterest() will be run when the prop is executed
         super.setUp();
     }
 
     function testSetUp() public {
-        /// @dev as of block 5453110
-        assertEq(totalFRAXReserves, 192088687826830391504748);
-        assertEq(totalFRAXBorrows, 3238083326555520628961815);
-        assertEq(fraxExchangeRate, 229247873259888279522173114);
+        /// @dev check that the borrows, reserves and index calculations match
+        (, uint256 blockDelta) = subUInt(block.timestamp, fraxAccrualBlockTimestampPrior);
+        (, Exp memory simpleInterestFactor) = mulScalar(Exp({mantissa: fraxBorrowRateMantissa}), blockDelta);
+        (, uint256 interestAccumulated) = mulScalarTruncate(simpleInterestFactor, fraxTotalBorrows);
+        (, uint256 _fraxTotalBorrows) = addUInt(interestAccumulated, fraxTotalBorrows - fraxDelegator.badDebt());
+        (, uint256 _fraxTotalReserves) = mulScalarTruncateAddUInt(
+            Exp({mantissa: fraxDelegator.reserveFactorMantissa()}), interestAccumulated, fraxTotalReserves
+        );
+        (, uint256 _fraxBorrowIndex) = mulScalarTruncateAddUInt(simpleInterestFactor, fraxBorrowIndex, fraxBorrowIndex);
 
-        assertEq(fraxDelegator.totalReserves(), 192145283329395620002646);
-        assertEq(fraxDelegator.totalBorrows(), 2880378125492784178717951);
-        assertEq(fraxDelegator.exchangeRateStored(), 229272010396607327821609962);
+        assertEq(fraxDelegator.totalBorrows(), _fraxTotalBorrows);
+        assertEq(fraxDelegator.totalReserves(), _fraxTotalReserves);
+        assertEq(fraxDelegator.borrowIndex(), _fraxBorrowIndex);
+
+        uint256 _fraxCashPrior = token.balanceOf(addresses.getAddress("MOONWELL_mFRAX")) + fraxDelegator.badDebt();
+        (, uint256 cashPlusBorrowsMinusReserves) = addThenSubUInt(_fraxCashPrior, _fraxTotalBorrows, _fraxTotalReserves);
+        (, Exp memory _fraxExchangeRate) = getExp(cashPlusBorrowsMinusReserves, fraxTotalSupply);
+
+        assertEq(fraxDelegator.exchangeRateStored(), _fraxExchangeRate.mantissa);
         assertEq(fraxDelegator.totalSupply(), fraxTotalSupply);
-
         assertEq(comptroller.supplyRewardSpeeds(0, address(fraxDelegator)), fraxSupplyRewardSpeeds);
 
         assertEq(nomadUSDCDelegator.balance(), 0);

@@ -1,5 +1,6 @@
 pragma solidity 0.8.19;
 
+import "./IInterestRateModel.sol";
 import "./IMToken.sol";
 
 /// @title interface for MErc20Delegator
@@ -40,8 +41,14 @@ interface IMErc20Delegator {
     /// @notice total reserves
     function totalReserves() external returns (uint256);
 
+    /// @notice reserve factor mantissa
+    function reserveFactorMantissa() external returns (uint256);
+
     /// @notice total borrows
     function totalBorrows() external returns (uint256);
+
+    /// @notice borrow index
+    function borrowIndex() external returns (uint256);
 
     /// @notice borrow balanace stored
     function borrowBalanceStored(address) external view returns (uint);
@@ -72,4 +79,7 @@ interface IMErc20Delegator {
 
     /// @notice liquidate a borrow
     function liquidateBorrow(address, uint256, IMToken) external returns (uint256);
+
+    /// @notice IR model
+    function interestRateModel() external returns (IInterestRateModel);
 }
