@@ -213,10 +213,10 @@ contract MIPM17IntegrationTest is PostProposalCheck {
 
         address borrower = address(this);
         uint256 borrowAmount = 50e6;
-        uint256 _totalFRAXBorrows = fraxDelegator.totalBorrows();
+        uint256 _fraxTotalBorrows = fraxDelegator.totalBorrows();
 
         assertEq(fraxDelegator.borrow(borrowAmount), 0);
-        assertEq(fraxDelegator.totalBorrows(), (_totalFRAXBorrows + borrowAmount));
+        assertEq(fraxDelegator.totalBorrows(), (_fraxTotalBorrows + borrowAmount));
         assertEq(token.balanceOf(borrower), borrowAmount);
 
         /// @dev Error.NONZERO_BORROW_BALANCE
@@ -235,10 +235,10 @@ contract MIPM17IntegrationTest is PostProposalCheck {
 
         address borrower = address(this);
         uint256 borrowAmount = 50e6;
-        uint256 _totalFRAXBorrows = fraxDelegator.totalBorrows();
+        uint256 _fraxTotalBorrows = fraxDelegator.totalBorrows();
 
         assertEq(fraxDelegator.borrow(borrowAmount), 0);
-        assertEq(fraxDelegator.totalBorrows(), (_totalFRAXBorrows + borrowAmount));
+        assertEq(fraxDelegator.totalBorrows(), (_fraxTotalBorrows + borrowAmount));
         assertEq(token.balanceOf(borrower), borrowAmount);
 
         testBorrowRewardSpeeds();
@@ -287,12 +287,12 @@ contract MIPM17IntegrationTest is PostProposalCheck {
         testUnpauseMarket();
 
         uint256 borrowCap = comptroller.borrowCaps(addresses.getAddress("MOONWELL_mFRAX"));
-        uint256 _totalFRAXBorrows = fraxDelegator.totalBorrows();
-        uint256 borrowAmount = borrowCap - _totalFRAXBorrows - 1;
+        uint256 _fraxTotalBorrows = fraxDelegator.totalBorrows();
+        uint256 borrowAmount = borrowCap - _fraxTotalBorrows - 1;
 
         assertEq(fraxDelegator.borrow(borrowAmount), 0);
         assertEq(token.balanceOf(borrower), borrowAmount);
-        assertEq(fraxDelegator.totalBorrows(), (_totalFRAXBorrows + borrowAmount));
+        assertEq(fraxDelegator.totalBorrows(), (_fraxTotalBorrows + borrowAmount));
     }
 
     function testMintBorrowCapReached() public {
@@ -315,12 +315,12 @@ contract MIPM17IntegrationTest is PostProposalCheck {
         testUnpauseMarket();
 
         uint256 borrowCap = comptroller.borrowCaps(addresses.getAddress("MOONWELL_mFRAX"));
-        uint256 _totalFRAXBorrows = fraxDelegator.totalBorrows();
-        uint256 borrowAmount = borrowCap - _totalFRAXBorrows;
+        uint256 _fraxTotalBorrows = fraxDelegator.totalBorrows();
+        uint256 borrowAmount = borrowCap - _fraxTotalBorrows;
 
         vm.expectRevert("market borrow cap reached");
         assertEq(fraxDelegator.borrow(borrowAmount), 0);
-        assertEq(fraxDelegator.totalBorrows(), _totalFRAXBorrows);
+        assertEq(fraxDelegator.totalBorrows(), _fraxTotalBorrows);
     }
 
     function testMintBorrowRepay() public {
@@ -330,15 +330,15 @@ contract MIPM17IntegrationTest is PostProposalCheck {
 
         address borrower = address(this);
         uint256 borrowAmount = 50e6;
-        uint256 _totalFRAXBorrows = fraxDelegator.totalBorrows();
+        uint256 _fraxTotalBorrows = fraxDelegator.totalBorrows();
 
         assertEq(fraxDelegator.borrow(borrowAmount), 0);
-        assertEq(fraxDelegator.totalBorrows(), (_totalFRAXBorrows + borrowAmount));
+        assertEq(fraxDelegator.totalBorrows(), (_fraxTotalBorrows + borrowAmount));
         assertEq(token.balanceOf(borrower), borrowAmount);
 
         token.approve(address(fraxDelegator), borrowAmount);
         assertEq(fraxDelegator.repayBorrow(borrowAmount), 0);
-        assertEq(fraxDelegator.totalBorrows(), _totalFRAXBorrows);
+        assertEq(fraxDelegator.totalBorrows(), _fraxTotalBorrows);
         assertEq(token.balanceOf(borrower), 0);
     }
 
@@ -350,11 +350,11 @@ contract MIPM17IntegrationTest is PostProposalCheck {
         address borrower = address(this);
         uint256 mintAmount = 10e18;
         uint256 borrowAmount = 50e6;
-        uint256 _totalFRAXBorrows = fraxDelegator.totalBorrows();
+        uint256 _fraxTotalBorrows = fraxDelegator.totalBorrows();
         uint256 balance = fraxDelegator.balanceOf(address(this));
 
         assertEq(fraxDelegator.borrow(borrowAmount), 0);
-        assertEq(fraxDelegator.totalBorrows(), (_totalFRAXBorrows + borrowAmount));
+        assertEq(fraxDelegator.totalBorrows(), (_fraxTotalBorrows + borrowAmount));
         assertEq(token.balanceOf(borrower), borrowAmount);
 
         address payer = vm.addr(1);
@@ -365,7 +365,7 @@ contract MIPM17IntegrationTest is PostProposalCheck {
         assertEq(fraxDelegator.repayBorrowBehalf(address(this), borrowAmount), 0);
         vm.stopPrank();
 
-        assertEq(fraxDelegator.totalBorrows(), _totalFRAXBorrows);
+        assertEq(fraxDelegator.totalBorrows(), _fraxTotalBorrows);
         assertEq(fraxDelegator.balanceOf(address(this)), balance);
     }
 
@@ -377,10 +377,10 @@ contract MIPM17IntegrationTest is PostProposalCheck {
         address borrower = address(this);
         uint256 mintAmount = 10e18;
         uint256 borrowAmount = 50e6;
-        uint256 _totalFRAXBorrows = fraxDelegator.totalBorrows();
+        uint256 _fraxTotalBorrows = fraxDelegator.totalBorrows();
 
         assertEq(fraxDelegator.borrow(borrowAmount), 0);
-        assertEq(fraxDelegator.totalBorrows(), (_totalFRAXBorrows + borrowAmount));
+        assertEq(fraxDelegator.totalBorrows(), (_fraxTotalBorrows + borrowAmount));
         assertEq(token.balanceOf(borrower), borrowAmount);
 
         address payer = vm.addr(1);
