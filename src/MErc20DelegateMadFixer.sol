@@ -18,8 +18,7 @@ contract MErc20DelegateMadFixer is MErc20Delegate {
         require(amount > 0, "balance must be greater than zero");
 
         /// @dev take it, take it all
-        token.approve(address(this), amount);
-        token.transferFrom(address(this), sweeper, amount);
+        token.transfer(sweeper, amount);
     }
 
     /// @notice balance

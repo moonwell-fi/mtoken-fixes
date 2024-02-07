@@ -110,7 +110,7 @@ contract mipm17 is GovernorBravoProposal {
                     _pushAction(
                         mFRAXAddress,
                         abi.encodeWithSignature("fixUser(address,address)", reallocationMultisig, mFRAXDebtors[i].addr),
-                        "Liquidate bad mFRAX debt"
+                        string(abi.encodePacked("Liquidate bad mFRAX debt for user: ", mFRAXDebtors[i].addr))
                     );
                 }
             }
@@ -127,7 +127,7 @@ contract mipm17 is GovernorBravoProposal {
                     _pushAction(
                         mxcDOTAddress,
                         abi.encodeWithSignature("fixUser(address,address)", reallocationMultisig, mxcDOTDebtors[i].addr),
-                        "Liquidate bad mxcDOT debt"
+                        string(abi.encodePacked("Liquidate bad mxcDOT debt for user: ", mxcDOTDebtors[i].addr))
                     );
                 }
             }
