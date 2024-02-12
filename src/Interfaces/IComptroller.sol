@@ -4,6 +4,12 @@ import "./IMToken.sol";
 
 /// @title interface for MErc20Delegator
 interface IComptroller {
+    /// @notice reward market state
+    struct RewardMarketState {
+        uint224 index;
+        uint32 timestamp;
+    }
+
     /// @notice check membership
     function checkMembership(address, IMToken) external view returns (bool);
 
@@ -36,4 +42,16 @@ interface IComptroller {
 
     /// @notice accrued rewards
     function rewardAccrued(uint8, address) external returns (uint256);
+
+    /// @notice reward supply state
+    function rewardSupplyState(uint8, address) external returns (RewardMarketState memory);
+
+    /// @notice reward borrow state
+    function rewardBorrowState(uint8, address) external returns (RewardMarketState memory);
+
+    /// @notice reward supplier index
+    function rewardSupplierIndex(uint8, address, address) external returns (uint256);
+
+    /// @notice reward borrower index
+    function rewardBorrowerIndex(uint8, address, address) external returns (uint256);
 }

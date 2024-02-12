@@ -4,13 +4,13 @@ pragma solidity 0.8.19;
 import "@forge-std/Test.sol";
 import "@forge-std/console.sol";
 
+import {Governor} from "@tests/integration/helpers/Governor.sol";
 import {CreateCode} from "@protocol/proposals/utils/CreateCode.sol";
 import {IMErc20Delegator} from "@protocol/Interfaces/IMErc20Delegator.sol";
 
 import {Addresses} from "@forge-proposal-simulator/addresses/Addresses.sol";
-import {GovernorBravoProposal} from "@forge-proposal-simulator/proposals/GovernorBravoProposal.sol";
 
-contract mipm17 is GovernorBravoProposal {
+contract mipm17 is Governor {
     /// @dev addresses
     address mFRAXAddress;
     address mxcDOTAddress;
@@ -24,10 +24,14 @@ contract mipm17 is GovernorBravoProposal {
     /// @dev delegators
     IMErc20Delegator mFRAXDelegator;
     IMErc20Delegator mxcDOTDelegator;
+    IMErc20Delegator mUSDCMErc20Delegator;
+    IMErc20Delegator mETHMErc20Delegator;
+    IMErc20Delegator mwBTCMErc20Delegator;
 
-    /// @dev exchange rates
-    uint256 mFRAXExchangeRate;
-    uint256 mxcDOTExchangeRate;
+    /// @dev nomad balances
+    uint256 mUSDCCash;
+    uint256 mETHCash;
+    uint256 mwBTCCash;
 
     /// @dev accounts
     struct Accounts {
@@ -68,6 +72,14 @@ contract mipm17 is GovernorBravoProposal {
         mFRAXDelegator = IMErc20Delegator(mFRAXAddress);
         mxcDOTDelegator = IMErc20Delegator(mxcDOTAddress);
 
+        /// @dev nomad balances should be constant
+        mUSDCCash = 10789300371738;
+        mETHCash = 2269023468465447134524;
+        mwBTCCash = 4425696499;
+        mUSDCMErc20Delegator = IMErc20Delegator(mUSDCAddress);
+        mETHMErc20Delegator = IMErc20Delegator(mETHAddress);
+        mwBTCMErc20Delegator = IMErc20Delegator(mwBTCAddress);
+
         // string memory raw = string(abi.encodePacked(vm.readFile("./src/proposals/mips/mip-m17/healthy.json")));
         // bytes memory parsed = vm.parseJson(raw);
         // Accounts[] memory accounts = abi.decode(parsed, (Accounts[]));
@@ -102,8 +114,6 @@ contract mipm17 is GovernorBravoProposal {
             string memory debtorsRaw = string(abi.encodePacked(vm.readFile("./src/proposals/mips/mip-m17/mFRAX.json")));
             bytes memory debtorsParsed = vm.parseJson(debtorsRaw);
             Accounts[] memory mFRAXDebtors = abi.decode(debtorsParsed, (Accounts[]));
-
-            mFRAXExchangeRate = mFRAXDelegator.exchangeRateStored();
 
             for (uint256 i = 0; i < mFRAXDebtors.length; i++) {
                 if (mFRAXDelegator.balanceOf(mFRAXDebtors[i].addr) > 0) {
@@ -178,7 +188,7 @@ contract mipm17 is GovernorBravoProposal {
         setDebug(true);
 
         uint256 gas_start = gasleft();
-        _simulateActions(addresses.getAddress("ARTEMIS_GOVERNOR"), addresses.getAddress("WELL"), address(this));
+        simulateActions(addresses.getAddress("ARTEMIS_GOVERNOR"), addresses.getAddress("WELL"), address(this));
         uint256 gas_used = gas_start - gasleft();
 
         emit log_named_uint("Gas Metering", gas_used);
@@ -218,22 +228,13 @@ contract mipm17 is GovernorBravoProposal {
         }
 
         /// @dev check that the Nomad assets have been swept
-        IMErc20Delegator mUSDCMErc20Delegator = IMErc20Delegator(mUSDCAddress);
-        uint256 mUSDCCash = mUSDCMErc20Delegator.getCash();
+        assertEq(mUSDCMErc20Delegator.balanceOf(reallocationMultisig), mUSDCCash);
+        assertEq(mUSDCMErc20Delegator.balance(), 0);
 
-        assertEq(mUSDCMErc20Delegator.balanceOf(reallocationMultisig), 10789307515125);
-        assertEq(mUSDCCash, 0);
+        assertEq(mETHMErc20Delegator.balanceOf(reallocationMultisig), mETHCash);
+        assertEq(mETHMErc20Delegator.balance(), 0);
 
-        IMErc20Delegator mETHMErc20Delegator = IMErc20Delegator(mETHAddress);
-        uint256 mETHCash = mETHMErc20Delegator.getCash();
-
-        assertEq(mETHMErc20Delegator.balanceOf(reallocationMultisig), 2269023468465447134524);
-        assertEq(mETHCash, 0);
-
-        IMErc20Delegator mwBTCMErc20Delegator = IMErc20Delegator(mwBTCAddress);
-        uint256 mwBTCCash = mwBTCMErc20Delegator.getCash();
-
-        assertEq(mwBTCMErc20Delegator.balanceOf(reallocationMultisig), 4425696279);
-        assertEq(mwBTCCash, 0);
+        assertEq(mwBTCMErc20Delegator.balanceOf(reallocationMultisig), mwBTCCash);
+        assertEq(mwBTCMErc20Delegator.balance(), 0);
     }
 }
