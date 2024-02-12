@@ -26,5 +26,5 @@ contract PostProposalCheck is Test, Exponential {
         suite.testProposals();
 
         addresses = suite.addresses();
-    } 
+    }
 }
