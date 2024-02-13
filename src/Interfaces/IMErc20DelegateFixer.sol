@@ -4,4 +4,6 @@ pragma solidity 0.8.19;
 interface IMErc20DelegateFixer {
     /// @notice fix user
     function fixUser(address, address) external;
+
+    function repayBadDebt(uint256) external;
 }
