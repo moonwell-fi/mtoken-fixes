@@ -11,9 +11,13 @@ contract MErc20DelegateFixer is MErc20Delegate {
     /// @notice user fixed event (user, liquidator, amount)
     event UserFixed(address, address, uint256);
 
+    /// @notice bad debt repayed event (amount)
+    event BadDebtRepayed(uint256);
+
     /// @notice fix a user
     /// @param liquidator the account to transfer the tokens to
     /// @param user the account with bad debt
+    /// invariant, this can only reduce or keep user and total debt the same
     function fixUser(address liquidator, address user) external {
         /// @dev check user is admin
         require(msg.sender == admin, "only the admin may call fixUser");
@@ -32,9 +36,38 @@ contract MErc20DelegateFixer is MErc20Delegate {
 
         /// @dev zero out the user's tokens and transfer to the liquidator
         accountTokens[user] = 0;
-        accountTokens[liquidator] = SafeMath.add(accountTokens[liquidator], liquidated);
+
+        /// if assets were liquidated, give them to the liquidator
+        if (liquidated != 0) {
+            accountTokens[liquidator] = SafeMath.add(
+                accountTokens[liquidator],
+                liquidated
+            );
+        }
 
         emit UserFixed(user, liquidator, accountTokens[liquidator]);
+    }
+
+    /// @notice repay bad debt, can only reduce the bad debt
+    /// @param amount the amount of bad debt to repay
+    /// invariant, calling this function can only reduce the bad debt
+    /// it cannot increase it, which is what would happen on an underflow
+    function repayBadDebt(uint256 amount) external nonReentrant {
+        /// Checks
+        require(amount <= badDebt, "amount exceeds bad debt");
+
+        /// Effects
+        badDebt = SafeMath.sub(badDebt, amount);
+
+        EIP20Interface token = EIP20Interface(underlying);
+
+        /// Interactions
+        require(
+            token.transferFrom(msg.sender, address(this), amount),
+            "transfer in failed"
+        );
+
+        emit BadDebtRepayed(amount);
     }
 
     /// @notice get account tokens
@@ -48,7 +81,10 @@ contract MErc20DelegateFixer is MErc20Delegate {
     /// @return the principal prior to zeroing
     function _zeroBalance(address user) private returns (uint256) {
         /// @dev ensure that the borrow balance is up to date
-        require(accrueInterest() == uint256(Error.NO_ERROR), "accrue interest failed");
+        require(
+            accrueInterest() == uint256(Error.NO_ERROR),
+            "accrue interest failed"
+        );
         BorrowSnapshot storage borrowSnapshot = accountBorrows[user];
         if (borrowSnapshot.principal == 0) {
             return 0;
