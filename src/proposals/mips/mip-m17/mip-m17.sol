@@ -242,11 +242,16 @@ contract mipm17 is Governor {
             IMErc20Delegator mErc20Delegator = IMErc20Delegator(
                 addresses.getAddress("MOONWELL_mFRAX")
             );
+
+            IMErc20Delegator mErc20DelegatorxcDot = IMErc20Delegator(
+                addresses.getAddress("MOONWELL_mxcDOT")
+            );
             for (uint256 i = 0; i < debtors.length; i++) {
                 (uint256 err, , ) = comptroller.getAccountLiquidity(
                     debtors[i].addr
                 );
 
+                /// not an invariant because the mglimmer market still has bad debt
                 // assertEq(
                 //     shortfall,
                 //     0,
@@ -267,7 +272,16 @@ contract mipm17 is Governor {
                         )
                     )
                 );
-                assertEq(mErc20Delegator.balanceOf(debtors[i].addr), 0);
+                assertEq(
+                    mErc20Delegator.balanceOf(debtors[i].addr),
+                    0,
+                    "mfrax balance after seizing"
+                );
+                assertEq(
+                    mErc20DelegatorxcDot.balanceOf(debtors[i].addr),
+                    0,
+                    "mxcDOT balance after seizing"
+                );
             }
         }
 
