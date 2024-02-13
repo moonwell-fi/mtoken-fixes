@@ -25,6 +25,14 @@ import {IMErc20DelegateFixer} from "@protocol/Interfaces/IMErc20DelegateFixer.so
 contract MIPM17IntegrationTest is PostProposalCheck {
     event BadDebtRepayed(uint256);
 
+    /// @notice bad debt repayed with reserves
+    event BadDebtRepayedWithReserves(
+        uint256 badDebt,
+        uint256 previousBadDebt,
+        uint256 reserves,
+        uint256 previousReserves
+    );
+
     /// @dev contracts
     IMErc20Delegator mxcDotDelegator;
     IMErc20Delegator fraxDelegator;
@@ -350,6 +358,85 @@ contract MIPM17IntegrationTest is PostProposalCheck {
             fraxDelegator.exchangeRateStored(),
             startingExchangeRate,
             "exchange rate should not change on bad debt repayment"
+        );
+    }
+
+    function testRepayBadDebtWithReservesSucceeds() public {
+        uint256 startingExchangeRate = fraxDelegator.exchangeRateStored();
+        uint256 existingBadDebt = fraxDelegator.badDebt();
+        uint256 totalReserves = fraxDelegator.totalReserves();
+        uint256 expectedBadDebt = existingBadDebt > totalReserves
+            ? existingBadDebt - totalReserves
+            : 0;
+        uint256 expectedTotalReserves = totalReserves <= existingBadDebt
+            ? 0
+            : totalReserves - existingBadDebt;
+
+        vm.expectEmit(true, true, true, true, address(fraxDelegator));
+        emit BadDebtRepayedWithReserves(
+            expectedBadDebt,
+            existingBadDebt,
+            expectedTotalReserves,
+            totalReserves
+        );
+
+        IMErc20DelegateFixer(address(fraxDelegator)).repayBadDebtWithReserves();
+
+        assertEq(
+            fraxDelegator.totalReserves(),
+            expectedTotalReserves,
+            "reserves incorrectly updated"
+        );
+        assertEq(
+            IMErc20DelegateFixer(address(fraxDelegator)).badDebt(),
+            expectedBadDebt,
+            "bad debt incorrectly updated"
+        );
+        assertEq(
+            fraxDelegator.exchangeRateStored(),
+            startingExchangeRate,
+            "exchange rate should not change on bad debt repayment"
+        );
+    }
+
+    function testRepayBadDebtWithNoReservesFails() public {
+        testRepayBadDebtWithReservesSucceeds();
+
+        vm.expectRevert("reserves are zero");
+        IMErc20DelegateFixer(address(fraxDelegator)).repayBadDebtWithReserves();
+    }
+
+    function testRepayBadDebtWithNoBadDebtFails() public {
+        /// bad debt stored at storage slot 20, write down to 0
+        vm.store(address(fraxDelegator), bytes32(uint256(20)), 0);
+
+        vm.expectRevert("bad debt is zero");
+        IMErc20DelegateFixer(address(fraxDelegator)).repayBadDebtWithReserves();
+    }
+
+    function testIncreaseBadDebtIncreasesCash(uint256 increaseAmount) public {
+        increaseAmount = _bound(increaseAmount, 1, type(uint128).max);
+
+        uint256 startingCash = fraxDelegator.getCash();
+        uint256 startingBadDebt = IMErc20DelegateFixer(address(fraxDelegator))
+            .badDebt();
+
+        /// bad debt stored at storage slot 20, write down to 0
+        vm.store(
+            address(fraxDelegator),
+            bytes32(uint256(20)),
+            bytes32(uint256(increaseAmount) + startingBadDebt)
+        );
+
+        assertEq(
+            fraxDelegator.getCash(),
+            startingCash + increaseAmount,
+            "cash not increased"
+        );
+        assertEq(
+            IMErc20DelegateFixer(address(fraxDelegator)).badDebt(),
+            startingBadDebt + increaseAmount,
+            "bad debt not increased"
         );
     }
 
