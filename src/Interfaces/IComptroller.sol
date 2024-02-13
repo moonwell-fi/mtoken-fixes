@@ -29,7 +29,9 @@ interface IComptroller {
     function borrowGuardianPaused(address) external returns (bool);
 
     /// @notice account liquidity
-    function getAccountLiquidity(address) external view returns (uint256, uint256, uint256);
+    function getAccountLiquidity(
+        address
+    ) external view returns (uint256, uint256, uint256);
 
     /// @notice supply reward speeds
     function supplyRewardSpeeds(uint8, address) external returns (uint256);
@@ -44,14 +46,33 @@ interface IComptroller {
     function rewardAccrued(uint8, address) external returns (uint256);
 
     /// @notice reward supply state
-    function rewardSupplyState(uint8, address) external returns (RewardMarketState memory);
+    function rewardSupplyState(
+        uint8,
+        address
+    ) external returns (RewardMarketState memory);
 
     /// @notice reward borrow state
-    function rewardBorrowState(uint8, address) external returns (RewardMarketState memory);
+    function rewardBorrowState(
+        uint8,
+        address
+    ) external returns (RewardMarketState memory);
 
     /// @notice reward supplier index
-    function rewardSupplierIndex(uint8, address, address) external returns (uint256);
+    function rewardSupplierIndex(
+        uint8,
+        address,
+        address
+    ) external returns (uint256);
 
     /// @notice reward borrower index
-    function rewardBorrowerIndex(uint8, address, address) external returns (uint256);
+    function rewardBorrowerIndex(
+        uint8,
+        address,
+        address
+    ) external returns (uint256);
+
+    function _setMarketBorrowCaps(address[] memory, uint256[] memory) external;
+
+    /// @notice returns the current admin address
+    function admin() external view returns (address);
 }
