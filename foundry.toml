@@ -4,3 +4,6 @@ out = "out"
 libs = ["lib"]
 auto_detect_solc = true
 fs_permissions = [{ access = "read", path = "./"}]
+
+[rpc_endpoints]
+moonbeam = "https://rpc.api.moonbeam.network"
