@@ -21,8 +21,6 @@ contract PostProposalCheck is Test, Exponential {
         proposalsAddresses[0] = address(proposalTwo);
 
         suite = new TestSuite(ADDRESSES_PATH, proposalsAddresses);
-
-        suite.setDebug(false);
         suite.testProposals();
 
         addresses = suite.addresses();
