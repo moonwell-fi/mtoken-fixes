@@ -1,7 +1,6 @@
 pragma solidity 0.8.19;
 
 import "./IInterestRateModel.sol";
-import "./IMToken.sol";
 
 /// @title interface for MErc20Delegator
 interface IMErc20Delegator {
@@ -78,7 +77,11 @@ interface IMErc20Delegator {
     function repayBorrowBehalf(address, uint256) external returns (uint256);
 
     /// @notice liquidate a borrow
-    function liquidateBorrow(address, uint256, IMToken) external returns (uint256);
+    function liquidateBorrow(
+        address,
+        uint256,
+        address
+    ) external returns (uint256);
 
     /// @notice IR model
     function interestRateModel() external returns (IInterestRateModel);

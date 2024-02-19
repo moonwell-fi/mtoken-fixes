@@ -8,7 +8,6 @@ import {IERC20} from "@forge-proposal-simulator/lib/openzeppelin-contracts/contr
 import {ERC20} from "@forge-proposal-simulator/lib/openzeppelin-contracts/contracts/token/ERC20/ERC20.sol";
 
 import {IWell} from "@protocol/Interfaces/IWell.sol";
-import {IMToken} from "@protocol/Interfaces/IMToken.sol";
 import {MockxcDOT} from "@tests/mock/MockxcDOT.sol";
 import {MockxcUSDT} from "@tests/mock/MockxcUSDT.sol";
 import {IComptroller} from "@protocol/Interfaces/IComptroller.sol";
@@ -109,10 +108,6 @@ contract MIPM17IntegrationTest is PostProposalCheck {
                 )
             }
 
-            // console.log(
-            //     "xcDot symbol before upgrade: ",
-            //     ERC20(_addresses.getAddress("xcDOT")).symbol()
-            // );
             vm.etch(_addresses.getAddress("xcDOT"), runtimeBytecode);
             console.log(
                 "xcDot symbol after upgrade: ",
@@ -509,7 +504,7 @@ contract MIPM17IntegrationTest is PostProposalCheck {
         );
 
         vm.prank(addresses.getAddress("MOONBEAM_TIMELOCK"));
-        comptroller._setBorrowPaused(IMToken(address(fraxDelegator)), false);
+        comptroller._setBorrowPaused(address(fraxDelegator), false);
 
         assertFalse(
             comptroller.borrowGuardianPaused(
@@ -525,7 +520,7 @@ contract MIPM17IntegrationTest is PostProposalCheck {
         assertFalse(
             comptroller.checkMembership(
                 address(this),
-                IMToken(addresses.getAddress("MOONWELL_mFRAX"))
+                addresses.getAddress("MOONWELL_mFRAX")
             )
         );
 
@@ -534,7 +529,7 @@ contract MIPM17IntegrationTest is PostProposalCheck {
         assertTrue(
             comptroller.checkMembership(
                 address(this),
-                IMToken(addresses.getAddress("MOONWELL_mFRAX"))
+                addresses.getAddress("MOONWELL_mFRAX")
             )
         );
     }
@@ -551,7 +546,7 @@ contract MIPM17IntegrationTest is PostProposalCheck {
         assertFalse(
             comptroller.checkMembership(
                 address(this),
-                IMToken(addresses.getAddress("MOONWELL_mFRAX"))
+                addresses.getAddress("MOONWELL_mFRAX")
             )
         );
     }
@@ -884,5 +879,54 @@ contract MIPM17IntegrationTest is PostProposalCheck {
     }
 
     /// TODO
-    function testLiquidateBorrow() public {}
+    function testLiquidateBorrow() public {
+        IMErc20Delegator mToken = IMErc20Delegator(
+            addresses.getAddress("MOONWELL_mFRAX")
+        );
+
+        /// borrower is now underwater on loan
+        deal(
+            address(mToken),
+            address(this),
+            mToken.balanceOf(address(this)) / 2
+        );
+
+        (uint256 err, uint256 liquidity, uint256 shortfall) = comptroller
+            .getHypotheticalAccountLiquidity(
+                address(this),
+                address(mToken),
+                0,
+                0
+            );
+
+        assertEq(err, 0);
+        assertEq(liquidity, 0);
+        assertGt(shortfall, 0);
+
+        uint256 repayAmt = 50e6;
+        address liquidator = address(100_000_000);
+        IERC20 frax = IERC20(addresses.getAddress("FRAX"));
+
+        deal(addresses.getAddress("FRAX"), liquidator, repayAmt);
+        vm.prank(liquidator);
+        frax.approve(address(mToken), repayAmt);
+
+        _liquidateAccount(liquidator, address(this), mToken, 1e6);
+
+        /// TODO validate that borrow has decreased, (share price unchanged?)
+    }
+
+    function _liquidateAccount(
+        address liquidator,
+        address liquidated,
+        IMErc20Delegator token,
+        uint256 repayAmt
+    ) private {
+        vm.prank(liquidator);
+        assertEq(
+            token.liquidateBorrow(liquidated, repayAmt, address(token)),
+            0,
+            "user liquidation failure"
+        );
+    }
 }

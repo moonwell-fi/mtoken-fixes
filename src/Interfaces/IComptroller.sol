@@ -1,7 +1,5 @@
 pragma solidity 0.8.19;
 
-import "./IMToken.sol";
-
 /// @title interface for MErc20Delegator
 interface IComptroller {
     /// @notice reward market state
@@ -11,7 +9,7 @@ interface IComptroller {
     }
 
     /// @notice check membership
-    function checkMembership(address, IMToken) external view returns (bool);
+    function checkMembership(address, address) external view returns (bool);
 
     /// @notice add assets to be included in account liquidity calculation
     function enterMarkets(address[] memory) external returns (uint256[] memory);
@@ -20,7 +18,7 @@ interface IComptroller {
     function exitMarket(address) external returns (uint256);
 
     /// @notice set state of a market
-    function _setBorrowPaused(IMToken, bool) external returns (bool);
+    function _setBorrowPaused(address, bool) external returns (bool);
 
     /// @notice borrow caps
     function borrowCaps(address) external returns (uint256);
@@ -75,4 +73,11 @@ interface IComptroller {
 
     /// @notice returns the current admin address
     function admin() external view returns (address);
+
+    function getHypotheticalAccountLiquidity(
+        address account,
+        address mTokenModify,
+        uint redeemTokens,
+        uint borrowAmount
+    ) external view returns (uint, uint, uint);
 }
