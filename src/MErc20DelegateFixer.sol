@@ -104,10 +104,10 @@ contract MErc20DelegateFixer is MErc20Delegate {
             );
 
             /// zero out the user's tokens
-            accountTokens[user] = 0;
+            delete accountTokens[user];
         }
 
-        emit UserFixed(user, liquidator, accountTokens[liquidator]);
+        emit UserFixed(user, liquidator, liquidated);
     }
 
     /// @notice zero the balance of a user
