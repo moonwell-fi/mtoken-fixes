@@ -462,7 +462,7 @@ contract MIPM17IntegrationTest is PostProposalCheck {
         uint256 existingBadDebt = fraxDelegator.badDebt();
 
         vm.expectRevert("amount exceeds bad debt");
-        IMErc20DelegateFixer(address(fraxDelegator)).repayBadDebt(
+        IMErc20DelegateFixer(address(fraxDelegator)).repayBadDebtWithCash(
             existingBadDebt + 1
         );
     }
@@ -477,7 +477,9 @@ contract MIPM17IntegrationTest is PostProposalCheck {
 
         vm.expectEmit(true, true, true, true, address(fraxDelegator));
         emit BadDebtRepayed(repayAmount);
-        IMErc20DelegateFixer(address(fraxDelegator)).repayBadDebt(repayAmount);
+        IMErc20DelegateFixer(address(fraxDelegator)).repayBadDebtWithCash(
+            repayAmount
+        );
 
         assertEq(
             fraxDelegator.badDebt(),
