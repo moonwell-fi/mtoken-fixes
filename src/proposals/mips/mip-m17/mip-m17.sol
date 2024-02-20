@@ -107,7 +107,9 @@ contract mipm17 is Governor {
 
             for (uint256 i = 0; i < mFRAXDebtors.length; i++) {
                 if (
-                    mFRAXDelegator.borrowBalanceStored(mFRAXDebtors[i].addr) > 0
+                    mFRAXDelegator.borrowBalanceStored(mFRAXDebtors[i].addr) >
+                    0 ||
+                    mFRAXDelegator.balanceOf(mFRAXDebtors[i].addr) != 0
                 ) {
                     _pushAction(
                         mFRAXAddress,
@@ -140,7 +142,8 @@ contract mipm17 is Governor {
             for (uint256 i = 0; i < mxcDOTDebtors.length; i++) {
                 if (
                     mxcDOTDelegator.borrowBalanceStored(mxcDOTDebtors[i].addr) >
-                    0
+                    0 ||
+                    mxcDOTDelegator.balanceOf(mxcDOTDebtors[i].addr) != 0
                 ) {
                     _pushAction(
                         mxcDOTAddress,
