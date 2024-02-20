@@ -426,7 +426,31 @@ contract MIPM17IntegrationTest is PostProposalCheck {
     }
 
     function testAccrueInterest() public {
-        assertEq(fraxDelegator.accrueInterest(), 0);
+        assertEq(
+            fraxDelegator.accrueInterest(),
+            0,
+            "fraxDelegator accrue interest failed"
+        );
+        assertEq(
+            mxcDotDelegator.accrueInterest(),
+            0,
+            "mxcDotDelegator accrue interest failed"
+        );
+        assertEq(
+            nomadUSDCDelegator.accrueInterest(),
+            0,
+            "nomadUSDCDelegator accrue interest failed"
+        );
+        assertEq(
+            nomadETHDelegator.accrueInterest(),
+            0,
+            "nomadETHDelegator accrue interest failed"
+        );
+        assertEq(
+            nomadBTCDelegator.accrueInterest(),
+            0,
+            "nomadBTCDelegator accrue interest failed"
+        );
     }
 
     function testAccrueInterestBlockTimestamp() public {
