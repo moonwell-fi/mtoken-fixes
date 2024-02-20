@@ -9,7 +9,7 @@ interface IMErc20DelegateFixer {
     function fixUser(address, address) external;
 
     /// @notice repay bad debt with underlying asset
-    function repayBadDebt(uint256) external;
+    function repayBadDebtWithCash(uint256) external;
 
     /// @notice repay bad debt with reserves
     function repayBadDebtWithReserves() external;
