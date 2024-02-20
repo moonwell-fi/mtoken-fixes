@@ -2,7 +2,7 @@
 
 ## Overview
 
-This proposal will remove all collateral mTokens from users with bad debt from all markets, sending them to the community multisig. In order to allow mToken collateral sweeping and bad debt write-offs, the mTokens will have their implementations upgraded. This will stop further issues and allow the exchange rates of the assets to stay the same post-proposal. Interest Rate Models may need to be changed in order to stop rate spikes due to changes in supply and borrow amounts.
+This proposal will remove all collateral mTokens from users with bad debt from all markets, sending them to the community multisig. In order to allow mToken collateral sweeping and bad debt write offs, the mTokens will have their implementations upgraded. This will stop further issues and allow the exchange rates of the assets to stay the same post-proposal. Interest Rate Models may need to be changed in order to stop rate spikes due to changes in supply and borrow amounts.
 
 Following the passing of the signaling snapshot [poll](https://snapshot.org/#/moonwell-governance.eth/proposal/0xe30b2ec324ad04397eb864dd464d3f57f44c63ccf684c9a126f9dd34908fd5c7), this governance proposal is being created to execute the second step in restoring liquidity to the markets.
 
