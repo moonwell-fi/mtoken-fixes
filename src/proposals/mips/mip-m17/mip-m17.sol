@@ -249,10 +249,6 @@ contract mipm17 is Governor {
                 addresses.getAddress("MOONWELL_mFRAX")
             );
 
-            IMErc20Delegator mErc20DelegatorxcDot = IMErc20Delegator(
-                addresses.getAddress("MOONWELL_mxcDOT")
-            );
-
             for (uint256 i = 0; i < debtors.length; i++) {
                 (uint256 err, , ) = comptroller.getAccountLiquidity(
                     debtors[i].addr
@@ -278,11 +274,6 @@ contract mipm17 is Governor {
                     0,
                     "mfrax balance after seizing"
                 );
-                assertEq(
-                    mErc20DelegatorxcDot.balanceOf(debtors[i].addr),
-                    0,
-                    "mxcDOT balance after seizing"
-                );
             }
         }
 
@@ -299,7 +290,11 @@ contract mipm17 is Governor {
                 addresses.getAddress("MOONWELL_mxcDOT")
             );
             for (uint256 i = 0; i < debtors.length; i++) {
-                assertEq(mErc20Delegator.balanceOf(debtors[i].addr), 0);
+                assertEq(
+                    mErc20Delegator.balanceOf(debtors[i].addr),
+                    0,
+                    "mxcDOT balanceOf after seizing not zero"
+                );
                 assertEq(
                     mErc20Delegator.borrowBalanceStored(debtors[i].addr),
                     0,
