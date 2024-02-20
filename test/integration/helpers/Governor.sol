@@ -40,10 +40,17 @@ contract Governor is GovernorBravoProposal {
         bytes memory proposeCalldata = getProposeCalldata();
 
         // Register the proposal
-        vm.prank(proposerAddress);
-        bytes memory data = address(payable(governorAddress)).functionCall(
-            proposeCalldata
-        );
+        bytes memory data;
+        {
+            // Execute the proposal
+            uint256 gas_start = gasleft();
+            vm.prank(proposerAddress);
+            data = address(payable(governorAddress)).functionCall(
+                proposeCalldata
+            );
+
+            emit log_named_uint("Propose Gas Metering", gas_start - gasleft());
+        }
         uint256 proposalId = abi.decode(data, (uint256));
 
         if (DEBUG) {
@@ -83,12 +90,16 @@ contract Governor is GovernorBravoProposal {
         TimelockInterface timelock = TimelockInterface(governor.timelock());
         vm.warp(block.timestamp + timelock.delay());
 
-        // Execute the proposal
-        uint256 gas_start = gasleft();
-        governor.execute(proposalId);
-        uint256 gas_end = gasleft();
+        {
+            // Execute the proposal
+            uint256 gas_start = gasleft();
+            governor.execute(proposalId);
 
-        emit log_named_uint("Gas Metering", gas_start - gas_end);
+            emit log_named_uint(
+                "Execution Gas Metering",
+                gas_start - gasleft()
+            );
+        }
 
         require(governor.state(proposalId) == Bravo.ProposalState.Executed);
     }
