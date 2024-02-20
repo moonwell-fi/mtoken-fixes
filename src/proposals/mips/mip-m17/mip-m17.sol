@@ -2,6 +2,7 @@
 pragma solidity 0.8.19;
 
 import {Strings} from "@openzeppelin/utils/Strings.sol";
+import {IERC20} from "@forge-proposal-simulator/lib/openzeppelin-contracts/contracts/token/ERC20/IERC20.sol";
 
 import "@forge-std/Test.sol";
 import "@forge-std/console.sol";
@@ -251,17 +252,6 @@ contract mipm17 is Governor {
                     debtors[i].addr
                 );
 
-                /// not an invariant because the mglimmer market still has bad debt
-                // assertEq(
-                //     shortfall,
-                //     0,
-                //     string(
-                //         abi.encodePacked(
-                //             "bad debt not cleared for account: ",
-                //             Strings.toHexString(debtors[i].addr)
-                //         )
-                //     )
-                // );
                 assertEq(
                     err,
                     0,
@@ -301,6 +291,7 @@ contract mipm17 is Governor {
                 assertEq(mErc20Delegator.balanceOf(debtors[i].addr), 0);
             }
         }
+
         IMErc20Delegator mUSDCMErc20Delegator = IMErc20Delegator(
             addresses.getAddress("MOONWELL_mUSDC")
         );
@@ -316,18 +307,45 @@ contract mipm17 is Governor {
 
         /// @dev check that the Nomad assets have been swept
         assertEq(
-            mUSDCMErc20Delegator.balanceOf(reallocationMultisig),
-            mUSDCCash
+            IERC20(addresses.getAddress("madUSDC")).balanceOf(
+                reallocationMultisig
+            ),
+            mUSDCCash,
+            "mad usdc msig balance incorrect"
         );
-        assertEq(mUSDCMErc20Delegator.balance(), 0);
-
-        assertEq(mETHMErc20Delegator.balanceOf(reallocationMultisig), mETHCash);
-        assertEq(mETHMErc20Delegator.balance(), 0);
+        assertEq(mUSDCMErc20Delegator.getCash(), 0, "mad usdc cash incorrect");
+        assertEq(
+            mUSDCMErc20Delegator.balanceOf(reallocationMultisig),
+            0,
+            "musdc balance of msig incorrect"
+        );
 
         assertEq(
-            mwBTCMErc20Delegator.balanceOf(reallocationMultisig),
-            mwBTCCash
+            IERC20(addresses.getAddress("madWETH")).balanceOf(
+                reallocationMultisig
+            ),
+            mETHCash,
+            "mad eth msig balance incorrect"
         );
-        assertEq(mwBTCMErc20Delegator.balance(), 0);
+        assertEq(
+            mETHMErc20Delegator.balanceOf(reallocationMultisig),
+            0,
+            "meth balance of msig incorrect"
+        );
+        assertEq(mETHMErc20Delegator.getCash(), 0, "mad eth cash incorrect");
+
+        assertEq(
+            IERC20(addresses.getAddress("madWBTC")).balanceOf(
+                reallocationMultisig
+            ),
+            mwBTCCash,
+            "mad btc msig balance incorrect"
+        );
+        assertEq(
+            mwBTCMErc20Delegator.balanceOf(reallocationMultisig),
+            0,
+            "mwbtc balance of msig incorrect"
+        );
+        assertEq(mwBTCMErc20Delegator.getCash(), 0, "mad btc cash incorrect");
     }
 }
