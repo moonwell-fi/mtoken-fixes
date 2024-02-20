@@ -22,11 +22,10 @@ interface IMErc20Delegator {
     /// @notice block number that interest was last accrued at
     function accrualBlockTimestamp() external returns (uint256);
 
+    function exchangeRateCurrent() external returns (uint);
+
     /// @notice get cash amount
     function getCash() external returns (uint256);
-
-    /// @notice balance of the underlying token held by the contract
-    function balance() external returns (uint256);
 
     /// @notice balance of a given address
     function balanceOf(address) external returns (uint256);
