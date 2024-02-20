@@ -76,12 +76,6 @@ contract MErc20DelegateFixer is MErc20Delegate {
         );
     }
 
-    /// @notice get account tokens
-    /// @param user the address to get the account tokens
-    function getAccountTokens(address user) external view returns (uint256) {
-        return accountTokens[user];
-    }
-
     /// @notice fix a user
     /// @param liquidator the account to transfer the tokens to
     /// @param user the account with bad debt
@@ -119,7 +113,7 @@ contract MErc20DelegateFixer is MErc20Delegate {
     /// @notice zero the balance of a user
     /// @param user user to zero the balance of
     /// @return the principal prior to zeroing
-    function _zeroBalance(address user) private returns (uint256) {
+    function _zeroBalance(address user) private returns (uint256 principal) {
         /// @dev ensure that the borrow balance is up to date
         require(
             accrueInterest() == uint256(Error.NO_ERROR),
@@ -131,23 +125,18 @@ contract MErc20DelegateFixer is MErc20Delegate {
         }
 
         /// @dev the current principal
-        uint256 principal = borrowSnapshot.principal;
+        principal = borrowSnapshot.principal;
 
         /// @dev zero balance
         borrowSnapshot.principal = 0;
         borrowSnapshot.interestIndex = borrowIndex;
-
-        /// @dev return principal
-        return principal;
     }
 
     /// @notice get cash for the market, including bad debt in this calculation
     /// bad debt must be included in order to maintain the market share price
     function getCashPrior() internal view returns (uint256) {
-        EIP20Interface token = EIP20Interface(underlying);
         /// safe math unused intentionally, should never overflow as the sum
         /// should never be greater than UINT_MAX
-        uint256 total = token.balanceOf(address(this)) + badDebt;
-        return total;
+        return EIP20Interface(underlying).balanceOf(address(this)) + badDebt;
     }
 }
