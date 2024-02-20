@@ -5,9 +5,7 @@ import "@forge-std/console.sol";
 import {Address} from "@utils/Address.sol";
 import {IVotes} from "@openzeppelin/governance/utils/IVotes.sol";
 import {GovernorBravoDelegate} from "@comp-governance/GovernorBravoDelegate.sol";
-import {
-    TimelockInterface, GovernorBravoDelegateStorageV1 as Bravo
-} from "@comp-governance/GovernorBravoInterfaces.sol";
+import {TimelockInterface, GovernorBravoDelegateStorageV1 as Bravo} from "@comp-governance/GovernorBravoInterfaces.sol";
 
 import {GovernorBravoProposal} from "@forge-proposal-simulator/proposals/GovernorBravoProposal.sol";
 
@@ -18,14 +16,20 @@ contract Governor is GovernorBravoProposal {
     /// @param governorAddress address of the Governor Bravo Delegator contract
     /// @param governanceToken address of the governance token of the system
     /// @param proposerAddress address of the proposer
-    function simulateActions(address governorAddress, address governanceToken, address proposerAddress) internal {
+    function simulateActions(
+        address governorAddress,
+        address governanceToken,
+        address proposerAddress
+    ) internal {
         GovernorBravoDelegate governor = GovernorBravoDelegate(governorAddress);
 
         {
             // Ensure proposer has meets minimum proposal threshold and quorum votes to pass the proposal
             uint256 quorumVotes = governor.quorumVotes();
             uint256 proposalThreshold = governor.proposalThreshold();
-            uint256 votingPower = quorumVotes > proposalThreshold ? quorumVotes : proposalThreshold;
+            uint256 votingPower = quorumVotes > proposalThreshold
+                ? quorumVotes
+                : proposalThreshold;
             deal(governanceToken, proposerAddress, votingPower);
             // Delegate proposer's votes to itself
             vm.prank(proposerAddress);
@@ -36,12 +40,25 @@ contract Governor is GovernorBravoProposal {
         bytes memory proposeCalldata = getProposeCalldata();
 
         // Register the proposal
-        vm.prank(proposerAddress);
-        bytes memory data = address(payable(governorAddress)).functionCall(proposeCalldata);
+        bytes memory data;
+        {
+            // Execute the proposal
+            uint256 gas_start = gasleft();
+            vm.prank(proposerAddress);
+            data = address(payable(governorAddress)).functionCall(
+                proposeCalldata
+            );
+
+            emit log_named_uint("Propose Gas Metering", gas_start - gasleft());
+        }
         uint256 proposalId = abi.decode(data, (uint256));
 
         if (DEBUG) {
-            console.log("schedule batch calldata with ", actions.length, (actions.length > 1 ? "actions" : "action"));
+            console.log(
+                "schedule batch calldata with ",
+                actions.length,
+                (actions.length > 1 ? "actions" : "action")
+            );
 
             if (data.length > 0) {
                 console.log("proposalId: %s", proposalId);
@@ -73,8 +90,17 @@ contract Governor is GovernorBravoProposal {
         TimelockInterface timelock = TimelockInterface(governor.timelock());
         vm.warp(block.timestamp + timelock.delay());
 
-        // Execute the proposal
-        governor.execute(proposalId);
+        {
+            // Execute the proposal
+            uint256 gas_start = gasleft();
+            governor.execute(proposalId);
+
+            emit log_named_uint(
+                "Execution Gas Metering",
+                gas_start - gasleft()
+            );
+        }
+
         require(governor.state(proposalId) == Bravo.ProposalState.Executed);
     }
 }

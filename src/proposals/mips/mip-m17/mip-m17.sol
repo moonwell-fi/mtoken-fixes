@@ -106,7 +106,11 @@ contract mipm17 is Governor {
             IMErc20Delegator mFRAXDelegator = IMErc20Delegator(mFRAXAddress);
 
             for (uint256 i = 0; i < mFRAXDebtors.length; i++) {
-                if (mFRAXDelegator.balanceOf(mFRAXDebtors[i].addr) > 0) {
+                if (
+                    mFRAXDelegator.borrowBalanceStored(mFRAXDebtors[i].addr) >
+                    0 ||
+                    mFRAXDelegator.balanceOf(mFRAXDebtors[i].addr) != 0
+                ) {
                     _pushAction(
                         mFRAXAddress,
                         abi.encodeWithSignature(
@@ -136,7 +140,11 @@ contract mipm17 is Governor {
             IMErc20Delegator mxcDOTDelegator = IMErc20Delegator(mxcDOTAddress);
 
             for (uint256 i = 0; i < mxcDOTDebtors.length; i++) {
-                if (mxcDOTDelegator.balanceOf(mxcDOTDebtors[i].addr) > 0) {
+                if (
+                    mxcDOTDelegator.borrowBalanceStored(mxcDOTDebtors[i].addr) >
+                    0 ||
+                    mxcDOTDelegator.balanceOf(mxcDOTDebtors[i].addr) != 0
+                ) {
                     _pushAction(
                         mxcDOTAddress,
                         abi.encodeWithSignature(
@@ -149,6 +157,7 @@ contract mipm17 is Governor {
                 }
             }
         }
+
         address mUSDCAddress = addresses.getAddress("MOONWELL_mUSDC");
         address mETHAddress = addresses.getAddress("MOONWELL_mETH");
         address mwBTCAddress = addresses.getAddress("MOONWELL_mwBTC");
@@ -215,15 +224,11 @@ contract mipm17 is Governor {
         /// @dev set debug
         // setDebug(true);
 
-        uint256 gas_start = gasleft();
         simulateActions(
             addresses.getAddress("ARTEMIS_GOVERNOR"),
             addresses.getAddress("WELL"),
             address(this)
         );
-        uint256 gas_used = gas_start - gasleft();
-
-        emit log_named_uint("Gas Metering", gas_used);
     }
 
     function _validate(Addresses addresses, address) internal override {
@@ -247,6 +252,7 @@ contract mipm17 is Governor {
             IMErc20Delegator mErc20DelegatorxcDot = IMErc20Delegator(
                 addresses.getAddress("MOONWELL_mxcDOT")
             );
+
             for (uint256 i = 0; i < debtors.length; i++) {
                 (uint256 err, , ) = comptroller.getAccountLiquidity(
                     debtors[i].addr
@@ -261,6 +267,11 @@ contract mipm17 is Governor {
                             Strings.toHexString(debtors[i].addr)
                         )
                     )
+                );
+                assertEq(
+                    mErc20Delegator.borrowBalanceStored(debtors[i].addr),
+                    0,
+                    "mfrax borrow balance after seizing not zero"
                 );
                 assertEq(
                     mErc20Delegator.balanceOf(debtors[i].addr),
@@ -289,6 +300,11 @@ contract mipm17 is Governor {
             );
             for (uint256 i = 0; i < debtors.length; i++) {
                 assertEq(mErc20Delegator.balanceOf(debtors[i].addr), 0);
+                assertEq(
+                    mErc20Delegator.borrowBalanceStored(debtors[i].addr),
+                    0,
+                    "mxcDOT borrow balance after seizing not zero"
+                );
             }
         }
 
