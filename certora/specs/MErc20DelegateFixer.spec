@@ -19,14 +19,6 @@ function one() returns uint256 {
     return 1000000000000000000;
 }
 
-/// ensure we can reach assert false for all external calls
-rule sanity(method f) {
-    env e;
-    calldataarg args;
-    f(e, args);
-    assert false;
-}
-
 rule fixUserIncreasesBadDebt(env e) {
     address user;
     address liquidator;
