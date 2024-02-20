@@ -29,4 +29,4 @@ jobs:
 
       - name: test
         run: |
-          forge test --match-contract MIPM17IntegrationTest --fork-url https://rpc.api.moonbeam.network -vvvvv
+          forge test --match-contract MIPM17IntegrationTest --fork-url https://rpc.api.moonbeam.network -vvv
