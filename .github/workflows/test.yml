@@ -1,7 +1,6 @@
 name: test
 
-on:
-  push
+on: push
 
 env:
   FOUNDRY_PROFILE: ci
@@ -30,5 +29,4 @@ jobs:
 
       - name: test
         run: |
-          forge test --match-contract ComptrollerFixerIntegrationTest --fork-url https://rpc.api.moonbeam.network
-          forge test --match-contract MErc20DelegateMadFixerIntegrationTest --fork-url https://rpc.api.moonbeam.network
+          forge test --match-contract MIPM17IntegrationTest --fork-url https://rpc.api.moonbeam.network
