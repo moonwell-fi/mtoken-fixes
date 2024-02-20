@@ -1,6 +1,4 @@
 @forge-std/=lib/forge-std/src/
-@openzeppelin/=lib/openzeppelin-contracts/
 @protocol=src/
-@test=test/
-@proposals=src/proposals/
-@utils/=utils/
+@tests=test/
+@forge-proposal-simulator=lib/forge-proposal-simulator/

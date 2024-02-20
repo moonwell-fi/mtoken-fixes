@@ -35,11 +35,6 @@
         "name": "MOONBEAM_TIMELOCK"
     },
     {
-        "addr": "0x4a8bc80Ed5a4067f1CCf107057b8270E0cC11A78",
-        "chainId": 11155111,
-        "name": "WORMHOLE_CORE"
-    },
-    {
         "addr": "0x23908A62110e21C04F3A4e011d24F901F911744A",
         "chainId": 84531,
         "name": "WORMHOLE_CORE"
@@ -628,6 +623,31 @@
         "addr": "0x24A9d8f1f350d59cB0368D3d52A77dB29c833D1D",
         "chainId": 1284,
         "name": "MOONWELL_mwBTC"
+    },
+    {
+        "addr": "0x1C55649f73CDA2f72CEf3DD6C5CA3d49EFcF484C",
+        "chainId": 1284,
+        "name": "MOONWELL_mFRAX"
+    },
+    {
+        "addr": "0x322E86852e492a7Ee17f28a78c663da38FB33bfb",
+        "chainId": 1284,
+        "name": "FRAX"
+    },
+    {
+        "addr": "0xD22Da948c0aB3A27f5570b604f3ADef5F68211C3",
+        "chainId": 1284,
+        "name": "MOONWELL_mxcDOT"
+    },
+    {
+        "addr": "0xFfFFfFff1FcaCBd218EDc0EbA20Fc2308C778080",
+        "chainId": 1284,
+        "name": "xcDOT"
+    },
+    {
+        "addr": "0xFFFFFFfFea09FB06d082fd1275CD48b191cbCD1d",
+        "chainId": 1284,
+        "name": "xcUSDT"
     },
     {
         "addr": "0x8f552a71efe5eefc207bf75485b356a0b3f01ec9",
