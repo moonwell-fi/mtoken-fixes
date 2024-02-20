@@ -1,7 +1,6 @@
 pragma solidity 0.8.19;
 
 import "@forge-std/Test.sol";
-import "@forge-std/console.sol";
 
 import {Addresses} from "@forge-proposal-simulator/addresses/Addresses.sol";
 import {IERC20} from "@forge-proposal-simulator/lib/openzeppelin-contracts/contracts/token/ERC20/IERC20.sol";
@@ -15,6 +14,7 @@ import {IMErc20Delegator} from "@protocol/Interfaces/IMErc20Delegator.sol";
 import {PostProposalCheck} from "@tests/integration/PostProposalCheck.sol";
 import {IInterestRateModel} from "@protocol/Interfaces/IInterestRateModel.sol";
 import {IMErc20DelegateFixer} from "@protocol/Interfaces/IMErc20DelegateFixer.sol";
+import {IMErc20DelegateMadFixer} from "@protocol/Interfaces/IMErc20DelegateMadFixer.sol";
 
 /// @title MIP-M17 integration tests
 /// @dev to run:
@@ -38,6 +38,7 @@ contract MIPM17IntegrationTest is PostProposalCheck {
     IMErc20Delegator nomadUSDCDelegator;
     IMErc20Delegator nomadETHDelegator;
     IMErc20Delegator nomadBTCDelegator;
+    IERC20 xcDotToken;
     IERC20 fraxToken;
     IComptroller comptroller;
 
@@ -49,6 +50,15 @@ contract MIPM17IntegrationTest is PostProposalCheck {
     uint256 public fraxSupplyRewardSpeeds;
     uint256 public fraxAccrualBlockTimestampPrior;
     uint256 public fraxBorrowRateMantissa;
+
+    uint256 public xcDOTTotalBorrows;
+    uint256 public xcDOTTotalReserves;
+    uint256 public xcDOTTotalSupply;
+    uint256 public xcDOTBorrowIndex;
+    uint256 public xcDOTSupplyRewardSpeeds;
+    uint256 public xcDOTAccrualBlockTimestampPrior;
+    uint256 public xcDOTBorrowRateMantissa;
+
     uint256 public nomadUSDCBalance;
     uint256 public nomadETHBalance;
     uint256 public nomadBTCBalance;
@@ -109,14 +119,6 @@ contract MIPM17IntegrationTest is PostProposalCheck {
             }
 
             vm.etch(_addresses.getAddress("xcDOT"), runtimeBytecode);
-            console.log(
-                "xcDot symbol after upgrade: ",
-                ERC20(_addresses.getAddress("xcDOT")).symbol()
-            );
-            console.log(
-                "xcDot name after upgrade: ",
-                ERC20(_addresses.getAddress("xcDOT")).name()
-            );
 
             deal(
                 _addresses.getAddress("xcDOT"),
@@ -170,6 +172,7 @@ contract MIPM17IntegrationTest is PostProposalCheck {
         nomadBTCBalance = IERC20(madWBTC).balanceOf(mwBTC);
         multisigBTCBalance = IERC20(madWBTC).balanceOf(multisig);
 
+        xcDotToken = IERC20(_addresses.getAddress("xcDOT"));
         fraxToken = IERC20(_addresses.getAddress("FRAX"));
         comptroller = IComptroller(_addresses.getAddress("UNITROLLER"));
 
@@ -186,92 +189,200 @@ contract MIPM17IntegrationTest is PostProposalCheck {
 
         IInterestRateModel interestRateModel = fraxDelegator
             .interestRateModel();
-        uint256 fraxCashPrior = fraxToken.balanceOf(
-            _addresses.getAddress("MOONWELL_mFRAX")
+        {
+            uint256 fraxCashPrior = fraxToken.balanceOf(
+                _addresses.getAddress("MOONWELL_mFRAX")
+            );
+
+            fraxBorrowRateMantissa = interestRateModel.getBorrowRate(
+                fraxCashPrior,
+                fraxTotalBorrows,
+                fraxTotalReserves
+            );
+        }
+
+        xcDOTTotalBorrows = mxcDotDelegator.totalBorrows();
+        xcDOTTotalReserves = mxcDotDelegator.totalReserves();
+        xcDOTTotalSupply = mxcDotDelegator.totalSupply();
+        xcDOTBorrowIndex = mxcDotDelegator.borrowIndex();
+        xcDOTSupplyRewardSpeeds = comptroller.supplyRewardSpeeds(
+            0,
+            address(mxcDotDelegator)
         );
-        fraxBorrowRateMantissa = interestRateModel.getBorrowRate(
-            fraxCashPrior,
-            fraxTotalBorrows,
-            fraxTotalReserves
+        xcDOTAccrualBlockTimestampPrior = mxcDotDelegator
+            .accrualBlockTimestamp();
+        interestRateModel = mxcDotDelegator.interestRateModel();
+        uint256 xcDOTCashPrior = xcDotToken.balanceOf(
+            _addresses.getAddress("MOONWELL_mxcDOT")
+        );
+
+        xcDOTBorrowRateMantissa = interestRateModel.getBorrowRate(
+            xcDOTCashPrior,
+            xcDOTTotalBorrows,
+            xcDOTTotalReserves
         );
 
         /// @dev accrueInterest() will be run when the prop is executed
         super.setUp();
     }
 
-    function testSetUp() public {
-        /// TODO add tests for xcDOT borrows, reserves, indexes
+    function testSetUpxcDot() public {
+        {
+            /// @dev check that the borrows, reserves and index calculations match
+            (, uint256 blockDelta) = subUInt(
+                block.timestamp,
+                xcDOTAccrualBlockTimestampPrior
+            );
+            (, Exp memory simpleInterestFactor) = mulScalar(
+                Exp({mantissa: xcDOTBorrowRateMantissa}),
+                blockDelta
+            );
+            (, uint256 interestAccumulated) = mulScalarTruncate(
+                simpleInterestFactor,
+                xcDOTTotalBorrows
+            );
 
-        /// @dev check that the borrows, reserves and index calculations match
-        (, uint256 blockDelta) = subUInt(
-            block.timestamp,
-            fraxAccrualBlockTimestampPrior
-        );
-        (, Exp memory simpleInterestFactor) = mulScalar(
-            Exp({mantissa: fraxBorrowRateMantissa}),
-            blockDelta
-        );
-        (, uint256 interestAccumulated) = mulScalarTruncate(
-            simpleInterestFactor,
-            fraxTotalBorrows
-        );
-        (, uint256 _fraxTotalBorrows) = addUInt(
-            interestAccumulated,
-            fraxTotalBorrows - fraxDelegator.badDebt()
-        );
-        (, uint256 _fraxTotalReserves) = mulScalarTruncateAddUInt(
-            Exp({mantissa: fraxDelegator.reserveFactorMantissa()}),
-            interestAccumulated,
-            fraxTotalReserves
-        );
-        (, uint256 _fraxBorrowIndex) = mulScalarTruncateAddUInt(
-            simpleInterestFactor,
-            fraxBorrowIndex,
-            fraxBorrowIndex
-        );
+            /// calculate the amount of xcDot that still should be borrowed post writeoffs
+            (, uint256 _xcDotTotalBorrows) = addUInt(
+                interestAccumulated,
+                xcDOTTotalBorrows - mxcDotDelegator.badDebt()
+            );
+            (, uint256 _mxcDotTotalReserves) = mulScalarTruncateAddUInt(
+                Exp({mantissa: mxcDotDelegator.reserveFactorMantissa()}),
+                interestAccumulated,
+                xcDOTTotalReserves
+            );
+            (, uint256 _xcDotBorrowIndex) = mulScalarTruncateAddUInt(
+                simpleInterestFactor,
+                xcDOTBorrowIndex,
+                xcDOTBorrowIndex
+            );
 
-        assertEq(fraxDelegator.totalBorrows(), _fraxTotalBorrows);
-        assertEq(fraxDelegator.totalReserves(), _fraxTotalReserves);
-        assertEq(fraxDelegator.borrowIndex(), _fraxBorrowIndex);
+            assertEq(
+                mxcDotDelegator.totalBorrows(),
+                _xcDotTotalBorrows,
+                "incorrect total borrows"
+            );
+            assertEq(
+                mxcDotDelegator.totalReserves(),
+                _mxcDotTotalReserves,
+                "incorrect total reserves"
+            );
+            assertEq(
+                mxcDotDelegator.borrowIndex(),
+                _xcDotBorrowIndex,
+                "incorrect borrow index"
+            );
 
-        uint256 _fraxCashPrior = fraxToken.balanceOf(
-            addresses.getAddress("MOONWELL_mFRAX")
-        ) + fraxDelegator.badDebt();
-        (, uint256 cashPlusBorrowsMinusReserves) = addThenSubUInt(
-            _fraxCashPrior,
-            _fraxTotalBorrows,
-            _fraxTotalReserves
-        );
-        (, Exp memory _fraxExchangeRate) = getExp(
-            cashPlusBorrowsMinusReserves,
-            fraxTotalSupply
-        );
+            uint256 _mxcDotCashPrior = xcDotToken.balanceOf(
+                addresses.getAddress("MOONWELL_mxcDOT")
+            ) + mxcDotDelegator.badDebt();
+            (, uint256 cashPlusBorrowsMinusReserves) = addThenSubUInt(
+                _mxcDotCashPrior,
+                _xcDotTotalBorrows,
+                _mxcDotTotalReserves
+            );
+            (, Exp memory _mxcDotExchangeRate) = getExp(
+                cashPlusBorrowsMinusReserves,
+                xcDOTTotalSupply
+            );
+
+            assertEq(
+                mxcDotDelegator.exchangeRateStored(),
+                _mxcDotExchangeRate.mantissa,
+                "incorrect exchange rate"
+            );
+        }
 
         assertEq(
-            fraxDelegator.exchangeRateStored(),
-            _fraxExchangeRate.mantissa
+            mxcDotDelegator.totalSupply(),
+            xcDOTTotalSupply,
+            "incorrect total supply"
         );
+        assertEq(
+            comptroller.supplyRewardSpeeds(0, address(mxcDotDelegator)),
+            xcDOTSupplyRewardSpeeds,
+            "incorrect reward speeds"
+        );
+    }
+
+    function testSetUp() public {
+        {
+            /// @dev check that the borrows, reserves and index calculations match
+            (, uint256 blockDelta) = subUInt(
+                block.timestamp,
+                fraxAccrualBlockTimestampPrior
+            );
+            (, Exp memory simpleInterestFactor) = mulScalar(
+                Exp({mantissa: fraxBorrowRateMantissa}),
+                blockDelta
+            );
+            (, uint256 interestAccumulated) = mulScalarTruncate(
+                simpleInterestFactor,
+                fraxTotalBorrows
+            );
+            (, uint256 _fraxTotalBorrows) = addUInt(
+                interestAccumulated,
+                fraxTotalBorrows - fraxDelegator.badDebt()
+            );
+            (, uint256 _fraxTotalReserves) = mulScalarTruncateAddUInt(
+                Exp({mantissa: fraxDelegator.reserveFactorMantissa()}),
+                interestAccumulated,
+                fraxTotalReserves
+            );
+            (, uint256 _fraxBorrowIndex) = mulScalarTruncateAddUInt(
+                simpleInterestFactor,
+                fraxBorrowIndex,
+                fraxBorrowIndex
+            );
+
+            assertEq(fraxDelegator.totalBorrows(), _fraxTotalBorrows);
+            assertEq(fraxDelegator.totalReserves(), _fraxTotalReserves);
+            assertEq(fraxDelegator.borrowIndex(), _fraxBorrowIndex);
+
+            uint256 _fraxCashPrior = fraxToken.balanceOf(
+                addresses.getAddress("MOONWELL_mFRAX")
+            ) + fraxDelegator.badDebt();
+            (, uint256 cashPlusBorrowsMinusReserves) = addThenSubUInt(
+                _fraxCashPrior,
+                _fraxTotalBorrows,
+                _fraxTotalReserves
+            );
+            (, Exp memory _fraxExchangeRate) = getExp(
+                cashPlusBorrowsMinusReserves,
+                fraxTotalSupply
+            );
+
+            assertEq(
+                fraxDelegator.exchangeRateStored(),
+                _fraxExchangeRate.mantissa
+            );
+        }
+
         assertEq(fraxDelegator.totalSupply(), fraxTotalSupply);
         assertEq(
             comptroller.supplyRewardSpeeds(0, address(fraxDelegator)),
             fraxSupplyRewardSpeeds
         );
 
-        assertEq(nomadUSDCDelegator.balance(), 0);
-        assertEq(nomadETHDelegator.balance(), 0);
-        assertEq(nomadBTCDelegator.balance(), 0);
+        assertEq(nomadUSDCDelegator.getCash(), 0, "cash incorrect usdc");
+        assertEq(nomadETHDelegator.getCash(), 0, "cash incorrect eth");
+        assertEq(nomadBTCDelegator.getCash(), 0, "cash incorrect btc");
 
         assertEq(
             nomadUSDCDelegator.balanceOf(multisig),
-            (multisigUSDCBalance + nomadUSDCBalance)
+            0,
+            "msig should have no balance of nomad mUSDC"
         );
         assertEq(
             nomadETHDelegator.balanceOf(multisig),
-            (multisigETHBalance + nomadETHBalance)
+            0,
+            "msig should have no balance of nomad mETH"
         );
         assertEq(
             nomadBTCDelegator.balanceOf(multisig),
-            (multisigBTCBalance + nomadBTCBalance)
+            0,
+            "msig should have no balance of nomad mWBTC"
         );
 
         assertEq(
@@ -878,13 +989,55 @@ contract MIPM17IntegrationTest is PostProposalCheck {
         comptroller.claimReward(2, payable(claimant));
     }
 
-    /// TODO
-    function testLiquidateBorrow() public {
+    function testLiquidateBorrowFrax() public {
+        testUnpauseMarket(); /// unpause frax borrows
+
+        uint256 supplyAmount = 1_000_000 * 1e18;
         IMErc20Delegator mToken = IMErc20Delegator(
             addresses.getAddress("MOONWELL_mFRAX")
         );
 
-        /// borrower is now underwater on loan
+        deal(addresses.getAddress("FRAX"), address(this), supplyAmount);
+
+        fraxToken.approve(address(mToken), supplyAmount);
+        assertEq(mToken.mint(supplyAmount), 0, "error minting frax tokens");
+
+        address[] memory markets = new address[](1);
+        markets[0] = address(mToken);
+        comptroller.enterMarkets(markets);
+
+        {
+            (, uint256 mintedAmount) = divScalarByExpTruncate(
+                supplyAmount,
+                Exp({mantissa: fraxDelegator.exchangeRateStored()})
+            );
+            assertEq(
+                fraxDelegator.balanceOf(address(this)),
+                mintedAmount,
+                "frax minter balance incorrect"
+            );
+            assertEq(
+                fraxToken.balanceOf(address(this)),
+                0,
+                "frax token balance post mint incorrect"
+            );
+        }
+
+        assertEq(mToken.borrow(supplyAmount / 2), 0, "borrow failed");
+
+        assertEq(
+            mToken.borrowBalanceStored(address(this)),
+            supplyAmount / 2,
+            "incorrect borrow balance stored"
+        );
+
+        assertEq(
+            fraxToken.balanceOf(address(this)),
+            supplyAmount / 2,
+            "frax token balance post borrow incorrect"
+        );
+
+        /// borrower is now underwater on loan as collateral value is cut in half
         deal(
             address(mToken),
             address(this),
@@ -911,9 +1064,91 @@ contract MIPM17IntegrationTest is PostProposalCheck {
         vm.prank(liquidator);
         frax.approve(address(mToken), repayAmt);
 
-        _liquidateAccount(liquidator, address(this), mToken, 1e6);
+        _liquidateAccount(liquidator, address(this), mToken, repayAmt);
+    }
 
-        /// TODO validate that borrow has decreased, (share price unchanged?)
+    function testLiquidateBorrowxcDOT() public {
+        uint256 supplyAmount = 1_000_000 * 1e18;
+        IMErc20Delegator mToken = IMErc20Delegator(
+            addresses.getAddress("MOONWELL_mxcDOT")
+        );
+
+        deal(addresses.getAddress("xcDOT"), address(this), supplyAmount);
+
+        xcDotToken.approve(address(mToken), supplyAmount);
+        assertEq(mToken.mint(supplyAmount), 0, "error minting xcDot tokens");
+
+        address[] memory markets = new address[](1);
+        markets[0] = address(mToken);
+        comptroller.enterMarkets(markets);
+
+        {
+            (, uint256 mintedAmount) = divScalarByExpTruncate(
+                supplyAmount,
+                Exp({mantissa: mxcDotDelegator.exchangeRateStored()})
+            );
+            assertEq(
+                mxcDotDelegator.balanceOf(address(this)),
+                mintedAmount,
+                "xcDot minter balance incorrect"
+            );
+            assertEq(
+                xcDotToken.balanceOf(address(this)),
+                0,
+                "xcDot token balance post mint incorrect"
+            );
+        }
+
+        address[] memory mTokens = new address[](1);
+        mTokens[0] = address(mxcDotDelegator);
+
+        uint256[] memory borrowCaps = new uint256[](1);
+        borrowCaps[0] = type(uint256).max;
+
+        vm.prank(comptroller.admin());
+        comptroller._setMarketBorrowCaps(mTokens, borrowCaps);
+
+        assertEq(mToken.borrow(supplyAmount / 2), 0, "borrow failed");
+
+        assertEq(
+            mToken.borrowBalanceStored(address(this)),
+            supplyAmount / 2,
+            "incorrect borrow balance stored"
+        );
+
+        assertEq(
+            xcDotToken.balanceOf(address(this)),
+            supplyAmount / 2,
+            "xcDot token balance post borrow incorrect"
+        );
+
+        /// borrower is now underwater on loan as collateral value is cut in half
+        deal(
+            address(mToken),
+            address(this),
+            mToken.balanceOf(address(this)) / 2
+        );
+
+        (uint256 err, uint256 liquidity, uint256 shortfall) = comptroller
+            .getHypotheticalAccountLiquidity(
+                address(this),
+                address(mToken),
+                0,
+                0
+            );
+
+        assertEq(err, 0);
+        assertEq(liquidity, 0);
+        assertGt(shortfall, 0);
+
+        uint256 repayAmt = 50e6;
+        address liquidator = address(100_000_000);
+
+        deal(addresses.getAddress("xcDOT"), liquidator, repayAmt);
+        vm.prank(liquidator);
+        xcDotToken.approve(address(mToken), repayAmt);
+
+        _liquidateAccount(liquidator, address(this), mToken, repayAmt);
     }
 
     function _liquidateAccount(
@@ -922,11 +1157,45 @@ contract MIPM17IntegrationTest is PostProposalCheck {
         IMErc20Delegator token,
         uint256 repayAmt
     ) private {
+        uint256 borrowBalanceStored = token.borrowBalanceStored(liquidated);
+
         vm.prank(liquidator);
         assertEq(
             token.liquidateBorrow(liquidated, repayAmt, address(token)),
             0,
             "user liquidation failure"
         );
+
+        uint256 borrowBalanceStoredPost = token.borrowBalanceStored(liquidated);
+
+        assertEq(
+            borrowBalanceStored - borrowBalanceStoredPost,
+            repayAmt,
+            "borrow balance incorrectly decreased"
+        );
+    }
+
+    /// MErc20DelegateMadFixer
+
+    function testSweepAllNonAdminFails() public {
+        IMErc20DelegateMadFixer madEth = IMErc20DelegateMadFixer(
+            addresses.getAddress("MOONWELL_mETH")
+        );
+        IMErc20DelegateMadFixer madBtc = IMErc20DelegateMadFixer(
+            addresses.getAddress("MOONWELL_mwBTC")
+        );
+        IMErc20DelegateMadFixer madUsdc = IMErc20DelegateMadFixer(
+            addresses.getAddress("MOONWELL_mUSDC")
+        );
+        address nomadMsig = addresses.getAddress("NOMAD_REALLOCATION_MULTISIG");
+
+        vm.expectRevert("only admin may sweep all");
+        madEth.sweepAll(nomadMsig);
+
+        vm.expectRevert("only admin may sweep all");
+        madBtc.sweepAll(nomadMsig);
+
+        vm.expectRevert("only admin may sweep all");
+        madUsdc.sweepAll(nomadMsig);
     }
 }
