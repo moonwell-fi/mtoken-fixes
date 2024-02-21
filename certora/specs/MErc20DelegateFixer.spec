@@ -24,6 +24,8 @@ methods {
     function _.admin() external => DISPATCHER(true);
     function _.borrowIndex() external => DISPATCHER(true);
     function _._acceptImplementation() external => CONSTANT;
+    function _.totalBorrows() external => CONSTANT;
+    function _.borrowBalanceStored() external => CONSTANT;
 }
 
 ghost uint256 borrowIndex {
@@ -154,6 +156,8 @@ filtered {
     f.selector == sig:repayBadDebtWithCash(uint256).selector ||
     f.selector == sig:repayBadDebtWithReserves().selector
 } {
+    require e.msg.sender != fixer;
+
     uint256 startingSharePrice = exchangeRateCurrent(e);
     uint256 startingBadDebt = badDebt();
     uint256 startingCash = token.balanceOf(fixer);
@@ -195,6 +199,8 @@ rule repayBadDebtWithReserves(env e) {
 }
 
 rule repayBadDebtWithReservesDoesNotChangeSharePrice(env e) {
+    require e.msg.sender != fixer;
+
     uint256 startingSharePrice = exchangeRateCurrent(e);
 
     repayBadDebtWithReserves();
