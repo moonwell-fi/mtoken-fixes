@@ -21,7 +21,7 @@ contract mipm17 is Governor {
     /// @dev nomad balances
     uint256 public constant mwBTCCash = 4425696499;
     uint256 public constant mUSDCCash = 10789300371738;
-    uint256 public constant mETHCash = 2269023468465447134524;
+    uint256 public constant mETHCash = 2269023504004122147416;
 
     /// @notice struct to read in JSON file
     struct Accounts {
