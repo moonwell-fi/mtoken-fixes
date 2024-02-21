@@ -5,19 +5,91 @@ methods {
     function badDebt() external returns (uint256) envfree;
     function fixUser(address liquidator, address user) external;
     function borrowIndex() external returns (uint256) envfree;
+    function totalBorrows() external returns (uint256) envfree;
+    function totalReserves() external returns (uint256) envfree;
     function token.balanceOf(address) external returns (uint256) envfree;
     function balanceOf(address) external returns (uint256) envfree;
     function repayBadDebtWithCash(uint256) external;
     function accrueInterest() external returns (uint256);
     function exchangeRateCurrent() external returns (uint256);
     function borrowBalanceCurrent(address account) external returns (uint256);
-    function repayBadDebtWithReserves() external;
+    function repayBadDebtWithReserves() external envfree;
     function getUserBorrowSnapshot(address user) external returns (uint256, uint256) envfree;
+    function getUserBorrowInterestIndex(address user) external returns (uint256) envfree;
+    function getInitialExchangeRateMantissa() external returns (uint256) envfree;
+
+    /// summarize these calls to prevent prover havoc
+    function _.isComptroller() external => DISPATCHER(true);
+    function _.isInterestRateModel() external => DISPATCHER(true);
+    function _.admin() external => DISPATCHER(true);
+    function _.borrowIndex() external => DISPATCHER(true);
+    function _._acceptImplementation() external => CONSTANT;
+}
+
+ghost uint256 borrowIndex {
+    init_state axiom borrowIndex == 0;
+}
+
+ghost uint256 totalBorrows {
+    init_state axiom totalBorrows == 0;
+}
+
+ghost uint256 initialExchangeRateMantissa {
+    init_state axiom initialExchangeRateMantissa == 0;
+}
+
+hook Sstore borrowIndex uint256 newBorrowIndex (uint256 oldBorrowIndex) STORAGE {
+    borrowIndex = newBorrowIndex;
+}
+
+hook Sstore totalBorrows uint256 newTotalBorrows (uint256 oldTotalBorrows) STORAGE {
+    totalBorrows = newTotalBorrows;
+}
+
+hook Sstore initialExchangeRateMantissa uint256 newInitialExchangeRateMantissa (uint256 oldInitialExchangeRateMantissa) STORAGE {
+    initialExchangeRateMantissa = newInitialExchangeRateMantissa;
 }
 
 function one() returns uint256 {
     return 1000000000000000000;
 }
+
+function uintMax() returns uint256 {
+    return 2 ^ 256 - 1;
+}
+
+/// market initialization check
+
+invariant ghostInitialExchangeRateMantissaMirrorsStorage()
+    initialExchangeRateMantissa == getInitialExchangeRateMantissa();
+
+invariant ghostBorrowIndexMirrorsStorage()
+    borrowIndex == borrowIndex();
+
+invariant ghostTotalBorrowsMirrorsStorage()
+    totalBorrows == totalBorrows();
+
+invariant initialBorrowIndexGteOne()
+    borrowIndex() != 0 => borrowIndex() >= one();
+
+// invariant initialExchangeRateMantissaGteOne()
+//     borrowIndex() != 0 => initialExchangeRateMantissa() >= one();
+
+invariant exchangeRateGteOne(env e)
+    borrowIndex() >= one() => exchangeRateCurrent(e) >= one() {
+        preserved {
+            requireInvariant initialBorrowIndexGteOne();
+            // requireInvariant initialExchangeRateMantissaGteOne();
+        }
+    }
+
+invariant userBorrowIndexLteExchangeRateCurrent(env e, address user)
+    getUserBorrowInterestIndex(user) != 0 =>
+     (getUserBorrowInterestIndex(user) <= exchangeRateCurrent(e) && getUserBorrowInterestIndex(user) >= one()) {
+        preserved {
+            requireInvariant ghostBorrowIndexMirrorsStorage();
+        }
+     }
 
 rule fixUserIncreasesBadDebt(env e) {
     address user;
@@ -25,11 +97,7 @@ rule fixUserIncreasesBadDebt(env e) {
     uint256 principle;
     uint256 interestIndex;
 
-    require borrowIndex() >= one();
     principle, interestIndex = getUserBorrowSnapshot(user);
-
-    require interestIndex <= borrowIndex();
-    require interestIndex >= one();
 
     uint256 badDebt = badDebt();
     uint256 liquidatorBalance = balanceOf(liquidator);
@@ -42,28 +110,14 @@ rule fixUserIncreasesBadDebt(env e) {
 
     assert badDebtAfter >= badDebt, "bad debt decreased from fixing a user";
     assert balanceOf(user) == 0, "user balance not zero";
-    assert liquidatorBalance + userBalance == to_mathint(balanceOf(liquidator)), "liquidator balance not increased by user balance";
+    assert (liquidatorBalance + userBalance == to_mathint(balanceOf(liquidator))), "liquidator balance not increased by user balance";
     assert borrowBalanceCurrent(e, user) == 0, "user borrow balance not zero";
-    assert badDebt + borrowBalance == to_mathint(badDebtAfter), "bad debt not increased by user borrow amt";
+    assert interestIndex >= one() => (badDebt + borrowBalance == to_mathint(badDebtAfter)), "bad debt not increased by user borrow amt";
 }
 
 rule fixingUserDoesNotChangeSharePrice(env e) {
     address user;
     address liquidator;
-    uint256 principle;
-    uint256 interestIndex;
-
-    /// ensure liquidator is not user
-    require liquidator != user;
-
-    /// verify market integrity before starting
-    require accrueInterest(e) == 0;
-
-    require borrowIndex() >= one();
-    principle, interestIndex = getUserBorrowSnapshot(user);
-
-    require interestIndex <= borrowIndex();
-    require interestIndex >= one();
 
     uint256 startingSharePrice = exchangeRateCurrent(e);
 
@@ -92,3 +146,60 @@ rule repayBadDebtDecreasesBadDebt(env e, uint256 repayAmount) {
 }
 
 /// TODO parametric rules for repayBadDebtWithReserves
+
+rule badDebtRules(method f, env e, calldataarg args)
+filtered {
+    f -> 
+    f.selector == sig:fixUser(address,address).selector ||
+    f.selector == sig:repayBadDebtWithCash(uint256).selector ||
+    f.selector == sig:repayBadDebtWithReserves().selector
+} {
+    uint256 startingSharePrice = exchangeRateCurrent(e);
+    uint256 startingBadDebt = badDebt();
+    uint256 startingCash = token.balanceOf(fixer);
+
+    f(e, args);
+
+    uint256 endingBadDebt = badDebt();
+
+    assert startingCash + startingBadDebt <= to_mathint(uintMax()) =>
+     exchangeRateCurrent(e) == startingSharePrice,
+     "share price should not change repaying bad debt";
+
+    assert (endingBadDebt > startingBadDebt) =>
+     (f.selector == sig:fixUser(address,address).selector),
+      "bad debt should only increase when fixing users";
+
+    assert (startingBadDebt >= endingBadDebt) => 
+     (f.selector == sig:repayBadDebtWithCash(uint256).selector ||
+     f.selector == sig:repayBadDebtWithReserves().selector),
+     "bad debt should only increase when fixing users";
+}
+
+rule repayBadDebtWithReserves(env e) {
+    uint256 startingReserves = totalReserves();
+    uint256 startingBadDebt = badDebt();
+
+    repayBadDebtWithReserves();
+
+    uint256 endingReserves = totalReserves();
+    uint256 endingBadDebt = badDebt();
+
+    assert (startingReserves >= startingBadDebt) =>
+     (endingBadDebt == 0),
+      "bad debt not fully paid off";
+
+    assert (startingReserves < startingBadDebt) =>
+     (to_mathint(endingBadDebt) == startingBadDebt - startingReserves),
+      "bad debt not paid off by reserve amount";
+}
+
+rule repayBadDebtWithReservesDoesNotChangeSharePrice(env e) {
+    uint256 startingSharePrice = exchangeRateCurrent(e);
+
+    repayBadDebtWithReserves();
+
+    uint256 endingSharePrice = exchangeRateCurrent(e);
+
+    assert endingSharePrice == startingSharePrice, "share price should remain unchanged";
+}
