@@ -8,6 +8,15 @@ contract MockMErc20DelegateFixer is MErc20DelegateFixer {
         address user
     ) external view returns (uint256 principal, uint256 interestIndex) {
         principal = accountBorrows[user].principal;
+    }
+
+    function getUserBorrowInterestIndex(
+        address user
+    ) external view returns (uint256 interestIndex) {
         interestIndex = accountBorrows[user].interestIndex;
+    }
+
+    function getInitialExchangeRateMantissa() external view returns (uint256) {
+        return initialExchangeRateMantissa;
     }
 }
