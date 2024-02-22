@@ -467,6 +467,24 @@ contract MIPM17IntegrationTest is PostProposalCheck {
         );
     }
 
+    function testFixUserFailsNoUserBorrows() public {
+        vm.prank(addresses.getAddress("MOONBEAM_TIMELOCK"));
+        vm.expectRevert("cannot liquidate user without borrows");
+        IMErc20DelegateFixer(address(fraxDelegator)).fixUser(
+            address(2),
+            address(1)
+        );
+    }
+
+    function testFixUserFailsUserEqLiquidator() public {
+        vm.prank(addresses.getAddress("MOONBEAM_TIMELOCK"));
+        vm.expectRevert("liquidator cannot be user");
+        IMErc20DelegateFixer(address(fraxDelegator)).fixUser(
+            address(1),
+            address(1)
+        );
+    }
+
     function testRepayBadDebtSucceeds(uint256 repayAmount) public {
         uint256 startingExchangeRate = fraxDelegator.exchangeRateStored();
         uint256 existingBadDebt = fraxDelegator.badDebt();
