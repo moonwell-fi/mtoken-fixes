@@ -149,8 +149,6 @@ rule repayBadDebtDecreasesBadDebt(env e, uint256 repayAmount) {
     assert exchangeRateCurrent(e) == startingSharePrice, "share price should not change repaying bad debt";
 }
 
-/// TODO parametric rules for repayBadDebtWithReserves
-
 rule badDebtRules(method f, env e, calldataarg args)
 filtered {
     f -> 
