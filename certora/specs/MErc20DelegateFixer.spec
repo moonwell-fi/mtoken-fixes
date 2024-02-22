@@ -1,5 +1,7 @@
 using MockERC20 as token;
 using MockMErc20DelegateFixer as fixer;
+using Comptroller as comptroller;
+using JumpRateModel as jrm;
 
 methods {
     function badDebt() external returns (uint256) envfree;
@@ -24,8 +26,8 @@ methods {
     function _.admin() external => DISPATCHER(true);
     function _.borrowIndex() external => DISPATCHER(true);
     function _._acceptImplementation() external => CONSTANT;
-    function _.totalBorrows() external => CONSTANT;
-    function _.borrowBalanceStored() external => CONSTANT;
+    function comptroller._ external => NONDET;
+    function jrm._ external => NONDET;
 }
 
 ghost uint256 borrowIndex {
@@ -178,6 +180,26 @@ filtered {
      (f.selector == sig:repayBadDebtWithCash(uint256).selector ||
      f.selector == sig:repayBadDebtWithReserves().selector),
      "bad debt should only increase when fixing users";
+}
+
+rule cannotChangeBadDebt(method f, env e, calldataarg args)
+filtered {
+    f -> 
+    !f.isView &&
+    f.selector != sig:fixUser(address,address).selector &&
+    f.selector != sig:repayBadDebtWithCash(uint256).selector &&
+    f.selector != sig:repayBadDebtWithReserves().selector
+} {
+    require e.msg.sender != fixer;
+
+    uint256 startingBadDebt = badDebt();
+
+    f(e, args);
+
+    uint256 endingBadDebt = badDebt();
+
+    assert endingBadDebt == startingBadDebt,
+      "bad debt should not change";
 }
 
 rule repayBadDebtWithReserves(env e) {
