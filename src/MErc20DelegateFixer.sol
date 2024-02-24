@@ -92,7 +92,6 @@ contract MErc20DelegateFixer is MErc20Delegate {
         /// @dev fetch user's current borrow balance, first updating interest index
         uint256 principal = borrowBalanceStored(user);
 
-        /// TODO test this branch
         require(principal != 0, "cannot liquidate user without borrows");
 
         /// user effects
