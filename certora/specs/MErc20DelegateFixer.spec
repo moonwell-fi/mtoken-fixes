@@ -1,6 +1,6 @@
 using MockERC20 as token;
 using MockMErc20DelegateFixer as fixer;
-using Comptroller as comptroller;
+using MockComptroller as comptroller;
 using JumpRateModel as jrm;
 
 methods {
