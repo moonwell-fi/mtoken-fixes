@@ -76,14 +76,10 @@ invariant ghostTotalBorrowsMirrorsStorage()
 invariant initialBorrowIndexGteOne()
     borrowIndex() != 0 => borrowIndex() >= one();
 
-// invariant initialExchangeRateMantissaGteOne()
-//     borrowIndex() != 0 => initialExchangeRateMantissa() >= one();
-
 invariant exchangeRateGteOne(env e)
     borrowIndex() >= one() => exchangeRateCurrent(e) >= one() {
         preserved {
             requireInvariant initialBorrowIndexGteOne();
-            // requireInvariant initialExchangeRateMantissaGteOne();
         }
     }
 
