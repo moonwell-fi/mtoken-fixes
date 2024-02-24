@@ -4,14 +4,25 @@ import "./IInterestRateModel.sol";
 
 /// @title interface for MErc20Delegator
 interface IMErc20Delegator {
+    /// @notice initialize the delegate contract, should always revert when called on the logic contract
+    function initialize(
+        address underlying_,
+        address comptroller_,
+        address interestRateModel_,
+        uint initialExchangeRateMantissa_,
+        string memory name_,
+        string memory symbol_,
+        uint8 decimals_
+    ) external;
+
     /// @notice provide assets for the market and receive mTokens in exchange
     function mint(uint256) external returns (uint256);
 
     /// @notice borrow from the protocol
     function borrow(uint256) external returns (uint256);
 
-    /// @notice bad debt
-    function badDebt() external returns (uint256);
+    /// @notice returns the current amount of bad debt
+    function badDebt() external view returns (uint256);
 
     /// @notice sweep all tokens to a given address
     function sweepAll(address) external;
