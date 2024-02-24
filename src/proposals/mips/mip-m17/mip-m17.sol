@@ -234,19 +234,26 @@ contract mipm17 is Governor {
     function _validate(Addresses addresses, address) internal override {
         /// @dev check debtors have had their debt zeroed
         {
-            Comptroller comptroller = Comptroller(
-                addresses.getAddress("UNITROLLER")
-            );
             string memory debtorsRaw = string(
                 abi.encodePacked(
                     vm.readFile("./src/proposals/mips/mip-m17/mFRAX.json")
                 )
             );
+
             bytes memory debtorsParsed = vm.parseJson(debtorsRaw);
             Accounts[] memory debtors = abi.decode(debtorsParsed, (Accounts[]));
 
             IMErc20Delegator mErc20Delegator = IMErc20Delegator(
                 addresses.getAddress("MOONWELL_mFRAX")
+            );
+
+            assertTrue(
+                mErc20Delegator.badDebt() != 0,
+                "mFRAX bad debt should not start at 0"
+            );
+
+            Comptroller comptroller = Comptroller(
+                addresses.getAddress("UNITROLLER")
             );
 
             for (uint256 i = 0; i < debtors.length; i++) {
