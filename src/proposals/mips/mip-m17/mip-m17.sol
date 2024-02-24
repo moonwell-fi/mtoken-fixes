@@ -21,7 +21,7 @@ contract mipm17 is Governor {
     /// @dev nomad balances
     uint256 public constant mwBTCCash = 4425696499;
     uint256 public constant mUSDCCash = 10789300371738;
-    uint256 public constant mETHCash = 2269023468465447134524;
+    uint256 public constant mETHCash = 2269023504004122147416;
 
     /// @notice struct to read in JSON file
     struct Accounts {
@@ -249,10 +249,6 @@ contract mipm17 is Governor {
                 addresses.getAddress("MOONWELL_mFRAX")
             );
 
-            IMErc20Delegator mErc20DelegatorxcDot = IMErc20Delegator(
-                addresses.getAddress("MOONWELL_mxcDOT")
-            );
-
             for (uint256 i = 0; i < debtors.length; i++) {
                 (uint256 err, , ) = comptroller.getAccountLiquidity(
                     debtors[i].addr
@@ -278,11 +274,6 @@ contract mipm17 is Governor {
                     0,
                     "mfrax balance after seizing"
                 );
-                assertEq(
-                    mErc20DelegatorxcDot.balanceOf(debtors[i].addr),
-                    0,
-                    "mxcDOT balance after seizing"
-                );
             }
         }
 
@@ -299,7 +290,11 @@ contract mipm17 is Governor {
                 addresses.getAddress("MOONWELL_mxcDOT")
             );
             for (uint256 i = 0; i < debtors.length; i++) {
-                assertEq(mErc20Delegator.balanceOf(debtors[i].addr), 0);
+                assertEq(
+                    mErc20Delegator.balanceOf(debtors[i].addr),
+                    0,
+                    "mxcDOT balanceOf after seizing not zero"
+                );
                 assertEq(
                     mErc20Delegator.borrowBalanceStored(debtors[i].addr),
                     0,

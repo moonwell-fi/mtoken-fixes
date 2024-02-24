@@ -462,8 +462,26 @@ contract MIPM17IntegrationTest is PostProposalCheck {
         uint256 existingBadDebt = fraxDelegator.badDebt();
 
         vm.expectRevert("amount exceeds bad debt");
-        IMErc20DelegateFixer(address(fraxDelegator)).repayBadDebt(
+        IMErc20DelegateFixer(address(fraxDelegator)).repayBadDebtWithCash(
             existingBadDebt + 1
+        );
+    }
+
+    function testFixUserFailsNoUserBorrows() public {
+        vm.prank(addresses.getAddress("MOONBEAM_TIMELOCK"));
+        vm.expectRevert("cannot liquidate user without borrows");
+        IMErc20DelegateFixer(address(fraxDelegator)).fixUser(
+            address(2),
+            address(1)
+        );
+    }
+
+    function testFixUserFailsUserEqLiquidator() public {
+        vm.prank(addresses.getAddress("MOONBEAM_TIMELOCK"));
+        vm.expectRevert("liquidator cannot be user");
+        IMErc20DelegateFixer(address(fraxDelegator)).fixUser(
+            address(1),
+            address(1)
         );
     }
 
@@ -477,7 +495,9 @@ contract MIPM17IntegrationTest is PostProposalCheck {
 
         vm.expectEmit(true, true, true, true, address(fraxDelegator));
         emit BadDebtRepayed(repayAmount);
-        IMErc20DelegateFixer(address(fraxDelegator)).repayBadDebt(repayAmount);
+        IMErc20DelegateFixer(address(fraxDelegator)).repayBadDebtWithCash(
+            repayAmount
+        );
 
         assertEq(
             fraxDelegator.badDebt(),

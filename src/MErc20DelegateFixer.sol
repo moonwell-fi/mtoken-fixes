@@ -22,16 +22,14 @@ contract MErc20DelegateFixer is MErc20Delegate {
         uint256 previousReserves
     );
 
-    /// @notice repay bad debt, can only reduce the bad debt
+    /// @notice repay bad debt with cash, can only reduce the bad debt
     /// @param amount the amount of bad debt to repay
     /// invariant, calling this function can only reduce the bad debt
     /// it cannot increase it, which is what would happen on an underflow
-    function repayBadDebt(uint256 amount) external nonReentrant {
-        /// Checks
-        require(amount <= badDebt, "amount exceeds bad debt");
-
-        /// Effects
-        badDebt = SafeMath.sub(badDebt, amount);
+    /// this function cannot change the share price of the mToken
+    function repayBadDebtWithCash(uint256 amount) external nonReentrant {
+        /// Checks and Effects
+        badDebt = SafeMath.sub(badDebt, amount, "amount exceeds bad debt");
 
         EIP20Interface token = EIP20Interface(underlying);
 
@@ -80,22 +78,33 @@ contract MErc20DelegateFixer is MErc20Delegate {
     /// @param liquidator the account to transfer the tokens to
     /// @param user the account with bad debt
     /// invariant, this can only reduce or keep user and total debt the same
+    /// liquidator will never be the same as user, only governance can call this function
+    /// assumes governance is non malicious, and that all users liquidated have active borrows
     function fixUser(address liquidator, address user) external {
         /// @dev check user is admin
         require(msg.sender == admin, "only the admin may call fixUser");
 
-        /// @dev zero a user's borrow balance
-        uint256 principal = _zeroBalance(user);
+        /// ensure nothing strange can happen with incorrect liquidator
+        require(liquidator != user, "liquidator cannot be user");
 
-        /// @dev increment the bad debt counter
-        badDebt = SafeMath.add(badDebt, principal);
+        require(accrueInterest() == 0, "accrue interest failed");
 
-        /// @dev subtract the previous balance from the totalBorrows balance
-        totalBorrows = SafeMath.sub(totalBorrows, principal);
+        /// @dev fetch user's current borrow balance, first updating interest index
+        uint256 principal = borrowBalanceStored(user);
+
+        /// TODO test this branch
+        require(principal != 0, "cannot liquidate user without borrows");
+
+        /// user effects
+
+        /// @dev zero balance
+        accountBorrows[user].principal = 0;
+        accountBorrows[user].interestIndex = borrowIndex;
 
         /// @dev current amount for a user that we'll transfer to the liquidator
         uint256 liquidated = accountTokens[user];
 
+        /// can only seize collateral assets if they exist
         if (liquidated != 0) {
             /// if assets were liquidated, give them to the liquidator
             accountTokens[liquidator] = SafeMath.add(
@@ -107,29 +116,15 @@ contract MErc20DelegateFixer is MErc20Delegate {
             delete accountTokens[user];
         }
 
+        /// global effects
+
+        /// @dev increment the bad debt counter
+        badDebt = SafeMath.add(badDebt, principal);
+
+        /// @dev subtract the previous balance from the totalBorrows balance
+        totalBorrows = SafeMath.sub(totalBorrows, principal);
+
         emit UserFixed(user, liquidator, liquidated);
-    }
-
-    /// @notice zero the balance of a user
-    /// @param user user to zero the balance of
-    /// @return the principal prior to zeroing
-    function _zeroBalance(address user) private returns (uint256 principal) {
-        /// @dev ensure that the borrow balance is up to date
-        require(
-            accrueInterest() == uint256(Error.NO_ERROR),
-            "accrue interest failed"
-        );
-        BorrowSnapshot storage borrowSnapshot = accountBorrows[user];
-        if (borrowSnapshot.principal == 0) {
-            return 0;
-        }
-
-        /// @dev the current principal
-        principal = borrowSnapshot.principal;
-
-        /// @dev zero balance
-        borrowSnapshot.principal = 0;
-        borrowSnapshot.interestIndex = borrowIndex;
     }
 
     /// @notice get cash for the market, including bad debt in this calculation
