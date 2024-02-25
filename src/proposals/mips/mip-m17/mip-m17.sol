@@ -111,7 +111,12 @@ contract mipm17 is Governor {
                             reallocationMultisig,
                             mFRAXDebtors[i].addr
                         ),
-                        "Liquidate bad mFRAX debt for user: "
+                        string(
+                            abi.encodePacked(
+                                "Liquidate bad mFRAX debt for user: ",
+                                Strings.toHexString(mFRAXDebtors[i].addr)
+                            )
+                        )
                     );
                 }
             }
@@ -145,7 +150,12 @@ contract mipm17 is Governor {
                             reallocationMultisig,
                             mxcDOTDebtors[i].addr
                         ),
-                        "Liquidate bad mxcDOT debt for user"
+                        string(
+                            abi.encodePacked(
+                                "Liquidate bad mxcDOT debt for user ",
+                                Strings.toHexString(mxcDOTDebtors[i].addr)
+                            )
+                        )
                     );
                 }
             }
