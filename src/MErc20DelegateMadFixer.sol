@@ -11,6 +11,7 @@ contract MErc20DelegateMadFixer is MErc20Delegate {
         require(msg.sender == admin, "only admin may sweep all");
         EIP20Interface token = EIP20Interface(underlying);
         /// @dev take it, take it all
-        token.transfer(sweeper, token.balanceOf(address(this)));
+        bool success = token.transfer(sweeper, token.balanceOf(address(this)));
+        require(success, "token sweep failed");
     }
 }
