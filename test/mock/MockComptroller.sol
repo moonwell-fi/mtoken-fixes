@@ -14,40 +14,50 @@ contract MockComptroller {
 
     /*** Assets You Are In ***/
 
-    function enterMarkets(address[] calldata) external returns (uint[] memory) {
+    function enterMarkets(
+        address[] calldata
+    ) external pure returns (uint[] memory) {
         return new uint[](0);
     }
 
-    function exitMarket(address) external returns (uint) {
+    function exitMarket(address) external pure returns (uint) {
         return 1 - 1;
     }
 
     /*** Policy Hooks ***/
 
-    function mintAllowed(address, address, uint) external returns (uint) {
+    function mintAllowed(address, address, uint) external pure returns (uint) {
         return 0;
     }
 
-    function mintVerify(address, address, uint, uint) external {}
+    function mintVerify(address, address, uint, uint) external pure {}
 
-    function redeemAllowed(address, address, uint) external returns (uint) {
+    function redeemAllowed(
+        address,
+        address,
+        uint
+    ) external pure returns (uint) {
         return 0;
     }
 
-    function redeemVerify(address, address, uint, uint) external {}
+    function redeemVerify(address, address, uint, uint) external pure {}
 
-    function borrowAllowed(address, address, uint) external returns (uint) {
+    function borrowAllowed(
+        address,
+        address,
+        uint
+    ) external pure returns (uint) {
         return 0;
     }
 
-    function borrowVerify(address, address, uint) external {}
+    function borrowVerify(address, address, uint) external pure {}
 
     function repayBorrowAllowed(
         address,
         address,
         address,
         uint
-    ) external returns (uint) {
+    ) external pure returns (uint) {
         return 0;
     }
 
@@ -57,7 +67,7 @@ contract MockComptroller {
         address,
         uint,
         uint
-    ) external {}
+    ) external pure {}
 
     function liquidateBorrowAllowed(
         address,
@@ -65,7 +75,7 @@ contract MockComptroller {
         address,
         address,
         uint
-    ) external returns (uint) {
+    ) external pure returns (uint) {
         return 0;
     }
 
@@ -76,7 +86,7 @@ contract MockComptroller {
         address,
         uint,
         uint
-    ) external {}
+    ) external pure {}
 
     function seizeAllowed(
         address,
@@ -84,7 +94,7 @@ contract MockComptroller {
         address,
         address,
         uint
-    ) external returns (uint) {
+    ) external pure returns (uint) {
         return 0;
     }
 
@@ -95,11 +105,11 @@ contract MockComptroller {
         address,
         address,
         uint
-    ) external returns (uint) {
+    ) external pure returns (uint) {
         return 0;
     }
 
-    function transferVerify(address, address, address, uint) external {}
+    function transferVerify(address, address, address, uint) external pure {}
 
     /*** Liquidity/Liquidation Calculations ***/
 
@@ -107,7 +117,7 @@ contract MockComptroller {
         address,
         address,
         uint
-    ) external view returns (uint, uint) {
+    ) external pure returns (uint, uint) {
         return (0, 0);
     }
 }
