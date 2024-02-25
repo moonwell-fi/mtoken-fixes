@@ -20,6 +20,12 @@ methods {
     function getUserBorrowInterestIndex(address user) external returns (uint256) envfree;
     function getInitialExchangeRateMantissa() external returns (uint256) envfree;
 
+    function fixer.sweepToken(address) external => CONSTANT;
+    function fixer.liquidateBorrow(address borrower, uint256 repayAmount, address) external returns (uint256) => CONSTANT;
+    function fixer.seize(address liquidator, address borrower, uint256 seizeTokens) external returns (uint) => CONSTANT;
+
+    function accrueInterest() external returns uint256 => CONSTANT;
+
     /// summarize these calls to prevent prover havoc
     function _.isComptroller() external => DISPATCHER(true);
     function _.isInterestRateModel() external => DISPATCHER(true);
