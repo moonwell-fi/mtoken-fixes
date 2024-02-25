@@ -495,7 +495,7 @@ xcDOT returns true on transfer and transferFrom. This has been confirmed by the 
 |---|---|---|---|---|
 |[MErc20DelegateFixer.sol](./src/MErc20DelegateFixer.sol)|  63 |  Bad Debt Fixer Logic | SafeMath|
 |[MErc20DelegateMadFixer.sol](./src/MErc20DelegateMadFixer.sol)|  9 |  Nomad Collateral Sweeper Logic | n/a|
-|[mip-m17.sol](./src/proposals/mips/mip-m17/mip-m17.sol)|  188 |  MIP-M17 Governance Proposal | n/a |Validate function out of scope, deployment is in scope|
+|[mip-m17.sol](./src/proposals/mips/mip-m17/mip-m17.sol)|  198 |  MIP-M17 Governance Proposal | n/a |Validate function out of scope, deployment is in scope|
 
 ## Out of Scope Findings
 
