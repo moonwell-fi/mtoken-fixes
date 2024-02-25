@@ -1,6 +1,6 @@
 using MockERC20 as token;
 using MockMErc20DelegateFixer as fixer;
-using Comptroller as comptroller;
+using MockComptroller as comptroller;
 using JumpRateModel as jrm;
 
 methods {
@@ -19,6 +19,12 @@ methods {
     function getUserBorrowSnapshot(address user) external returns (uint256, uint256) envfree;
     function getUserBorrowInterestIndex(address user) external returns (uint256) envfree;
     function getInitialExchangeRateMantissa() external returns (uint256) envfree;
+
+    function fixer.sweepToken(address) external => CONSTANT;
+    function fixer.liquidateBorrow(address borrower, uint256 repayAmount, address) external returns (uint256) => CONSTANT;
+    function fixer.seize(address liquidator, address borrower, uint256 seizeTokens) external returns (uint) => CONSTANT;
+
+    function accrueInterest() external returns uint256 => CONSTANT;
 
     /// summarize these calls to prevent prover havoc
     function _.isComptroller() external => DISPATCHER(true);
@@ -76,14 +82,10 @@ invariant ghostTotalBorrowsMirrorsStorage()
 invariant initialBorrowIndexGteOne()
     borrowIndex() != 0 => borrowIndex() >= one();
 
-// invariant initialExchangeRateMantissaGteOne()
-//     borrowIndex() != 0 => initialExchangeRateMantissa() >= one();
-
 invariant exchangeRateGteOne(env e)
     borrowIndex() >= one() => exchangeRateCurrent(e) >= one() {
         preserved {
             requireInvariant initialBorrowIndexGteOne();
-            // requireInvariant initialExchangeRateMantissaGteOne();
         }
     }
 

@@ -8,6 +8,7 @@ import {ERC20} from "@forge-proposal-simulator/lib/openzeppelin-contracts/contra
 
 import {IWell} from "@protocol/Interfaces/IWell.sol";
 import {MockxcDOT} from "@tests/mock/MockxcDOT.sol";
+import {MockxcUSDC} from "@tests/mock/MockxcUSDC.sol";
 import {MockxcUSDT} from "@tests/mock/MockxcUSDT.sol";
 import {IComptroller} from "@protocol/Interfaces/IComptroller.sol";
 import {IMErc20Delegator} from "@protocol/Interfaces/IMErc20Delegator.sol";
@@ -97,6 +98,28 @@ contract MIPM17IntegrationTest is PostProposalCheck {
             }
 
             vm.etch(_addresses.getAddress("xcUSDT"), runtimeBytecode);
+        }
+
+        {
+            MockxcUSDC mockUSDC = new MockxcUSDC();
+            address mockUSDCAddress = address(mockUSDC);
+            uint256 codeSize;
+            assembly {
+                codeSize := extcodesize(mockUSDCAddress)
+            }
+
+            bytes memory runtimeBytecode = new bytes(codeSize);
+
+            assembly {
+                extcodecopy(
+                    mockUSDCAddress,
+                    add(runtimeBytecode, 0x20),
+                    0,
+                    codeSize
+                )
+            }
+
+            vm.etch(_addresses.getAddress("xcUSDC"), runtimeBytecode);
         }
 
         {
@@ -224,6 +247,42 @@ contract MIPM17IntegrationTest is PostProposalCheck {
 
         /// @dev accrueInterest() will be run when the prop is executed
         super.setUp();
+    }
+
+    /// initialization
+
+    function testInitializationFails() public {
+        IMErc20Delegator madFixer = IMErc20Delegator(
+            addresses.getAddress("MERC20_DELEGATE_FIXER_NOMAD_LOGIC")
+        );
+        IMErc20Delegator badDebtFixer = IMErc20Delegator(
+            addresses.getAddress("MERC20_BAD_DEBT_DELEGATE_FIXER_LOGIC")
+        );
+
+        vm.expectRevert("only admin may initialize the market");
+        madFixer.initialize(address(0), address(0), address(0), 0, "", "", 0);
+
+        vm.expectRevert("only admin may initialize the market");
+        badDebtFixer.initialize(
+            address(0),
+            address(0),
+            address(0),
+            0,
+            "",
+            "",
+            0
+        );
+    }
+
+    function testEthMadMarketsCeaseFunction() public {
+        address madEthMTokenHolder = 0xDD15c08320F01F1b6348b35EeBe29fDB5ca0cDa6;
+
+        uint256 balance = nomadETHDelegator.balanceOf(madEthMTokenHolder);
+
+        vm.prank(madEthMTokenHolder);
+        uint256 returnCode = nomadETHDelegator.redeem(balance);
+
+        assertTrue(returnCode != 0, "incorrect return code on redeem");
     }
 
     function testSetUpxcDot() public {

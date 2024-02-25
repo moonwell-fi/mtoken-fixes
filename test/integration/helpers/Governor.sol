@@ -101,6 +101,9 @@ contract Governor is GovernorBravoProposal {
             );
         }
 
-        require(governor.state(proposalId) == Bravo.ProposalState.Executed);
+        require(
+            governor.state(proposalId) == Bravo.ProposalState.Executed,
+            "Proposal state not executed"
+        );
     }
 }
