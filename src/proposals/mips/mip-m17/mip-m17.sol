@@ -10,12 +10,7 @@ import "@forge-std/console.sol";
 import {Governor} from "@tests/integration/helpers/Governor.sol";
 import {Addresses} from "@forge-proposal-simulator/addresses/Addresses.sol";
 import {IMErc20Delegator} from "@protocol/Interfaces/IMErc20Delegator.sol";
-
-interface Comptroller {
-    function getAccountLiquidity(
-        address account
-    ) external view returns (uint, uint, uint);
-}
+import {IComptroller as Comptroller} from "@protocol/Interfaces/IComptroller.sol";
 
 contract mipm17 is Governor {
     /// @dev nomad balances
@@ -28,9 +23,7 @@ contract mipm17 is Governor {
         address addr;
     }
 
-    function name() public pure override returns (string memory) {
-        return "MIP-M17";
-    }
+    string public constant override name = "MIP-M17";
 
     function description() public view override returns (string memory) {
         return
@@ -222,7 +215,6 @@ contract mipm17 is Governor {
 
     function _run(Addresses addresses, address) internal override {
         /// @dev set debug
-        // setDebug(true);
 
         simulateActions(
             addresses.getAddress("ARTEMIS_GOVERNOR"),
