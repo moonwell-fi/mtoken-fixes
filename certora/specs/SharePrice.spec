@@ -2,6 +2,7 @@ using MockERC20 as token;
 using MockMErc20DelegateFixer as fixer;
 
 methods {
+    function getCash() external returns (uint256) envfree;
     function badDebt() external returns (uint256) envfree;
     function fixUser(address liquidator, address user) external;
     function borrowIndex() external returns (uint256) envfree;
@@ -125,6 +126,51 @@ filtered {
      "bad debt should only increase when fixing users";
 }
 
+rule badDebtRulesCash(env e, uint256 amount) {
+    require e.msg.sender != fixer;
+
+    uint256 startingBadDebt = badDebt();
+    uint256 startingCash = token.balanceOf(fixer);
+
+    /// bound input as to not overflow (safe math is not used)
+    require startingCash + startingBadDebt <= to_mathint(uintMax());
+
+    repayBadDebtWithCash(e, amount);
+
+    uint256 endingBadDebt = badDebt();
+
+    /// starting cash + starting bad debt == ending bad debt + ending cash == getCash()
+
+    assert startingCash + startingBadDebt == endingBadDebt + to_mathint(token.balanceOf(fixer)),
+     "cash not the same";
+
+    assert startingCash + startingBadDebt == to_mathint(getCash()),
+     "bad debt should not increase when repaying with cash";
+}
+
+rule allBadDebtRulesCash(method f, env e, calldataarg args)
+filtered {
+    f -> 
+    f.selector == sig:repayBadDebtWithCash(uint256).selector ||
+    f.selector == sig:repayBadDebtWithReserves().selector
+} {
+    require e.msg.sender != fixer;
+
+    uint256 startingBadDebt = badDebt();
+    uint256 startingCash = token.balanceOf(fixer);
+
+    /// bound input as to not overflow (safe math is not used)
+    require startingCash + startingBadDebt <= to_mathint(uintMax());
+
+    f(e, args);
+
+    uint256 endingBadDebt = badDebt();
+
+    /// bad debt + cash == getCash()
+
+    assert to_mathint(getCash()) == endingBadDebt + to_mathint(token.balanceOf(fixer)),
+     "cash not correct";
+}
 
 rule repayBadDebtWithReservesSuccess(env e) {
     uint256 startingReserves = totalReserves();

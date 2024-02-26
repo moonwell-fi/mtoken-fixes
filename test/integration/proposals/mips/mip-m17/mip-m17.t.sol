@@ -274,6 +274,21 @@ contract MIPM17IntegrationTest is PostProposalCheck {
         );
     }
 
+    function testCashEqualsUnderlyingBalancePlusBalance() public {
+        assertEq(
+            mxcDotDelegator.badDebt() +
+                xcDotToken.balanceOf(address(mxcDotDelegator)),
+            mxcDotDelegator.getCash(),
+            "xcDot cash incorrect"
+        );
+        assertEq(
+            fraxDelegator.badDebt() +
+                fraxToken.balanceOf(address(fraxDelegator)),
+            fraxDelegator.getCash(),
+            "frax cash incorrect"
+        );
+    }
+
     function testEthMadMarketsCeaseFunction() public {
         address madEthMTokenHolder = 0xDD15c08320F01F1b6348b35EeBe29fDB5ca0cDa6;
 
@@ -281,6 +296,28 @@ contract MIPM17IntegrationTest is PostProposalCheck {
 
         vm.prank(madEthMTokenHolder);
         uint256 returnCode = nomadETHDelegator.redeem(balance);
+
+        assertTrue(returnCode != 0, "incorrect return code on redeem");
+    }
+
+    function testUsdcMadMarketsCeaseFunction() public {
+        address madUsdcMTokenHolder = 0xE0B2026E3DB1606ef0Beb764cCdf7b3CEE30Db4A;
+
+        uint256 balance = nomadUSDCDelegator.balanceOf(madUsdcMTokenHolder);
+
+        vm.prank(madUsdcMTokenHolder);
+        uint256 returnCode = nomadUSDCDelegator.redeem(balance);
+
+        assertTrue(returnCode != 0, "incorrect return code on redeem");
+    }
+
+    function testBtcMadMarketsCeaseFunction() public {
+        address madBTCMTokenHolder = 0xb587526953Ad321C1aB2eA26F7311d2aA1A98a4a;
+
+        uint256 balance = nomadBTCDelegator.balanceOf(madBTCMTokenHolder);
+
+        vm.prank(madBTCMTokenHolder);
+        uint256 returnCode = nomadBTCDelegator.redeem(balance);
 
         assertTrue(returnCode != 0, "incorrect return code on redeem");
     }
