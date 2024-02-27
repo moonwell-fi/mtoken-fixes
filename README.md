@@ -511,7 +511,7 @@ Fee on transfer tokens not supported with the current implementation of either f
 
 Addresses passed to `fixUser` are not checked to be valid as these values are found in JSON files and will not be address 0. Address 0 checks are out of scope.
 
-Known Compound V2 issues are out of scope. This audit is only concerned with new issues that may arise from the upgrade that were not already present.
+Known Compound V2 issues are out of scope. This audit is only concerned with new issues that may arise from the upgrade that were not already present. Any issues in [this](https://code4rena.com/audits/2023-07-moonwell) report are out of scope, and any findings from previous compound audits are out of scope.
 
 ## Definition Changes
 
