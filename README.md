@@ -511,6 +511,8 @@ Fee on transfer tokens not supported with the current implementation of either f
 
 Addresses passed to `fixUser` are not checked to be valid as these values are found in JSON files and will not be address 0. Address 0 checks are out of scope.
 
+Known Compound V2 issues are out of scope. This audit is only concerned with new issues that may arise from the upgrade that were not already present.
+
 ## Definition Changes
 
 Cash in the Compound whitepaper is defined as the underlying asset balance of the mToken. This definition has been changed to underlying asset balance of the mToken plus the bad debt amount. This change was necessary to allow the share price to remain unchanged when bad debt is created by fixing users. This has flow on effects for the frontend as the getCash function will return higher than the underlying balance of the mToken.
