@@ -1,6 +1,6 @@
 # Moonwell Protocol
 
-# Contest Details
+## Contest Details
 
 This contest will be focused on two main changes to the Moonwell protocol on Moonbeam. The first change is to upgrade the mTokens to a new implementation, and the second change is to liquidate bad debt from the protocol. Two separate contracts will be used to upgrade existing contracts, and a governance proposal will be used to liquidate bad debt should the DAO choose to ratify these changes.
 
