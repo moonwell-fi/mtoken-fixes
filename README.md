@@ -26,8 +26,11 @@ Moonwell is an open and decentralized lending and borrowing protocol built on Ba
 Moonwell is a fork of Compound, and naming has been modified from `cTokens` to `mTokens`, which are interest bearing tokens that represent the underlying asset.
 
 [Documentation](https://docs.moonwell.fi/moonwell/discover/about-moonwell)
+
 [Website](https://moonwell.fi/)
+
 [Twitter](https://twitter.com/MoonwellDeFi)
+
 [GitHub](https://github.com/moonwell-fi/)
 
 ## Compatibilities
@@ -591,7 +594,7 @@ Addresses passed to `fixUser` are not checked to be valid as these values are fo
 
 Addresses in the contract are assumed to be non-zero. This is out of scope as Addresses.sol would throw an error if an address retrieved was 0.
 
-Known Compound V2 issues are out of scope. This audit is only concerned with new issues that may arise from the upgrade that were not already present. Any issues in [this](https://code4rena.com/audits/2023-07-moonwell) report are out of scope, and any findings from previous compound audits are out of scope.
+Known Compound V2 issues are out of scope. This audit is only concerned with new issues that may arise from the upgrade that were not already present. Any issues in [this](https://code4rena.com/audits/2023-07-moonwell) report are out of scope, and any findings from previous compound audits or Moonwell are out of scope.
 
 The only items in scope are new issues that may arise from the upgrade. Any issues that were present in the previous implementation are out of scope.
 
