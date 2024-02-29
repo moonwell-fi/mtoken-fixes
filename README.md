@@ -232,6 +232,13 @@ Run the following commands to deploy the new contracts:
 forge script script/GovernorBravo.s.sol:GovernorBravoScript -vvvv --rpc-url moonbeam --broadcast --verify --etherscan-api-key {key}
 ```
 
+To dry run the deployment and verify the calldata, run the following command:
+```
+forge script script/GovernorBravo.s.sol:GovernorBravoScript -vvvv --rpc-url moonbeam
+```
+
+Note, your calldata may differ as the contract addresses are not known in advance, however the number of actions should stay the same, and the user liquidation calldata should be unchanged.
+
 ### Proposal Actions and Calldata
 Running the script should output the following calldata and proposal actions:
 
