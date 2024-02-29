@@ -1,6 +1,82 @@
-# mToken Fixes and Collateral Sweeping - Proposal #2
+# Moonwell Protocol
 
-This proposal will remove all Nomad collateral from .mad mTokens, sending the underlying to the community multisig, and zero all borrows from users with bad debt.
+# Contest Details
+
+This contest will be focused on two main changes to the Moonwell protocol on Moonbeam. The first change is to upgrade the mTokens to a new implementation, and the second change is to liquidate bad debt from the protocol. Two separate contracts will be used to upgrade existing contracts, and a governance proposal will be used to liquidate bad debt should the DAO choose to ratify these changes.
+
+### Prize Pool
+
+- Total Pool - 
+- H/M -  $14,000
+- Low - $1,000
+
+- Starts: March 4th, 2024
+- Ends: March 11th, 2024
+
+### Stats
+
+nSLOC: 260
+Complexity Score: 260
+SLOC: 38.07
+Complexity: 57.69
+
+## About the Project
+
+Moonwell is an open and decentralized lending and borrowing protocol built on Base, Moonbeam, and Moonriver. The app's intuitive design ensures a streamlined user experience, enabling everyone to do more with their digital assets. 
+Moonwell is a fork of Compound, and naming has been modified from `cTokens` to `mTokens`, which are interest bearing tokens that represent the underlying asset.
+
+[Documentation](https://docs.moonwell.fi/moonwell/discover/about-moonwell)
+[Website](https://moonwell.fi/)
+[Twitter](https://twitter.com/MoonwellDeFi)
+[GitHub](https://github.com/moonwell-fi/)
+
+## Compatibilities
+
+Compatibilities:
+  Blockchains:
+      - Ethereum/Any EVM
+      - Moonbeam
+  Tokens:
+      - ERC20 standard implementations (including Moonbeam pre-compile)
+      - Non standard ERC20 implmentations such as fee-on-transfer or no boolean returned on `transfer` or `transferFrom` not supported.
+
+## Actors
+
+There are two main actors in the Moonwell protocol:
+
+- privileged actors: this is the timelock and the guardian, which are able to execute certain functions on the protocol
+- users: these are the people who interact with the protocol, by either supplying or borrowing assets from the protocol
+
+## Scope
+
+The scope of this audit is to verify that the changes to the Moonwell protocol mTokens are implemented according to specifications and that no security vulnerabilities are introduced in the process.
+
+- The audit will include the following contracts:
+  - [`MIP-M17`](src/proposals/mips/mip-m17/mip-m17.sol) (validate function is out of scope in the proposal)
+  - [`MErc20DelegateFixer`](src/MErc20DelegateFixer.sol)
+  - [`MErc20DelegateMadFixer`](src/Merc20DelegateMadFixer.sol)
+
+## Setup
+
+To run the integration tests, run the following command:
+
+```
+forge test --match-contract MIPM17IntegrationTest --fork-url moonbeam
+```
+
+To run the Certora Prover and see the result of formal verification, run the following commands:
+
+```
+certoraRun certora/confs/SharePrice.conf
+```
+
+```
+certoraRun certora/confs/MErc20DelegateFixer.conf
+```
+
+## Governance Proposal
+
+This proposal will remove all Nomad collateral from `.mad` mTokens, sending the underlying to the community multisig, and zero all borrows from users with bad debt.
 
 In order to allow mToken collateral sweeping and bad debt write offs, the mTokens will have their implementations upgraded.
 
@@ -497,6 +573,8 @@ xcDOT returns true on transfer and transferFrom. This has been confirmed by the 
 |[MErc20DelegateMadFixer.sol](./src/MErc20DelegateMadFixer.sol)|  9 |  Nomad Collateral Sweeper Logic | n/a|
 |[mip-m17.sol](./src/proposals/mips/mip-m17/mip-m17.sol)|  198 |  MIP-M17 Governance Proposal | n/a |Validate function out of scope, deployment is in scope|
 
+The only issues that are in scope are the ones that could reasonably arise as a result of the upgrade. Any issues that were present in the previous implementation are out of scope.
+
 ## Out of Scope Findings
 
 The `validate` function in the MIP-M17 proposal is out of scope for this audit. This function is not used in the contracts that are being upgraded.
@@ -511,8 +589,33 @@ Fee on transfer tokens not supported with the current implementation of either f
 
 Addresses passed to `fixUser` are not checked to be valid as these values are found in JSON files and will not be address 0. Address 0 checks are out of scope.
 
+Addresses in the contract are assumed to be non-zero. This is out of scope as Addresses.sol would throw an error if an address retrieved was 0.
+
 Known Compound V2 issues are out of scope. This audit is only concerned with new issues that may arise from the upgrade that were not already present. Any issues in [this](https://code4rena.com/audits/2023-07-moonwell) report are out of scope, and any findings from previous compound audits are out of scope.
+
+The only items in scope are new issues that may arise from the upgrade. Any issues that were present in the previous implementation are out of scope.
+
+Governance could liquidate users that are healthy. This is out of scope as it is expected behavior and governance is assumed to be trusted and non-malicious.
+
+Speculating about future changes that could happen after this upgrade are out of scope unless the changes are directly related to the upgrade.
 
 ## Definition Changes
 
 Cash in the Compound whitepaper is defined as the underlying asset balance of the mToken. This definition has been changed to underlying asset balance of the mToken plus the bad debt amount. This change was necessary to allow the share price to remain unchanged when bad debt is created by fixing users. This has flow on effects for the frontend as the getCash function will return higher than the underlying balance of the mToken.
+
+### Exchange Rate
+
+The current exchange rate forumula is:
+```
+exchangeRate = (cash + total borrows - reserves) / totalSupply
+```
+
+See [this](https://betterprogramming.pub/compound-v2-in-depth-6227c0528b5) article for an explanation of the exchange rate.
+
+The new exchange rate formula post upgrade for mFRAX and mxcDOT is:
+
+```
+exchangeRate = (bad debt + cash + total borrows - reserves) / totalSupply
+```
+
+This new formula accounts for the bad debt. The exchange rate will not change when bad debt is realized, or repaid with reserves or cash.
