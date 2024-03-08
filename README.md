@@ -224,6 +224,27 @@ certoraRun certora/confs/SharePrice.conf
 certoraRun certora/confs/MErc20DelegateFixer.conf
 ```
 
+## Mutation Testing
+
+Use certora gambit to generate mutaions for `MErc20DelegateFixer` and then run each mutation against unit, integration tests and formal specification using `runMutation` script. The script generates a `Result.txt` file which stores following details for each mutations:
+- mutant diff with original contract
+- unit/integration test results with number and list of failing tests if any
+- result of certora formal verification against mutant with details such as number of failed rules, their list and certora prover cli job url
+
+Finally it logs total number of failed mutations.
+
+Following steps needs to be followed for mutation testing:
+
+Run certora gambit to generate mutants
+```
+gambit mutate --filename src/MErc20DelegateFixer.sol
+```
+
+Run script
+```
+sh runMutation.sh
+```
+
 ## Deployment
 
 Run the following commands to deploy the new contracts:
