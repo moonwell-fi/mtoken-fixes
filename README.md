@@ -233,7 +233,7 @@ Use certora gambit to generate mutaions for `MErc20DelegateFixer` and then run e
 
 Finally it logs total number of failed mutations.
 
-Following steps needs to be followed for mutation testing:
+Follow these steps to run the mutation test scripts:
 
 Run certora gambit to generate mutants
 ```
