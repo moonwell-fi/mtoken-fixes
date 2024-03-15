@@ -16,6 +16,7 @@ import {PostProposalCheck} from "@tests/integration/PostProposalCheck.sol";
 import {IInterestRateModel} from "@protocol/Interfaces/IInterestRateModel.sol";
 import {IMErc20DelegateFixer} from "@protocol/Interfaces/IMErc20DelegateFixer.sol";
 import {IMErc20DelegateMadFixer} from "@protocol/Interfaces/IMErc20DelegateMadFixer.sol";
+import {IMockMErc20DelegateFixer} from "@tests/mock/IMockMErc20DelegateFixer.sol";
 
 /// @title MIP-M17 integration tests
 /// @dev to run:
@@ -658,6 +659,111 @@ contract MIPM17IntegrationTest is PostProposalCheck {
 
         vm.expectRevert("bad debt is zero");
         IMErc20DelegateFixer(address(fraxDelegator)).repayBadDebtWithReserves();
+    }
+
+    function testFixUserBorrowxcDOT() public {
+        uint256 supplyAmount = 1_000_000 * 1e18;
+        IMErc20Delegator mToken = IMErc20Delegator(
+            addresses.getAddress("MOONWELL_mxcDOT")
+        );
+
+        deal(addresses.getAddress("xcDOT"), address(this), supplyAmount);
+
+        xcDotToken.approve(address(mToken), supplyAmount);
+        assertEq(mToken.mint(supplyAmount), 0, "error minting xcDot tokens");
+
+        address[] memory markets = new address[](1);
+        markets[0] = address(mToken);
+        comptroller.enterMarkets(markets);
+
+        {
+            (, uint256 mintedAmount) = divScalarByExpTruncate(
+                supplyAmount,
+                Exp({mantissa: mxcDotDelegator.exchangeRateStored()})
+            );
+            assertEq(
+                mxcDotDelegator.balanceOf(address(this)),
+                mintedAmount,
+                "xcDot minter balance incorrect"
+            );
+            assertEq(
+                xcDotToken.balanceOf(address(this)),
+                0,
+                "xcDot token balance post mint incorrect"
+            );
+        }
+
+        address[] memory mTokens = new address[](1);
+        mTokens[0] = address(mxcDotDelegator);
+
+        uint256[] memory borrowCaps = new uint256[](1);
+        borrowCaps[0] = type(uint256).max;
+
+        vm.prank(comptroller.admin());
+        comptroller._setMarketBorrowCaps(mTokens, borrowCaps);
+
+        assertEq(mToken.borrow(supplyAmount / 2), 0, "borrow failed");
+
+        assertEq(
+            mToken.borrowBalanceStored(address(this)),
+            supplyAmount / 2,
+            "incorrect borrow balance stored"
+        );
+
+        assertEq(
+            xcDotToken.balanceOf(address(this)),
+            supplyAmount / 2,
+            "xcDot token balance post borrow incorrect"
+        );
+
+        /// borrower is now underwater on loan as collateral value is cut in half
+        deal(
+            address(mToken),
+            address(this),
+            mToken.balanceOf(address(this)) / 2
+        );
+
+        (uint256 err, uint256 liquidity, uint256 shortfall) = comptroller
+            .getHypotheticalAccountLiquidity(
+                address(this),
+                address(mToken),
+                0,
+                0
+            );
+
+        assertEq(err, 0);
+        assertEq(liquidity, 0);
+        assertGt(shortfall, 0);
+
+        uint256 repayAmt = 50e6;
+        address liquidator = address(100_000_000);
+
+        deal(addresses.getAddress("xcDOT"), liquidator, repayAmt);
+        vm.prank(liquidator);
+        xcDotToken.approve(address(mToken), repayAmt);
+
+        // warp some time to update borrowIndex
+        vm.warp(block.timestamp + 100 hours);
+        fraxDelegator.accrueInterest();
+
+        vm.prank(comptroller.admin());
+        IMErc20DelegateFixer(address(mxcDotDelegator)).fixUser(
+            liquidator,
+            address(this)
+        );
+
+        // etch to get user InterestIndex from MErc20DelegateFixer which is otherwise internal
+        {
+            bytes memory bytecode = vm.getDeployedCode("MockMErc20DelegateFixer.sol:MockMErc20DelegateFixer");
+
+            vm.etch(address(mxcDotDelegator), bytecode);
+        }
+
+        assertEq(
+            IMErc20Delegator(address(mxcDotDelegator)).borrowIndex(),
+            IMockMErc20DelegateFixer(address(mxcDotDelegator)).getUserBorrowInterestIndex(address(this)),
+            "InterestIndex not updated"
+        );
     }
 
     function testIncreaseBadDebtIncreasesCash(uint256 increaseAmount) public {
