@@ -53,26 +53,9 @@ Results for all:
 |Rule name                               |Verified     |Time (sec)|Description                                                 |Local vars                                        |
 |----------------------------------------|-------------|----------|------------------------------------------------------------|--------------------------------------------------|
 |envfreeFuncsStaticCheck                 |Not violated |0         |                                                            |no local variables                                |
-|repayBadDebtDecreasesBadDebt            |Violated     |3         |Assert message: bad debt not decreased by repay amt -       |MockERC20=MockERC20 (0x47c0)                      |
-|                                        |             |          |certora/specs/SharePrice.spec line 94                       |MockMErc20DelegateFixer=MockMErc20DelegateFixer   |
-|                                        |             |          |                                                            |(0x47bf)                                          |
-|                                        |             |          |                                                            |badDebt=0                                         |
-|                                        |             |          |                                                            |e.block.basefee=0                                 |
-|                                        |             |          |                                                            |e.block.coinbase=0                                |
-|                                        |             |          |                                                            |e.block.difficulty=0                              |
-|                                        |             |          |                                                            |e.block.gaslimit=0                                |
-|                                        |             |          |                                                            |e.block.number=0                                  |
-|                                        |             |          |                                                            |e.block.timestamp=0                               |
-|                                        |             |          |                                                            |e.msg.sender=0x47be                               |
-|                                        |             |          |                                                            |e.msg.value=0                                     |
-|                                        |             |          |                                                            |e.tx.origin=0                                     |
-|                                        |             |          |                                                            |mTokenBalance=0x16dd                              |
-|                                        |             |          |                                                            |repayAmount=1                                     |
-|                                        |             |          |                                                            |userBalance=0xffffffffffffffffffffffffffffffffffff|
-|                                        |             |          |                                                            |ffffffffffffffffffffffffe05d                      |
-|badDebtRulesCash                        |Violated     |4         |Assert message: cash not the same -                         |MockERC20=MockERC20 (0x2b89)                      |
+|badDebtRulesCash                        |Violated     |2         |Assert message: cash not the same -                         |MockERC20=MockERC20 (0x8c92)                      |
 |                                        |             |          |certora/specs/SharePrice.spec line 144                      |MockMErc20DelegateFixer=MockMErc20DelegateFixer   |
-|                                        |             |          |                                                            |(0x2b88)                                          |
+|                                        |             |          |                                                            |(0x8c91)                                          |
 |                                        |             |          |                                                            |amount=1                                          |
 |                                        |             |          |                                                            |e.block.basefee=0                                 |
 |                                        |             |          |                                                            |e.block.coinbase=0                                |
@@ -80,29 +63,47 @@ Results for all:
 |                                        |             |          |                                                            |e.block.gaslimit=0                                |
 |                                        |             |          |                                                            |e.block.number=0                                  |
 |                                        |             |          |                                                            |e.block.timestamp=0                               |
-|                                        |             |          |                                                            |e.msg.sender=0x2b87                               |
+|                                        |             |          |                                                            |e.msg.sender=0x8c90                               |
 |                                        |             |          |                                                            |e.msg.value=0                                     |
 |                                        |             |          |                                                            |e.tx.origin=0                                     |
 |                                        |             |          |                                                            |endingBadDebt=0                                   |
 |                                        |             |          |                                                            |startingBadDebt=0                                 |
 |                                        |             |          |                                                            |startingCash=0                                    |
-|repayBadDebtWithReservesSuccess         |Not violated |3         |                                                            |no local variables                                |
+|repayBadDebtDecreasesBadDebt            |Violated     |2         |Assert message: bad debt not decreased by repay amt -       |MockERC20=MockERC20                               |
+|                                        |             |          |certora/specs/SharePrice.spec line 94                       |(0xffffffffffffffffffffffffffffffffffffffff       |
+|                                        |             |          |                                                            |(MAX_EVM_ADDRESS))                                |
+|                                        |             |          |                                                            |MockMErc20DelegateFixer=MockMErc20DelegateFixer   |
+|                                        |             |          |                                                            |(1)                                               |
+|                                        |             |          |                                                            |badDebt=0                                         |
+|                                        |             |          |                                                            |e.block.basefee=0                                 |
+|                                        |             |          |                                                            |e.block.coinbase=0                                |
+|                                        |             |          |                                                            |e.block.difficulty=0                              |
+|                                        |             |          |                                                            |e.block.gaslimit=0                                |
+|                                        |             |          |                                                            |e.block.number=0                                  |
+|                                        |             |          |                                                            |e.block.timestamp=0                               |
+|                                        |             |          |                                                            |e.msg.sender=0x2712                               |
+|                                        |             |          |                                                            |e.msg.value=0                                     |
+|                                        |             |          |                                                            |e.tx.origin=0                                     |
+|                                        |             |          |                                                            |mTokenBalance=0                                   |
+|                                        |             |          |                                                            |repayAmount=1                                     |
+|                                        |             |          |                                                            |userBalance=2                                     |
 |fixUserIncreasesBadDebt                 |Not violated |3         |                                                            |no local variables                                |
-|fixingUserZeroUserBalance               |Not violated |2         |                                                            |no local variables                                |
-|allBadDebtRulesCash                     |Violated     |3         |Assert message: cash not correct -                          |no local variables                                |
+|repayBadDebtWithReservesSuccess         |Not violated |3         |                                                            |no local variables                                |
+|allBadDebtRulesCash                     |Violated     |4         |Assert message: cash not correct -                          |no local variables                                |
 |                                        |             |          |certora/specs/SharePrice.spec line 171                      |                                                  |
+|fixingUserZeroUserBalance               |Not violated |3         |                                                            |no local variables                                |
+|badDebtSymmetry                         |Not violated |2         |                                                            |no local variables                                |
 |repayBadDebtWithReservesDoesNotChangeSha|Not violated |2         |                                                            |no local variables                                |
 |rePrice                                 |             |          |                                                            |                                                  |
-|badDebtSymmetry                         |Not violated |2         |                                                            |no local variables                                |
-|fixingUserDoesNotChangeSharePrice       |Not violated |3         |                                                            |no local variables                                |
-|badDebtRules                            |Violated     |5         |Assert message: share price should not change repaying b... |no local variables                                |
+|fixingUserDoesNotChangeSharePrice       |Not violated |2         |                                                            |no local variables                                |
+|badDebtRules                            |Violated     |4         |Assert message: share price should not change repaying b... |no local variables                                |
 |                                        |             |          |- certora/specs/SharePrice.spec line 115                    |                                                  |
 *---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*
 Failures summary:
-Failed on repayBadDebtDecreasesBadDebt:
-Assert message: bad debt not decreased by repay amt - certora/specs/SharePrice.spec line 94
 Failed on badDebtRulesCash:
 Assert message: cash not the same - certora/specs/SharePrice.spec line 144
+Failed on repayBadDebtDecreasesBadDebt:
+Assert message: bad debt not decreased by repay amt - certora/specs/SharePrice.spec line 94
 Failed on allBadDebtRulesCash:
 Assert message: cash not correct - certora/specs/SharePrice.spec line 171
 Violated for: 
@@ -117,7 +118,7 @@ Event reporter: all events were sent without errors
 [INFO]: Process returned with 100
 [INFO]: updated '41948e68b910f69c3218ad74de39b67e9de06ffa0d3fbf733cc48950b19227c8-optimisticTrue-iterNone-None--certora-cli-6.3.1' cache
 
-Job is completed! View the results at https://prover.certora.com/output/925723/5898b3ca85b74af0a4e6d11f12f4eed9?anonymousKey=70ede511091668b7bb5718cdeda4814bab25cbc8
+Job is completed! View the results at https://prover.certora.com/output/925723/c6b9cbb1f85a4514afe8e8aa07e92ec3?anonymousKey=48cc97d4919c61d74a1d638b99ac79235264010f
 Finished verification request
 ERROR: Prover found violations:
 [rule] allBadDebtRulesCash: 
@@ -178,23 +179,6 @@ Results for all:
 |Rule name                               |Verified     |Time (sec)|Description                                                 |Local vars                                        |
 |----------------------------------------|-------------|----------|------------------------------------------------------------|--------------------------------------------------|
 |envfreeFuncsStaticCheck                 |Not violated |0         |                                                            |no local variables                                |
-|repayBadDebtDecreasesBadDebt            |Violated     |3         |Assert message: bad debt not decreased by repay amt -       |MockERC20=MockERC20 (0x47c0)                      |
-|                                        |             |          |certora/specs/SharePrice.spec line 94                       |MockMErc20DelegateFixer=MockMErc20DelegateFixer   |
-|                                        |             |          |                                                            |(0x47bf)                                          |
-|                                        |             |          |                                                            |badDebt=49                                        |
-|                                        |             |          |                                                            |e.block.basefee=0                                 |
-|                                        |             |          |                                                            |e.block.coinbase=0                                |
-|                                        |             |          |                                                            |e.block.difficulty=0                              |
-|                                        |             |          |                                                            |e.block.gaslimit=0                                |
-|                                        |             |          |                                                            |e.block.number=0                                  |
-|                                        |             |          |                                                            |e.block.timestamp=0                               |
-|                                        |             |          |                                                            |e.msg.sender=0x47be                               |
-|                                        |             |          |                                                            |e.msg.value=0                                     |
-|                                        |             |          |                                                            |e.tx.origin=0                                     |
-|                                        |             |          |                                                            |mTokenBalance=0                                   |
-|                                        |             |          |                                                            |repayAmount=50                                    |
-|                                        |             |          |                                                            |userBalance=0xffffffffffffffffffffffffffffffffffff|
-|                                        |             |          |                                                            |ffffffffffffffffffffffffe05d                      |
 |badDebtRulesCash                        |Violated     |3         |Assert message: cash not the same -                         |MockERC20=MockERC20 (0x3098)                      |
 |                                        |             |          |certora/specs/SharePrice.spec line 144                      |MockMErc20DelegateFixer=MockMErc20DelegateFixer   |
 |                                        |             |          |                                                            |(0x3097)                                          |
@@ -212,22 +196,39 @@ Results for all:
 |                                        |             |          |                                                            |startingBadDebt=0                                 |
 |                                        |             |          |                                                            |startingCash=0xfffffffffffffffffffffffffffffffffff|
 |                                        |             |          |                                                            |ffffffffffffffffffffffffffffe                     |
+|repayBadDebtDecreasesBadDebt            |Violated     |3         |Assert message: bad debt not decreased by repay amt -       |MockERC20=MockERC20 (0x47c0)                      |
+|                                        |             |          |certora/specs/SharePrice.spec line 94                       |MockMErc20DelegateFixer=MockMErc20DelegateFixer   |
+|                                        |             |          |                                                            |(0x47bf)                                          |
+|                                        |             |          |                                                            |badDebt=49                                        |
+|                                        |             |          |                                                            |e.block.basefee=0                                 |
+|                                        |             |          |                                                            |e.block.coinbase=0                                |
+|                                        |             |          |                                                            |e.block.difficulty=0                              |
+|                                        |             |          |                                                            |e.block.gaslimit=0                                |
+|                                        |             |          |                                                            |e.block.number=0                                  |
+|                                        |             |          |                                                            |e.block.timestamp=0                               |
+|                                        |             |          |                                                            |e.msg.sender=0x47be                               |
+|                                        |             |          |                                                            |e.msg.value=0                                     |
+|                                        |             |          |                                                            |e.tx.origin=0                                     |
+|                                        |             |          |                                                            |mTokenBalance=0                                   |
+|                                        |             |          |                                                            |repayAmount=50                                    |
+|                                        |             |          |                                                            |userBalance=0xffffffffffffffffffffffffffffffffffff|
+|                                        |             |          |                                                            |ffffffffffffffffffffffffe05d                      |
 |repayBadDebtWithReservesSuccess         |Not violated |3         |                                                            |no local variables                                |
 |fixUserIncreasesBadDebt                 |Not violated |2         |                                                            |no local variables                                |
-|fixingUserZeroUserBalance               |Not violated |2         |                                                            |no local variables                                |
-|allBadDebtRulesCash                     |Not violated |2         |                                                            |no local variables                                |
+|fixingUserZeroUserBalance               |Not violated |3         |                                                            |no local variables                                |
 |badDebtSymmetry                         |Not violated |2         |                                                            |no local variables                                |
 |repayBadDebtWithReservesDoesNotChangeSha|Not violated |2         |                                                            |no local variables                                |
 |rePrice                                 |             |          |                                                            |                                                  |
+|allBadDebtRulesCash                     |Not violated |2         |                                                            |no local variables                                |
 |fixingUserDoesNotChangeSharePrice       |Not violated |3         |                                                            |no local variables                                |
 |badDebtRules                            |Violated     |5         |Assert message: share price should not change repaying b... |no local variables                                |
 |                                        |             |          |- certora/specs/SharePrice.spec line 115                    |                                                  |
 *---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*
 Failures summary:
-Failed on repayBadDebtDecreasesBadDebt:
-Assert message: bad debt not decreased by repay amt - certora/specs/SharePrice.spec line 94
 Failed on badDebtRulesCash:
 Assert message: cash not the same - certora/specs/SharePrice.spec line 144
+Failed on repayBadDebtDecreasesBadDebt:
+Assert message: bad debt not decreased by repay amt - certora/specs/SharePrice.spec line 94
 Failed on badDebtRules:
 Assert message: share price should not change repaying b... - certora/specs/SharePrice.spec line 115
 Violated for: 
@@ -238,7 +239,7 @@ Event reporter: all events were sent without errors
 [INFO]: Process returned with 100
 [INFO]: updated '41948e68b910f69c3218ad74de39b67e9de06ffa0d3fbf733cc48950b19227c8-optimisticTrue-iterNone-None--certora-cli-6.3.1' cache
 
-Job is completed! View the results at https://prover.certora.com/output/925723/53353c93d392467bb6e5655498c7d480?anonymousKey=99dbd40f1b65950cb11c50b7f186d8f068879ce1
+Job is completed! View the results at https://prover.certora.com/output/925723/83590c3273804e838800bba163f7ef3a?anonymousKey=410cf492a07d80e656e380bea293512b672dac13
 Finished verification request
 ERROR: Prover found violations:
 [rule] badDebtRules: 
@@ -281,7 +282,7 @@ Failed Integration Tests: 2, Passed Tests: 44
 Failing tests:
 Encountered 2 failing tests in test/integration/proposals/mips/mip-m17/mip-m17.t.sol:MIPM17IntegrationTest
 [FAIL. Reason: Error != expected error: ERC20: transfer amount exceeds balance != amount exceeds bad debt] testRepayBadDebtFailsAmountExceedsBadDebt() (gas: 33851)
-[FAIL. Reason: revert: exchangeRateStored: exchangeRateStoredInternal failed; counterexample: calldata=0xf70f04650000000000000000000000000000000000000000000000000000000000000000 args=[0]] testRepayBadDebtSucceeds(uint256) (runs: 1, μ: 217954, ~: 217954)
+[FAIL. Reason: revert: exchangeRateStored: exchangeRateStoredInternal failed; counterexample: calldata=0xf70f04650000000000000000000000000000000000000000000000000000000000000000 args=[0]] testRepayBadDebtSucceeds(uint256) (runs: 0, μ: 0, ~: 0)
 
 Encountered a total of 2 failing tests, 44 tests succeeded
 ```
@@ -298,9 +299,9 @@ Results for all:
 |Rule name                               |Verified     |Time (sec)|Description                                                 |Local vars                                        |
 |----------------------------------------|-------------|----------|------------------------------------------------------------|--------------------------------------------------|
 |envfreeFuncsStaticCheck                 |Not violated |0         |                                                            |no local variables                                |
-|repayBadDebtDecreasesBadDebt            |Violated     |4         |Assert message: bad debt not decreased by repay amt -       |MockERC20=MockERC20 (0x47c0)                      |
+|repayBadDebtDecreasesBadDebt            |Violated     |3         |Assert message: bad debt not decreased by repay amt -       |MockERC20=MockERC20 (1)                           |
 |                                        |             |          |certora/specs/SharePrice.spec line 94                       |MockMErc20DelegateFixer=MockMErc20DelegateFixer   |
-|                                        |             |          |                                                            |(0x47bf)                                          |
+|                                        |             |          |                                                            |(2)                                               |
 |                                        |             |          |                                                            |badDebt=0                                         |
 |                                        |             |          |                                                            |e.block.basefee=0                                 |
 |                                        |             |          |                                                            |e.block.coinbase=0                                |
@@ -308,14 +309,13 @@ Results for all:
 |                                        |             |          |                                                            |e.block.gaslimit=0                                |
 |                                        |             |          |                                                            |e.block.number=0                                  |
 |                                        |             |          |                                                            |e.block.timestamp=0                               |
-|                                        |             |          |                                                            |e.msg.sender=0x47be                               |
+|                                        |             |          |                                                            |e.msg.sender=0x2711                               |
 |                                        |             |          |                                                            |e.msg.value=0                                     |
 |                                        |             |          |                                                            |e.tx.origin=0                                     |
 |                                        |             |          |                                                            |mTokenBalance=0                                   |
-|                                        |             |          |                                                            |repayAmount=49                                    |
-|                                        |             |          |                                                            |userBalance=0xffffffffffffffffffffffffffffffffffff|
-|                                        |             |          |                                                            |ffffffffffffffffffffffffe05d                      |
-|badDebtRulesCash                        |Violated     |4         |Assert message: cash not the same -                         |MockERC20=MockERC20 (0x3098)                      |
+|                                        |             |          |                                                            |repayAmount=0                                     |
+|                                        |             |          |                                                            |userBalance=0                                     |
+|badDebtRulesCash                        |Violated     |2         |Assert message: cash not the same -                         |MockERC20=MockERC20 (0x3098)                      |
 |                                        |             |          |certora/specs/SharePrice.spec line 144                      |MockMErc20DelegateFixer=MockMErc20DelegateFixer   |
 |                                        |             |          |                                                            |(0x3097)                                          |
 |                                        |             |          |                                                            |amount=1                                          |
@@ -332,16 +332,16 @@ Results for all:
 |                                        |             |          |                                                            |startingBadDebt=0                                 |
 |                                        |             |          |                                                            |startingCash=0xfffffffffffffffffffffffffffffffffff|
 |                                        |             |          |                                                            |ffffffffffffffffffffffffffffe                     |
-|repayBadDebtWithReservesSuccess         |Not violated |3         |                                                            |no local variables                                |
+|repayBadDebtWithReservesSuccess         |Not violated |4         |                                                            |no local variables                                |
 |fixUserIncreasesBadDebt                 |Not violated |3         |                                                            |no local variables                                |
 |fixingUserZeroUserBalance               |Not violated |3         |                                                            |no local variables                                |
-|allBadDebtRulesCash                     |Violated     |4         |Assert message: cash not correct -                          |no local variables                                |
+|allBadDebtRulesCash                     |Violated     |3         |Assert message: cash not correct -                          |no local variables                                |
 |                                        |             |          |certora/specs/SharePrice.spec line 171                      |                                                  |
+|badDebtSymmetry                         |Not violated |2         |                                                            |no local variables                                |
 |repayBadDebtWithReservesDoesNotChangeSha|Not violated |2         |                                                            |no local variables                                |
 |rePrice                                 |             |          |                                                            |                                                  |
-|badDebtSymmetry                         |Not violated |3         |                                                            |no local variables                                |
-|fixingUserDoesNotChangeSharePrice       |Not violated |3         |                                                            |no local variables                                |
-|badDebtRules                            |Violated     |2         |Assert message: share price should not change repaying b... |no local variables                                |
+|fixingUserDoesNotChangeSharePrice       |Not violated |2         |                                                            |no local variables                                |
+|badDebtRules                            |Violated     |3         |Assert message: share price should not change repaying b... |no local variables                                |
 |                                        |             |          |- certora/specs/SharePrice.spec line 115                    |                                                  |
 *---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*
 Failures summary:
@@ -363,7 +363,7 @@ Event reporter: all events were sent without errors
 [INFO]: Process returned with 100
 [INFO]: updated '41948e68b910f69c3218ad74de39b67e9de06ffa0d3fbf733cc48950b19227c8-optimisticTrue-iterNone-None--certora-cli-6.3.1' cache
 
-Job is completed! View the results at https://prover.certora.com/output/925723/c04740cb4f334060a113dad7134a3c44?anonymousKey=cd5da0b7e343f611bc5f5a04fee294e19dd5d828
+Job is completed! View the results at https://prover.certora.com/output/925723/7514cf7166fe4b1da6c10a5bb46fd33c?anonymousKey=ad3e6950b1a3d47b27734b23a415d3f4edf4fa24
 Finished verification request
 ERROR: Prover found violations:
 [rule] allBadDebtRulesCash: 
@@ -423,9 +423,38 @@ Results for all:
 |Rule name                               |Verified     |Time (sec)|Description                                                 |Local vars                                        |
 |----------------------------------------|-------------|----------|------------------------------------------------------------|--------------------------------------------------|
 |envfreeFuncsStaticCheck                 |Not violated |0         |                                                            |no local variables                                |
-|badDebtRulesCash                        |Violated     |3         |Assert message: cash not the same -                         |MockERC20=MockERC20 (1)                           |
+|repayBadDebtDecreasesBadDebt            |Violated     |4         |Assert message: underlying balance of user did not decre... |MockERC20=MockERC20                               |
+|                                        |             |          |- certora/specs/SharePrice.spec line 90                     |(0xbfffffffffffffffffffffffffffffffffffffff)      |
+|                                        |             |          |                                                            |MockMErc20DelegateFixer=MockMErc20DelegateFixer   |
+|                                        |             |          |                                                            |(0x7fffffffffffffffffffffffffffffffffffffff)      |
+|                                        |             |          |                                                            |badDebt=0xc000000000000000000000000000000000000000|
+|                                        |             |          |                                                            |000000000000000000000000                          |
+|                                        |             |          |                                                            |e.block.basefee=0x7fffffffffffffffffffffffffffffff|
+|                                        |             |          |                                                            |ffffffffffffffffffffffffffffffff                  |
+|                                        |             |          |                                                            |e.block.coinbase=MockMErc20DelegateFixer          |
+|                                        |             |          |                                                            |(0x7fffffffffffffffffffffffffffffffffffffff)      |
+|                                        |             |          |                                                            |e.block.difficulty=0x7ffffffffffffffffffffffffffff|
+|                                        |             |          |                                                            |fffffffffffffffffffffffffffffffffff               |
+|                                        |             |          |                                                            |e.block.gaslimit=0x7ffffffffffffffffffffffffffffff|
+|                                        |             |          |                                                            |fffffffffffffffffffffffffffffffff                 |
+|                                        |             |          |                                                            |e.block.number=0x7ffffffffffffffffffffffffffffffff|
+|                                        |             |          |                                                            |fffffffffffffffffffffffffffffff                   |
+|                                        |             |          |                                                            |e.block.timestamp=0x7fffffffffffffffffffffffffffff|
+|                                        |             |          |                                                            |ffffffffffffffffffffffffffffffffff                |
+|                                        |             |          |                                                            |e.msg.sender=MockERC20                            |
+|                                        |             |          |                                                            |(0xbfffffffffffffffffffffffffffffffffffffff)      |
+|                                        |             |          |                                                            |e.msg.value=0                                     |
+|                                        |             |          |                                                            |e.tx.origin=MockMErc20DelegateFixer               |
+|                                        |             |          |                                                            |(0x7fffffffffffffffffffffffffffffffffffffff)      |
+|                                        |             |          |                                                            |mTokenBalance=0x8000000000000000000000000000000000|
+|                                        |             |          |                                                            |000000000000000000000000000000                    |
+|                                        |             |          |                                                            |repayAmount=0x800000000000000000000000000000000000|
+|                                        |             |          |                                                            |0000000000000000000000000000                      |
+|                                        |             |          |                                                            |userBalance=0x800000000000000000000000000000000000|
+|                                        |             |          |                                                            |0000000000000000000000000000                      |
+|badDebtRulesCash                        |Violated     |3         |Assert message: cash not the same -                         |MockERC20=MockERC20 (0x2739)                      |
 |                                        |             |          |certora/specs/SharePrice.spec line 144                      |MockMErc20DelegateFixer=MockMErc20DelegateFixer   |
-|                                        |             |          |                                                            |(2)                                               |
+|                                        |             |          |                                                            |(0x2738)                                          |
 |                                        |             |          |                                                            |amount=1                                          |
 |                                        |             |          |                                                            |e.block.basefee=0                                 |
 |                                        |             |          |                                                            |e.block.coinbase=0                                |
@@ -433,44 +462,28 @@ Results for all:
 |                                        |             |          |                                                            |e.block.gaslimit=0                                |
 |                                        |             |          |                                                            |e.block.number=0                                  |
 |                                        |             |          |                                                            |e.block.timestamp=0                               |
-|                                        |             |          |                                                            |e.msg.sender=0x2711                               |
+|                                        |             |          |                                                            |e.msg.sender=0x2737                               |
 |                                        |             |          |                                                            |e.msg.value=0                                     |
 |                                        |             |          |                                                            |e.tx.origin=0                                     |
 |                                        |             |          |                                                            |endingBadDebt=0                                   |
 |                                        |             |          |                                                            |startingBadDebt=1                                 |
-|                                        |             |          |                                                            |startingCash=0                                    |
-|repayBadDebtDecreasesBadDebt            |Violated     |4         |Assert message: underlying balance of user did not decre... |MockERC20=MockERC20 (0x2ac0)                      |
-|                                        |             |          |- certora/specs/SharePrice.spec line 90                     |MockMErc20DelegateFixer=MockMErc20DelegateFixer   |
-|                                        |             |          |                                                            |(0x2be6)                                          |
-|                                        |             |          |                                                            |badDebt=0x2298                                    |
-|                                        |             |          |                                                            |e.block.basefee=0                                 |
-|                                        |             |          |                                                            |e.block.coinbase=0                                |
-|                                        |             |          |                                                            |e.block.difficulty=0                              |
-|                                        |             |          |                                                            |e.block.gaslimit=0                                |
-|                                        |             |          |                                                            |e.block.number=0                                  |
-|                                        |             |          |                                                            |e.block.timestamp=0                               |
-|                                        |             |          |                                                            |e.msg.sender=0x2be5                               |
-|                                        |             |          |                                                            |e.msg.value=0                                     |
-|                                        |             |          |                                                            |e.tx.origin=0                                     |
-|                                        |             |          |                                                            |mTokenBalance=0                                   |
-|                                        |             |          |                                                            |repayAmount=1                                     |
-|                                        |             |          |                                                            |userBalance=0                                     |
+|                                        |             |          |                                                            |startingCash=1                                    |
 |repayBadDebtWithReservesSuccess         |Not violated |3         |                                                            |no local variables                                |
-|fixUserIncreasesBadDebt                 |Not violated |3         |                                                            |no local variables                                |
 |fixingUserZeroUserBalance               |Not violated |3         |                                                            |no local variables                                |
+|fixUserIncreasesBadDebt                 |Not violated |3         |                                                            |no local variables                                |
 |badDebtSymmetry                         |Not violated |2         |                                                            |no local variables                                |
 |allBadDebtRulesCash                     |Not violated |2         |                                                            |no local variables                                |
 |repayBadDebtWithReservesDoesNotChangeSha|Not violated |2         |                                                            |no local variables                                |
 |rePrice                                 |             |          |                                                            |                                                  |
 |fixingUserDoesNotChangeSharePrice       |Not violated |2         |                                                            |no local variables                                |
-|badDebtRules                            |Violated     |3         |Assert message: share price should not change repaying b... |no local variables                                |
+|badDebtRules                            |Violated     |4         |Assert message: share price should not change repaying b... |no local variables                                |
 |                                        |             |          |- certora/specs/SharePrice.spec line 115                    |                                                  |
 *---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*
 Failures summary:
-Failed on badDebtRulesCash:
-Assert message: cash not the same - certora/specs/SharePrice.spec line 144
 Failed on repayBadDebtDecreasesBadDebt:
 Assert message: underlying balance of user did not decre... - certora/specs/SharePrice.spec line 90
+Failed on badDebtRulesCash:
+Assert message: cash not the same - certora/specs/SharePrice.spec line 144
 Failed on badDebtRules:
 Assert message: share price should not change repaying b... - certora/specs/SharePrice.spec line 115
 Violated for: 
@@ -481,7 +494,7 @@ Event reporter: all events were sent without errors
 [INFO]: Process returned with 100
 [INFO]: updated '41948e68b910f69c3218ad74de39b67e9de06ffa0d3fbf733cc48950b19227c8-optimisticTrue-iterNone-None--certora-cli-6.3.1' cache
 
-Job is completed! View the results at https://prover.certora.com/output/925723/714e2d20fe824826be107f0f6739b4c0?anonymousKey=7659c7a6aae83ab28dbf4b98591fa316df4e4b8f
+Job is completed! View the results at https://prover.certora.com/output/925723/38dab50b6558417abf3f7379e581a139?anonymousKey=8d3d24f094663c4178b13ce7496ff88bd95a35c7
 Finished verification request
 ERROR: Prover found violations:
 [rule] badDebtRules: 
@@ -540,28 +553,28 @@ Results for all:
 |Rule name                               |Verified     |Time (sec)|Description                                                 |Local vars                                        |
 |----------------------------------------|-------------|----------|------------------------------------------------------------|--------------------------------------------------|
 |envfreeFuncsStaticCheck                 |Not violated |0         |                                                            |no local variables                                |
-|repayBadDebtDecreasesBadDebt            |Sanity check |0         |                                                            |no local variables                                |
-|                                        |failed       |          |                                                            |                                                  |
 |badDebtRulesCash                        |Sanity check |0         |                                                            |no local variables                                |
 |                                        |failed       |          |                                                            |                                                  |
-|repayBadDebtWithReservesSuccess         |Not violated |3         |                                                            |no local variables                                |
+|repayBadDebtDecreasesBadDebt            |Sanity check |0         |                                                            |no local variables                                |
+|                                        |failed       |          |                                                            |                                                  |
+|repayBadDebtWithReservesSuccess         |Not violated |4         |                                                            |no local variables                                |
 |fixUserIncreasesBadDebt                 |Not violated |3         |                                                            |no local variables                                |
 |fixingUserZeroUserBalance               |Not violated |3         |                                                            |no local variables                                |
+|badDebtSymmetry                         |Sanity check |3         |                                                            |no local variables                                |
+|                                        |failed       |          |                                                            |                                                  |
 |allBadDebtRulesCash                     |Sanity check |3         |                                                            |no local variables                                |
 |                                        |failed       |          |                                                            |                                                  |
-|badDebtSymmetry                         |Sanity check |4         |                                                            |no local variables                                |
-|                                        |failed       |          |                                                            |                                                  |
-|repayBadDebtWithReservesDoesNotChangeSha|Not violated |3         |                                                            |no local variables                                |
+|repayBadDebtWithReservesDoesNotChangeSha|Not violated |2         |                                                            |no local variables                                |
 |rePrice                                 |             |          |                                                            |                                                  |
-|fixingUserDoesNotChangeSharePrice       |Not violated |3         |                                                            |no local variables                                |
-|badDebtRules                            |Sanity check |4         |                                                            |no local variables                                |
+|fixingUserDoesNotChangeSharePrice       |Not violated |2         |                                                            |no local variables                                |
+|badDebtRules                            |Sanity check |5         |                                                            |no local variables                                |
 |                                        |failed       |          |                                                            |                                                  |
 *---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*
 Failures summary:
-Failed on repayBadDebtDecreasesBadDebt:
 Failed on badDebtRulesCash:
-Failed on allBadDebtRulesCash:
+Failed on repayBadDebtDecreasesBadDebt:
 Failed on badDebtSymmetry:
+Failed on allBadDebtRulesCash:
 Failed on badDebtRules:
 Done 1m
 Done 1m
@@ -569,7 +582,7 @@ Event reporter: all events were sent without errors
 [INFO]: Process returned with 100
 [INFO]: updated '41948e68b910f69c3218ad74de39b67e9de06ffa0d3fbf733cc48950b19227c8-optimisticTrue-iterNone-None--certora-cli-6.3.1' cache
 
-Job is completed! View the results at https://prover.certora.com/output/925723/3a03bcfa3d684e3bae790a6fe145e3dd?anonymousKey=2d46956488e8bc9cb94a7281d2e50ef3d2b11c00
+Job is completed! View the results at https://prover.certora.com/output/925723/c3372c407ecb4b2e938fc3beb65ba40b?anonymousKey=f17e271771d0eed10f82ce07aea0b66ce950c868
 Finished verification request
 ERROR: Prover found violations:
 [rule] allBadDebtRulesCash: 
@@ -633,13 +646,13 @@ Results for all:
 |repayBadDebtWithReservesSuccess         |Not violated |3         |                                                            |no local variables                                |
 |fixUserIncreasesBadDebt                 |Not violated |3         |                                                            |no local variables                                |
 |fixingUserZeroUserBalance               |Not violated |3         |                                                            |no local variables                                |
+|repayBadDebtDecreasesBadDebt            |Not violated |2         |                                                            |no local variables                                |
+|badDebtRulesCash                        |Not violated |2         |                                                            |no local variables                                |
+|allBadDebtRulesCash                     |Not violated |2         |                                                            |no local variables                                |
+|badDebtSymmetry                         |Not violated |2         |                                                            |no local variables                                |
 |repayBadDebtWithReservesDoesNotChangeSha|Not violated |2         |                                                            |no local variables                                |
 |rePrice                                 |             |          |                                                            |                                                  |
-|badDebtRulesCash                        |Not violated |2         |                                                            |no local variables                                |
-|badDebtSymmetry                         |Not violated |2         |                                                            |no local variables                                |
-|repayBadDebtDecreasesBadDebt            |Not violated |3         |                                                            |no local variables                                |
-|allBadDebtRulesCash                     |Not violated |2         |                                                            |no local variables                                |
-|fixingUserDoesNotChangeSharePrice       |Not violated |4         |                                                            |no local variables                                |
+|fixingUserDoesNotChangeSharePrice       |Not violated |3         |                                                            |no local variables                                |
 |badDebtRules                            |Not violated |4         |                                                            |no local variables                                |
 *---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*
 Done 1m
@@ -647,7 +660,7 @@ Done 1m
 Event reporter: all events were sent without errors
 [INFO]: updated '41948e68b910f69c3218ad74de39b67e9de06ffa0d3fbf733cc48950b19227c8-optimisticTrue-iterNone-None--certora-cli-6.3.1' cache
 
-Job is completed! View the results at https://prover.certora.com/output/925723/657f25b2ac9d42ad8fbe9f4ac49f1217?anonymousKey=b0abda6805015396fc0a8c95a69ea21246742075
+Job is completed! View the results at https://prover.certora.com/output/925723/a4c0963932b6443cae2d7927193e8538?anonymousKey=4d173c4445744cb445b3e3c7aefc6f01b171faf6
 Finished verification request
 No errors found by Prover!
 ```
@@ -705,8 +718,7 @@ Results for all:
 |----------------------------------------|-------------|----------|------------------------------------------------------------|--------------------------------------------------|
 |envfreeFuncsStaticCheck                 |Not violated |0         |                                                            |no local variables                                |
 |repayBadDebtWithReservesSuccess         |Not violated |3         |                                                            |no local variables                                |
-|fixUserIncreasesBadDebt                 |Not violated |3         |                                                            |no local variables                                |
-|fixingUserZeroUserBalance               |Not violated |3         |                                                            |no local variables                                |
+|fixingUserZeroUserBalance               |Not violated |2         |                                                            |no local variables                                |
 |repayBadDebtWithReservesDoesNotChangeSha|Not violated |3         |                                                            |no local variables                                |
 |rePrice                                 |             |          |                                                            |                                                  |
 |repayBadDebtDecreasesBadDebt            |Not violated |2         |                                                            |no local variables                                |
@@ -714,14 +726,15 @@ Results for all:
 |allBadDebtRulesCash                     |Not violated |3         |                                                            |no local variables                                |
 |badDebtRulesCash                        |Not violated |3         |                                                            |no local variables                                |
 |fixingUserDoesNotChangeSharePrice       |Not violated |3         |                                                            |no local variables                                |
-|badDebtRules                            |Not violated |6         |                                                            |no local variables                                |
+|fixUserIncreasesBadDebt                 |Not violated |1         |                                                            |no local variables                                |
+|badDebtRules                            |Not violated |4         |                                                            |no local variables                                |
 *---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*
 Done 1m
 Done 1m
 Event reporter: all events were sent without errors
 [INFO]: updated '41948e68b910f69c3218ad74de39b67e9de06ffa0d3fbf733cc48950b19227c8-optimisticTrue-iterNone-None--certora-cli-6.3.1' cache
 
-Job is completed! View the results at https://prover.certora.com/output/925723/0bc4a13a67044379af8db884ee08f069?anonymousKey=c161dfdad927d16589bb51385e30e5346cacb7ab
+Job is completed! View the results at https://prover.certora.com/output/925723/3d254d98fcb741d6af3a5e60f7d09281?anonymousKey=84a000dc66bab8d9d211ede2fc0bec8401a6828e
 Finished verification request
 No errors found by Prover!
 ```
@@ -780,18 +793,18 @@ Results for all:
 |Rule name                               |Verified     |Time (sec)|Description                                                 |Local vars                                        |
 |----------------------------------------|-------------|----------|------------------------------------------------------------|--------------------------------------------------|
 |envfreeFuncsStaticCheck                 |Not violated |0         |                                                            |no local variables                                |
-|repayBadDebtWithReservesSuccess         |Sanity check |1         |                                                            |no local variables                                |
+|repayBadDebtWithReservesSuccess         |Sanity check |0         |                                                            |no local variables                                |
 |                                        |failed       |          |                                                            |                                                  |
 |repayBadDebtWithReservesDoesNotChangeSha|Sanity check |0         |                                                            |no local variables                                |
 |rePrice                                 |failed       |          |                                                            |                                                  |
-|fixUserIncreasesBadDebt                 |Not violated |4         |                                                            |no local variables                                |
-|fixingUserZeroUserBalance               |Not violated |4         |                                                            |no local variables                                |
-|repayBadDebtDecreasesBadDebt            |Not violated |4         |                                                            |no local variables                                |
-|badDebtRulesCash                        |Not violated |3         |                                                            |no local variables                                |
-|badDebtSymmetry                         |Sanity check |4         |                                                            |no local variables                                |
+|fixUserIncreasesBadDebt                 |Not violated |3         |                                                            |no local variables                                |
+|fixingUserZeroUserBalance               |Not violated |3         |                                                            |no local variables                                |
+|repayBadDebtDecreasesBadDebt            |Not violated |3         |                                                            |no local variables                                |
+|badDebtSymmetry                         |Sanity check |3         |                                                            |no local variables                                |
 |                                        |failed       |          |                                                            |                                                  |
-|allBadDebtRulesCash                     |Sanity check |5         |                                                            |no local variables                                |
+|allBadDebtRulesCash                     |Sanity check |4         |                                                            |no local variables                                |
 |                                        |failed       |          |                                                            |                                                  |
+|badDebtRulesCash                        |Not violated |2         |                                                            |no local variables                                |
 |fixingUserDoesNotChangeSharePrice       |Not violated |3         |                                                            |no local variables                                |
 |badDebtRules                            |Sanity check |5         |                                                            |no local variables                                |
 |                                        |failed       |          |                                                            |                                                  |
@@ -808,7 +821,7 @@ Event reporter: all events were sent without errors
 [INFO]: Process returned with 100
 [INFO]: updated '41948e68b910f69c3218ad74de39b67e9de06ffa0d3fbf733cc48950b19227c8-optimisticTrue-iterNone-None--certora-cli-6.3.1' cache
 
-Job is completed! View the results at https://prover.certora.com/output/925723/bd63571153f34a088cb2ca85a5ae2e2b?anonymousKey=90727a941cb382b676990da23e57a2e44534995e
+Job is completed! View the results at https://prover.certora.com/output/925723/125070ea498b429585cb02fde15dcb10?anonymousKey=5ae2166dd6dcc0ecd4ca230c2d30f170d53ed158
 Finished verification request
 ERROR: Prover found violations:
 [rule] allBadDebtRulesCash: 
@@ -870,23 +883,23 @@ Results for all:
 |----------------------------------------|-------------|----------|------------------------------------------------------------|--------------------------------------------------|
 |envfreeFuncsStaticCheck                 |Not violated |0         |                                                            |no local variables                                |
 |repayBadDebtWithReservesSuccess         |Not violated |3         |                                                            |no local variables                                |
-|fixingUserZeroUserBalance               |Not violated |3         |                                                            |no local variables                                |
-|fixUserIncreasesBadDebt                 |Not violated |3         |                                                            |no local variables                                |
-|repayBadDebtDecreasesBadDebt            |Not violated |2         |                                                            |no local variables                                |
+|fixUserIncreasesBadDebt                 |Not violated |2         |                                                            |no local variables                                |
+|fixingUserZeroUserBalance               |Not violated |2         |                                                            |no local variables                                |
 |repayBadDebtWithReservesDoesNotChangeSha|Not violated |2         |                                                            |no local variables                                |
 |rePrice                                 |             |          |                                                            |                                                  |
-|badDebtSymmetry                         |Not violated |4         |                                                            |no local variables                                |
-|allBadDebtRulesCash                     |Not violated |3         |                                                            |no local variables                                |
+|repayBadDebtDecreasesBadDebt            |Not violated |2         |                                                            |no local variables                                |
 |badDebtRulesCash                        |Not violated |2         |                                                            |no local variables                                |
+|badDebtSymmetry                         |Not violated |2         |                                                            |no local variables                                |
+|allBadDebtRulesCash                     |Not violated |3         |                                                            |no local variables                                |
 |fixingUserDoesNotChangeSharePrice       |Not violated |2         |                                                            |no local variables                                |
-|badDebtRules                            |Not violated |4         |                                                            |no local variables                                |
+|badDebtRules                            |Not violated |5         |                                                            |no local variables                                |
 *---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*
 Done 1m
 Done 1m
 Event reporter: all events were sent without errors
 [INFO]: updated '41948e68b910f69c3218ad74de39b67e9de06ffa0d3fbf733cc48950b19227c8-optimisticTrue-iterNone-None--certora-cli-6.3.1' cache
 
-Job is completed! View the results at https://prover.certora.com/output/925723/041a65baf9894de7b9f9144a63fbba44?anonymousKey=ae45c117ab97fad1e21246829f0dd6532ad537e5
+Job is completed! View the results at https://prover.certora.com/output/925723/255592b0712b4c23a5d7b80708cf1886?anonymousKey=41b93368c34648171eedd6177499817846ed82eb
 Finished verification request
 No errors found by Prover!
 ```
@@ -943,16 +956,16 @@ Results for all:
 |Rule name                               |Verified     |Time (sec)|Description                                                 |Local vars                                        |
 |----------------------------------------|-------------|----------|------------------------------------------------------------|--------------------------------------------------|
 |envfreeFuncsStaticCheck                 |Not violated |0         |                                                            |no local variables                                |
-|repayBadDebtWithReservesSuccess         |Not violated |3         |                                                            |no local variables                                |
-|fixingUserZeroUserBalance               |Not violated |3         |                                                            |no local variables                                |
 |fixUserIncreasesBadDebt                 |Not violated |3         |                                                            |no local variables                                |
-|repayBadDebtDecreasesBadDebt            |Not violated |3         |                                                            |no local variables                                |
+|repayBadDebtWithReservesSuccess         |Not violated |4         |                                                            |no local variables                                |
+|fixingUserZeroUserBalance               |Not violated |3         |                                                            |no local variables                                |
+|repayBadDebtDecreasesBadDebt            |Not violated |2         |                                                            |no local variables                                |
+|allBadDebtRulesCash                     |Not violated |3         |                                                            |no local variables                                |
 |badDebtRulesCash                        |Not violated |2         |                                                            |no local variables                                |
 |badDebtSymmetry                         |Not violated |2         |                                                            |no local variables                                |
-|repayBadDebtWithReservesDoesNotChangeSha|Not violated |3         |                                                            |no local variables                                |
+|repayBadDebtWithReservesDoesNotChangeSha|Not violated |2         |                                                            |no local variables                                |
 |rePrice                                 |             |          |                                                            |                                                  |
-|allBadDebtRulesCash                     |Not violated |2         |                                                            |no local variables                                |
-|fixingUserDoesNotChangeSharePrice       |Not violated |3         |                                                            |no local variables                                |
+|fixingUserDoesNotChangeSharePrice       |Not violated |2         |                                                            |no local variables                                |
 |badDebtRules                            |Not violated |4         |                                                            |no local variables                                |
 *---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*
 Done 1m
@@ -960,7 +973,7 @@ Done 1m
 Event reporter: all events were sent without errors
 [INFO]: updated '41948e68b910f69c3218ad74de39b67e9de06ffa0d3fbf733cc48950b19227c8-optimisticTrue-iterNone-None--certora-cli-6.3.1' cache
 
-Job is completed! View the results at https://prover.certora.com/output/925723/714e2f5616c54884a92a1a8cb7c9bc2a?anonymousKey=6b810f8f2b7e6b5c40776b0fbe4685ae8adc625f
+Job is completed! View the results at https://prover.certora.com/output/925723/3bf5287813be4402adb7d0fc88f456f7?anonymousKey=dded98ed94e95ae24491bd8f636191a42a8a77d8
 Finished verification request
 No errors found by Prover!
 ```
@@ -1024,14 +1037,14 @@ Results for all:
 |rePrice                                 |failed       |          |                                                            |                                                  |
 |fixUserIncreasesBadDebt                 |Not violated |4         |                                                            |no local variables                                |
 |fixingUserZeroUserBalance               |Not violated |4         |                                                            |no local variables                                |
-|badDebtRulesCash                        |Not violated |3         |                                                            |no local variables                                |
-|repayBadDebtDecreasesBadDebt            |Not violated |2         |                                                            |no local variables                                |
-|badDebtSymmetry                         |Sanity check |3         |                                                            |no local variables                                |
+|repayBadDebtDecreasesBadDebt            |Not violated |3         |                                                            |no local variables                                |
+|badDebtSymmetry                         |Sanity check |4         |                                                            |no local variables                                |
 |                                        |failed       |          |                                                            |                                                  |
 |allBadDebtRulesCash                     |Sanity check |5         |                                                            |no local variables                                |
 |                                        |failed       |          |                                                            |                                                  |
-|fixingUserDoesNotChangeSharePrice       |Not violated |3         |                                                            |no local variables                                |
-|badDebtRules                            |Sanity check |5         |                                                            |no local variables                                |
+|badDebtRulesCash                        |Not violated |3         |                                                            |no local variables                                |
+|fixingUserDoesNotChangeSharePrice       |Not violated |2         |                                                            |no local variables                                |
+|badDebtRules                            |Sanity check |6         |                                                            |no local variables                                |
 |                                        |failed       |          |                                                            |                                                  |
 *---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*
 Failures summary:
@@ -1046,7 +1059,7 @@ Event reporter: all events were sent without errors
 [INFO]: Process returned with 100
 [INFO]: updated '41948e68b910f69c3218ad74de39b67e9de06ffa0d3fbf733cc48950b19227c8-optimisticTrue-iterNone-None--certora-cli-6.3.1' cache
 
-Job is completed! View the results at https://prover.certora.com/output/925723/2fd3a9a91e5048aea32b8b7fdad57f62?anonymousKey=11382670e09f52362977c86f06bf1607c6dd8d0a
+Job is completed! View the results at https://prover.certora.com/output/925723/092d762ec2bd4c6499852b997578b5ff?anonymousKey=21ff96561c744070ddfb94a95b3018b242f13300
 Finished verification request
 ERROR: Prover found violations:
 [rule] allBadDebtRulesCash: 
@@ -1109,23 +1122,23 @@ Results for all:
 |----------------------------------------|-------------|----------|------------------------------------------------------------|--------------------------------------------------|
 |envfreeFuncsStaticCheck                 |Not violated |0         |                                                            |no local variables                                |
 |repayBadDebtWithReservesSuccess         |Not violated |3         |                                                            |no local variables                                |
-|fixUserIncreasesBadDebt                 |Not violated |3         |                                                            |no local variables                                |
-|fixingUserZeroUserBalance               |Not violated |3         |                                                            |no local variables                                |
+|fixUserIncreasesBadDebt                 |Not violated |2         |                                                            |no local variables                                |
+|fixingUserZeroUserBalance               |Not violated |2         |                                                            |no local variables                                |
 |repayBadDebtDecreasesBadDebt            |Not violated |2         |                                                            |no local variables                                |
+|badDebtRulesCash                        |Not violated |2         |                                                            |no local variables                                |
 |repayBadDebtWithReservesDoesNotChangeSha|Not violated |3         |                                                            |no local variables                                |
 |rePrice                                 |             |          |                                                            |                                                  |
-|badDebtRulesCash                        |Not violated |2         |                                                            |no local variables                                |
 |badDebtSymmetry                         |Not violated |3         |                                                            |no local variables                                |
-|fixingUserDoesNotChangeSharePrice       |Not violated |2         |                                                            |no local variables                                |
-|allBadDebtRulesCash                     |Not violated |5         |                                                            |no local variables                                |
-|badDebtRules                            |Not violated |3         |                                                            |no local variables                                |
+|allBadDebtRulesCash                     |Not violated |3         |                                                            |no local variables                                |
+|fixingUserDoesNotChangeSharePrice       |Not violated |4         |                                                            |no local variables                                |
+|badDebtRules                            |Not violated |6         |                                                            |no local variables                                |
 *---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*
 Done 1m
 Done 1m
 Event reporter: all events were sent without errors
 [INFO]: updated '41948e68b910f69c3218ad74de39b67e9de06ffa0d3fbf733cc48950b19227c8-optimisticTrue-iterNone-None--certora-cli-6.3.1' cache
 
-Job is completed! View the results at https://prover.certora.com/output/925723/b07da03205d741ed879d0b00d5f9befe?anonymousKey=a05ae140e377f1134f373d6509531dc414fa48f9
+Job is completed! View the results at https://prover.certora.com/output/925723/34943096a12e467a950523df7d3472ee?anonymousKey=b63f657ebe91d8fcd65a87c4a3b1d06707b4a895
 Finished verification request
 No errors found by Prover!
 ```
@@ -1183,23 +1196,36 @@ Results for all:
 |Rule name                               |Verified     |Time (sec)|Description                                                 |Local vars                                        |
 |----------------------------------------|-------------|----------|------------------------------------------------------------|--------------------------------------------------|
 |envfreeFuncsStaticCheck                 |Not violated |0         |                                                            |no local variables                                |
-|repayBadDebtWithReservesSuccess         |Violated     |5         |Assert message: bad debt not fully paid off -               |MockERC20=MockERC20 (1)                           |
-|                                        |             |          |certora/specs/SharePrice.spec line 184                      |MockMErc20DelegateFixer=MockMErc20DelegateFixer   |
-|                                        |             |          |                                                            |(2)                                               |
-|                                        |             |          |                                                            |e.block.basefee=0                                 |
-|                                        |             |          |                                                            |e.block.coinbase=0                                |
-|                                        |             |          |                                                            |e.block.difficulty=0                              |
-|                                        |             |          |                                                            |e.block.gaslimit=0                                |
-|                                        |             |          |                                                            |e.block.number=0                                  |
-|                                        |             |          |                                                            |e.block.timestamp=0                               |
-|                                        |             |          |                                                            |e.msg.sender=0                                    |
-|                                        |             |          |                                                            |e.msg.value=0                                     |
-|                                        |             |          |                                                            |e.tx.origin=0                                     |
-|                                        |             |          |                                                            |endingBadDebt=1                                   |
+|repayBadDebtWithReservesSuccess         |Violated     |3         |Assert message: bad debt not fully paid off -               |MockERC20=MockERC20                               |
+|                                        |             |          |certora/specs/SharePrice.spec line 184                      |(0x7fffffffffffffffffffffffffffffffffffffff)      |
+|                                        |             |          |                                                            |MockMErc20DelegateFixer=MockMErc20DelegateFixer   |
+|                                        |             |          |                                                            |(0xbfffffffffffffffffffffffffffffffffffffff)      |
+|                                        |             |          |                                                            |e.block.basefee=0x7fffffffffffffffffffffffffffffff|
+|                                        |             |          |                                                            |ffffffffffffffffffffffffffffffff                  |
+|                                        |             |          |                                                            |e.block.coinbase=MockERC20                        |
+|                                        |             |          |                                                            |(0x7fffffffffffffffffffffffffffffffffffffff)      |
+|                                        |             |          |                                                            |e.block.difficulty=0x7ffffffffffffffffffffffffffff|
+|                                        |             |          |                                                            |fffffffffffffffffffffffffffffffffff               |
+|                                        |             |          |                                                            |e.block.gaslimit=0x7ffffffffffffffffffffffffffffff|
+|                                        |             |          |                                                            |fffffffffffffffffffffffffffffffff                 |
+|                                        |             |          |                                                            |e.block.number=0x7ffffffffffffffffffffffffffffffff|
+|                                        |             |          |                                                            |fffffffffffffffffffffffffffffff                   |
+|                                        |             |          |                                                            |e.block.timestamp=0x7fffffffffffffffffffffffffffff|
+|                                        |             |          |                                                            |ffffffffffffffffffffffffffffffffff                |
+|                                        |             |          |                                                            |e.msg.sender=MockERC20                            |
+|                                        |             |          |                                                            |(0x7fffffffffffffffffffffffffffffffffffffff)      |
+|                                        |             |          |                                                            |e.msg.value=0x7fffffffffffffffffffffffffffffffffff|
+|                                        |             |          |                                                            |ffffffffffffffffffffffffffff                      |
+|                                        |             |          |                                                            |e.tx.origin=MockERC20                             |
+|                                        |             |          |                                                            |(0x7fffffffffffffffffffffffffffffffffffffff)      |
+|                                        |             |          |                                                            |endingBadDebt=0x4000000000000000000000000000000000|
+|                                        |             |          |                                                            |000000000000000000000000000000                    |
 |                                        |             |          |                                                            |endingReserves=initialized to unknown             |
-|                                        |             |          |                                                            |startingBadDebt=1                                 |
-|                                        |             |          |                                                            |startingReserves=2                                |
-|repayBadDebtWithReservesDoesNotChangeSha|Violated     |3         |Assert message: share price should remain unchanged -       |MockERC20=MockERC20 (1)                           |
+|                                        |             |          |                                                            |startingBadDebt=0x40000000000000000000000000000000|
+|                                        |             |          |                                                            |00000000000000000000000000000000                  |
+|                                        |             |          |                                                            |startingReserves=0x8000000000000000000000000000000|
+|                                        |             |          |                                                            |000000000000000000000000000000000                 |
+|repayBadDebtWithReservesDoesNotChangeSha|Violated     |2         |Assert message: share price should remain unchanged -       |MockERC20=MockERC20 (1)                           |
 |rePrice                                 |             |          |certora/specs/SharePrice.spec line 202                      |MockMErc20DelegateFixer=MockMErc20DelegateFixer   |
 |                                        |             |          |                                                            |(2)                                               |
 |                                        |             |          |                                                            |e.block.basefee=0xffffffffffffffffffffffffffffffff|
@@ -1221,15 +1247,15 @@ Results for all:
 |                                        |             |          |                                                            |endingSharePrice=0x7ffffffffffffffffffffffffffffff|
 |                                        |             |          |                                                            |ffffffffffffffee00c13e37b50a40000                 |
 |                                        |             |          |                                                            |startingSharePrice=0                              |
-|fixingUserZeroUserBalance               |Not violated |5         |                                                            |no local variables                                |
-|fixUserIncreasesBadDebt                 |Not violated |5         |                                                            |no local variables                                |
-|allBadDebtRulesCash                     |Not violated |2         |                                                            |no local variables                                |
+|fixUserIncreasesBadDebt                 |Not violated |3         |                                                            |no local variables                                |
+|fixingUserZeroUserBalance               |Not violated |3         |                                                            |no local variables                                |
 |repayBadDebtDecreasesBadDebt            |Not violated |2         |                                                            |no local variables                                |
+|badDebtRulesCash                        |Not violated |2         |                                                            |no local variables                                |
 |badDebtSymmetry                         |Violated     |3         |Assert message: reserves bad debt incorrect -               |no local variables                                |
 |                                        |             |          |certora/specs/SharePrice.spec line 229                      |                                                  |
-|badDebtRulesCash                        |Not violated |2         |                                                            |no local variables                                |
+|allBadDebtRulesCash                     |Not violated |4         |                                                            |no local variables                                |
 |fixingUserDoesNotChangeSharePrice       |Not violated |3         |                                                            |no local variables                                |
-|badDebtRules                            |Violated     |3         |Assert message: share price should not change repaying b... |no local variables                                |
+|badDebtRules                            |Violated     |5         |Assert message: share price should not change repaying b... |no local variables                                |
 |                                        |             |          |- certora/specs/SharePrice.spec line 115                    |                                                  |
 *---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*
 Failures summary:
@@ -1251,7 +1277,7 @@ Event reporter: all events were sent without errors
 [INFO]: Process returned with 100
 [INFO]: updated '41948e68b910f69c3218ad74de39b67e9de06ffa0d3fbf733cc48950b19227c8-optimisticTrue-iterNone-None--certora-cli-6.3.1' cache
 
-Job is completed! View the results at https://prover.certora.com/output/925723/835e9ec7a611475c90288e31a479b8fc?anonymousKey=5bc6eed2ec1993e9dd08c4262d3be0bf971631bc
+Job is completed! View the results at https://prover.certora.com/output/925723/528425aa0fa04c8b8ec942393207f818?anonymousKey=3cabee9bd5b5f9ce3818943b15db25914e5b9f88
 Finished verification request
 ERROR: Prover found violations:
 [rule] badDebtRules: 
@@ -1312,7 +1338,7 @@ Results for all:
 |Rule name                               |Verified     |Time (sec)|Description                                                 |Local vars                                        |
 |----------------------------------------|-------------|----------|------------------------------------------------------------|--------------------------------------------------|
 |envfreeFuncsStaticCheck                 |Not violated |0         |                                                            |no local variables                                |
-|repayBadDebtWithReservesSuccess         |Violated     |5         |Assert message: bad debt not paid off by reserve amount -   |MockERC20=MockERC20 (1)                           |
+|repayBadDebtWithReservesSuccess         |Violated     |3         |Assert message: bad debt not paid off by reserve amount -   |MockERC20=MockERC20 (1)                           |
 |                                        |             |          |certora/specs/SharePrice.spec line 188                      |MockMErc20DelegateFixer=MockMErc20DelegateFixer   |
 |                                        |             |          |                                                            |(2)                                               |
 |                                        |             |          |                                                            |e.block.basefee=0                                 |
@@ -1331,31 +1357,24 @@ Results for all:
 |repayBadDebtWithReservesDoesNotChangeSha|Violated     |2         |Assert message: share price should remain unchanged -       |MockERC20=MockERC20 (2)                           |
 |rePrice                                 |             |          |certora/specs/SharePrice.spec line 202                      |MockMErc20DelegateFixer=MockMErc20DelegateFixer   |
 |                                        |             |          |                                                            |(1)                                               |
-|                                        |             |          |                                                            |e.block.basefee=0xffffffffffffffffffffffffffffffff|
-|                                        |             |          |                                                            |ffffffffffffffffffffffffffffffff (MAX_UINT256)    |
-|                                        |             |          |                                                            |e.block.coinbase=0xfffffffffffffffffffffffffffffff|
-|                                        |             |          |                                                            |fffffffff (MAX_EVM_ADDRESS)                       |
-|                                        |             |          |                                                            |e.block.difficulty=0xfffffffffffffffffffffffffffff|
-|                                        |             |          |                                                            |fffffffffffffffffffffffffffffffffff (MAX_UINT256) |
-|                                        |             |          |                                                            |e.block.gaslimit=0xfffffffffffffffffffffffffffffff|
-|                                        |             |          |                                                            |fffffffffffffffffffffffffffffffff (MAX_UINT256)   |
-|                                        |             |          |                                                            |e.block.number=0xfffffffffffffffffffffffffffffffff|
-|                                        |             |          |                                                            |fffffffffffffffffffffffffffffff (MAX_UINT256)     |
-|                                        |             |          |                                                            |e.block.timestamp=0xffffffffffffffffffffffffffffff|
-|                                        |             |          |                                                            |ffffffffffffffffffffffffffffffffff (MAX_UINT256)  |
-|                                        |             |          |                                                            |e.msg.sender=0x2710                               |
+|                                        |             |          |                                                            |e.block.basefee=0                                 |
+|                                        |             |          |                                                            |e.block.coinbase=0                                |
+|                                        |             |          |                                                            |e.block.difficulty=0                              |
+|                                        |             |          |                                                            |e.block.gaslimit=0                                |
+|                                        |             |          |                                                            |e.block.number=0                                  |
+|                                        |             |          |                                                            |e.block.timestamp=0                               |
+|                                        |             |          |                                                            |e.msg.sender=0                                    |
 |                                        |             |          |                                                            |e.msg.value=0                                     |
-|                                        |             |          |                                                            |e.tx.origin=0xffffffffffffffffffffffffffffffffffff|
-|                                        |             |          |                                                            |ffff (MAX_EVM_ADDRESS)                            |
+|                                        |             |          |                                                            |e.tx.origin=0                                     |
 |                                        |             |          |                                                            |endingSharePrice=0                                |
 |                                        |             |          |                                                            |startingSharePrice=1                              |
-|fixingUserZeroUserBalance               |Not violated |4         |                                                            |no local variables                                |
-|fixUserIncreasesBadDebt                 |Not violated |4         |                                                            |no local variables                                |
+|fixUserIncreasesBadDebt                 |Not violated |3         |                                                            |no local variables                                |
+|fixingUserZeroUserBalance               |Not violated |3         |                                                            |no local variables                                |
 |repayBadDebtDecreasesBadDebt            |Not violated |2         |                                                            |no local variables                                |
-|badDebtRulesCash                        |Not violated |2         |                                                            |no local variables                                |
-|badDebtSymmetry                         |Violated     |2         |Assert message: reserves bad debt incorrect -               |no local variables                                |
+|allBadDebtRulesCash                     |Not violated |2         |                                                            |no local variables                                |
+|badDebtSymmetry                         |Violated     |3         |Assert message: reserves bad debt incorrect -               |no local variables                                |
 |                                        |             |          |certora/specs/SharePrice.spec line 229                      |                                                  |
-|allBadDebtRulesCash                     |Not violated |3         |                                                            |no local variables                                |
+|badDebtRulesCash                        |Not violated |2         |                                                            |no local variables                                |
 |fixingUserDoesNotChangeSharePrice       |Not violated |2         |                                                            |no local variables                                |
 |badDebtRules                            |Violated     |3         |Assert message: share price should not change repaying b... |no local variables                                |
 |                                        |             |          |- certora/specs/SharePrice.spec line 115                    |                                                  |
@@ -1379,7 +1398,7 @@ Event reporter: all events were sent without errors
 [INFO]: Process returned with 100
 [INFO]: updated '41948e68b910f69c3218ad74de39b67e9de06ffa0d3fbf733cc48950b19227c8-optimisticTrue-iterNone-None--certora-cli-6.3.1' cache
 
-Job is completed! View the results at https://prover.certora.com/output/925723/2d94893b4e2745c5aeb7351f8276b199?anonymousKey=7a96a348969bc07c78bc603f43c45acf803053f4
+Job is completed! View the results at https://prover.certora.com/output/925723/5d355f6967274638b280c94b8276e24a?anonymousKey=7a2f5fca01ebb73df80d2d0b97ad386274994d6a
 Finished verification request
 ERROR: Prover found violations:
 [rule] badDebtRules: 
@@ -1468,7 +1487,7 @@ Results for all:
 |                                        |             |          |                                                            |00000000000000000000000000000000                  |
 |                                        |             |          |                                                            |startingReserves=0x8000000000000000000000000000000|
 |                                        |             |          |                                                            |000000000000000000000000000000000                 |
-|repayBadDebtWithReservesDoesNotChangeSha|Violated     |3         |Assert message: share price should remain unchanged -       |MockERC20=MockERC20 (2)                           |
+|repayBadDebtWithReservesDoesNotChangeSha|Violated     |2         |Assert message: share price should remain unchanged -       |MockERC20=MockERC20 (2)                           |
 |rePrice                                 |             |          |certora/specs/SharePrice.spec line 202                      |MockMErc20DelegateFixer=MockMErc20DelegateFixer   |
 |                                        |             |          |                                                            |(1)                                               |
 |                                        |             |          |                                                            |e.block.basefee=0xffffffffffffffffffffffffffffffff|
@@ -1491,12 +1510,12 @@ Results for all:
 |                                        |             |          |                                                            |startingSharePrice=1                              |
 |fixingUserZeroUserBalance               |Not violated |3         |                                                            |no local variables                                |
 |fixUserIncreasesBadDebt                 |Not violated |3         |                                                            |no local variables                                |
-|repayBadDebtDecreasesBadDebt            |Not violated |1         |                                                            |no local variables                                |
-|badDebtRulesCash                        |Not violated |3         |                                                            |no local variables                                |
-|badDebtSymmetry                         |Violated     |2         |Assert message: reserves bad debt incorrect -               |no local variables                                |
+|badDebtRulesCash                        |Not violated |2         |                                                            |no local variables                                |
+|badDebtSymmetry                         |Violated     |4         |Assert message: reserves bad debt incorrect -               |no local variables                                |
 |                                        |             |          |certora/specs/SharePrice.spec line 229                      |                                                  |
-|allBadDebtRulesCash                     |Not violated |2         |                                                            |no local variables                                |
-|fixingUserDoesNotChangeSharePrice       |Not violated |2         |                                                            |no local variables                                |
+|repayBadDebtDecreasesBadDebt            |Not violated |2         |                                                            |no local variables                                |
+|allBadDebtRulesCash                     |Not violated |3         |                                                            |no local variables                                |
+|fixingUserDoesNotChangeSharePrice       |Not violated |3         |                                                            |no local variables                                |
 |badDebtRules                            |Violated     |4         |Assert message: share price should not change repaying b... |no local variables                                |
 |                                        |             |          |- certora/specs/SharePrice.spec line 115                    |                                                  |
 *---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*
@@ -1519,7 +1538,7 @@ Event reporter: all events were sent without errors
 [INFO]: Process returned with 100
 [INFO]: updated '41948e68b910f69c3218ad74de39b67e9de06ffa0d3fbf733cc48950b19227c8-optimisticTrue-iterNone-None--certora-cli-6.3.1' cache
 
-Job is completed! View the results at https://prover.certora.com/output/925723/04512ee586bb44bfa979820ced1bde6f?anonymousKey=22b11b687c77b69b08952949e0f7495d2ddb3d5d
+Job is completed! View the results at https://prover.certora.com/output/925723/ed6e4113f78e49e49490a9983bc56f33?anonymousKey=68b5da5c891a50a01667acdcd61f08e779542695
 Finished verification request
 ERROR: Prover found violations:
 [rule] badDebtRules: 
@@ -1580,29 +1599,30 @@ Results for all:
 |Rule name                               |Verified     |Time (sec)|Description                                                 |Local vars                                        |
 |----------------------------------------|-------------|----------|------------------------------------------------------------|--------------------------------------------------|
 |envfreeFuncsStaticCheck                 |Not violated |0         |                                                            |no local variables                                |
-|repayBadDebtWithReservesDoesNotChangeSha|Violated     |4         |Assert message: share price should remain unchanged -       |MockERC20=MockERC20 (0x2713)                      |
+|repayBadDebtWithReservesDoesNotChangeSha|Violated     |4         |Assert message: share price should remain unchanged -       |MockERC20=MockERC20 (2)                           |
 |rePrice                                 |             |          |certora/specs/SharePrice.spec line 202                      |MockMErc20DelegateFixer=MockMErc20DelegateFixer   |
-|                                        |             |          |                                                            |(0x2712)                                          |
+|                                        |             |          |                                                            |(4)                                               |
 |                                        |             |          |                                                            |e.block.basefee=0                                 |
 |                                        |             |          |                                                            |e.block.coinbase=0                                |
 |                                        |             |          |                                                            |e.block.difficulty=0                              |
 |                                        |             |          |                                                            |e.block.gaslimit=0                                |
 |                                        |             |          |                                                            |e.block.number=0                                  |
 |                                        |             |          |                                                            |e.block.timestamp=0                               |
-|                                        |             |          |                                                            |e.msg.sender=0x2711                               |
+|                                        |             |          |                                                            |e.msg.sender=0                                    |
 |                                        |             |          |                                                            |e.msg.value=0                                     |
 |                                        |             |          |                                                            |e.tx.origin=0                                     |
 |                                        |             |          |                                                            |endingSharePrice=0                                |
-|                                        |             |          |                                                            |startingSharePrice=1                              |
-|repayBadDebtWithReservesSuccess         |Not violated |3         |                                                            |no local variables                                |
-|fixUserIncreasesBadDebt                 |Not violated |3         |                                                            |no local variables                                |
-|fixingUserZeroUserBalance               |Not violated |3         |                                                            |no local variables                                |
-|repayBadDebtDecreasesBadDebt            |Not violated |2         |                                                            |no local variables                                |
+|                                        |             |          |                                                            |startingSharePrice=0xfffffffffffffffffffffffffffff|
+|                                        |             |          |                                                            |ffffffffffffffffffff7e52fe5afe40000               |
+|fixUserIncreasesBadDebt                 |Not violated |4         |                                                            |no local variables                                |
+|repayBadDebtWithReservesSuccess         |Not violated |4         |                                                            |no local variables                                |
+|fixingUserZeroUserBalance               |Not violated |4         |                                                            |no local variables                                |
 |badDebtRulesCash                        |Not violated |2         |                                                            |no local variables                                |
-|badDebtSymmetry                         |Not violated |3         |                                                            |no local variables                                |
+|badDebtSymmetry                         |Not violated |2         |                                                            |no local variables                                |
+|repayBadDebtDecreasesBadDebt            |Not violated |3         |                                                            |no local variables                                |
 |allBadDebtRulesCash                     |Not violated |4         |                                                            |no local variables                                |
-|fixingUserDoesNotChangeSharePrice       |Not violated |3         |                                                            |no local variables                                |
-|badDebtRules                            |Violated     |5         |Assert message: share price should not change repaying b... |no local variables                                |
+|fixingUserDoesNotChangeSharePrice       |Not violated |2         |                                                            |no local variables                                |
+|badDebtRules                            |Violated     |3         |Assert message: share price should not change repaying b... |no local variables                                |
 |                                        |             |          |- certora/specs/SharePrice.spec line 115                    |                                                  |
 *---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*
 Failures summary:
@@ -1618,7 +1638,7 @@ Event reporter: all events were sent without errors
 [INFO]: Process returned with 100
 [INFO]: updated '41948e68b910f69c3218ad74de39b67e9de06ffa0d3fbf733cc48950b19227c8-optimisticTrue-iterNone-None--certora-cli-6.3.1' cache
 
-Job is completed! View the results at https://prover.certora.com/output/925723/887a945ff5924bbd92b2cefc0debdd8c?anonymousKey=4cce952a8303517a2f0a1ede5a9947ee296e0aa8
+Job is completed! View the results at https://prover.certora.com/output/925723/f6e0dabddc2b40ac975e9faa9e7b5aee?anonymousKey=48512a2f0ce1d2dff32b16913e7e7804729f2599
 Finished verification request
 ERROR: Prover found violations:
 [rule] badDebtRules: 
@@ -1666,7 +1686,8 @@ Results for all:
 |Rule name                               |Verified     |Time (sec)|Description                                                 |Local vars                                        |
 |----------------------------------------|-------------|----------|------------------------------------------------------------|--------------------------------------------------|
 |envfreeFuncsStaticCheck                 |Not violated |0         |                                                            |no local variables                                |
-|repayBadDebtWithReservesDoesNotChangeSha|Violated     |7         |Assert message: share price should remain unchanged -       |MockERC20=MockERC20 (0x2713)                      |
+|repayBadDebtWithReservesSuccess         |Not violated |3         |                                                            |no local variables                                |
+|repayBadDebtWithReservesDoesNotChangeSha|Violated     |4         |Assert message: share price should remain unchanged -       |MockERC20=MockERC20 (0x2711)                      |
 |rePrice                                 |             |          |certora/specs/SharePrice.spec line 202                      |MockMErc20DelegateFixer=MockMErc20DelegateFixer   |
 |                                        |             |          |                                                            |(0x2712)                                          |
 |                                        |             |          |                                                            |e.block.basefee=0                                 |
@@ -1675,21 +1696,20 @@ Results for all:
 |                                        |             |          |                                                            |e.block.gaslimit=0                                |
 |                                        |             |          |                                                            |e.block.number=0                                  |
 |                                        |             |          |                                                            |e.block.timestamp=0                               |
-|                                        |             |          |                                                            |e.msg.sender=0x2711                               |
+|                                        |             |          |                                                            |e.msg.sender=MockERC20 (0x2711)                   |
 |                                        |             |          |                                                            |e.msg.value=0                                     |
 |                                        |             |          |                                                            |e.tx.origin=0                                     |
 |                                        |             |          |                                                            |endingSharePrice=1                                |
 |                                        |             |          |                                                            |startingSharePrice=0                              |
-|repayBadDebtWithReservesSuccess         |Not violated |7         |                                                            |no local variables                                |
-|fixUserIncreasesBadDebt                 |Not violated |6         |                                                            |no local variables                                |
-|fixingUserZeroUserBalance               |Not violated |6         |                                                            |no local variables                                |
-|badDebtRulesCash                        |Not violated |4         |                                                            |no local variables                                |
-|repayBadDebtDecreasesBadDebt            |Not violated |4         |                                                            |no local variables                                |
+|fixUserIncreasesBadDebt                 |Not violated |2         |                                                            |no local variables                                |
+|fixingUserZeroUserBalance               |Not violated |2         |                                                            |no local variables                                |
+|repayBadDebtDecreasesBadDebt            |Not violated |2         |                                                            |no local variables                                |
+|badDebtRulesCash                        |Not violated |2         |                                                            |no local variables                                |
 |badDebtSymmetry                         |Violated     |4         |Assert message: reserves bad debt incorrect -               |no local variables                                |
 |                                        |             |          |certora/specs/SharePrice.spec line 229                      |                                                  |
 |allBadDebtRulesCash                     |Not violated |4         |                                                            |no local variables                                |
-|fixingUserDoesNotChangeSharePrice       |Not violated |4         |                                                            |no local variables                                |
-|badDebtRules                            |Violated     |7         |Assert message: share price should not change repaying b... |no local variables                                |
+|fixingUserDoesNotChangeSharePrice       |Not violated |3         |                                                            |no local variables                                |
+|badDebtRules                            |Violated     |3         |Assert message: share price should not change repaying b... |no local variables                                |
 |                                        |             |          |- certora/specs/SharePrice.spec line 115                    |                                                  |
 *---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*
 Failures summary:
@@ -1703,13 +1723,13 @@ Failed on badDebtRules:
 Assert message: share price should not change repaying b... - certora/specs/SharePrice.spec line 115
 Violated for: 
 repayBadDebtWithReserves()
-Done 3m
-Done 3m
+Done 1m
+Done 1m
 Event reporter: all events were sent without errors
 [INFO]: Process returned with 100
 [INFO]: updated '41948e68b910f69c3218ad74de39b67e9de06ffa0d3fbf733cc48950b19227c8-optimisticTrue-iterNone-None--certora-cli-6.3.1' cache
 
-Job is completed! View the results at https://prover.certora.com/output/925723/5f63514d03da41b3ad151de0d4fee6a1?anonymousKey=ded8f9dd03bfd41e253566848e3306330d18bf85
+Job is completed! View the results at https://prover.certora.com/output/925723/4cb664ac1f09458791ea6956edd754cd?anonymousKey=1e3eab42f27250ae8fac799facb36be21dd371a1
 Finished verification request
 ERROR: Prover found violations:
 [rule] badDebtRules: 
@@ -1770,30 +1790,30 @@ Results for all:
 |Rule name                               |Verified     |Time (sec)|Description                                                 |Local vars                                        |
 |----------------------------------------|-------------|----------|------------------------------------------------------------|--------------------------------------------------|
 |envfreeFuncsStaticCheck                 |Not violated |0         |                                                            |no local variables                                |
-|repayBadDebtWithReservesDoesNotChangeSha|Violated     |4         |Assert message: share price should remain unchanged -       |MockERC20=MockERC20 (0x2711)                      |
+|repayBadDebtWithReservesDoesNotChangeSha|Violated     |3         |Assert message: share price should remain unchanged -       |MockERC20=MockERC20 (1)                           |
 |rePrice                                 |             |          |certora/specs/SharePrice.spec line 202                      |MockMErc20DelegateFixer=MockMErc20DelegateFixer   |
-|                                        |             |          |                                                            |(0x2712)                                          |
+|                                        |             |          |                                                            |(2)                                               |
 |                                        |             |          |                                                            |e.block.basefee=0                                 |
 |                                        |             |          |                                                            |e.block.coinbase=0                                |
 |                                        |             |          |                                                            |e.block.difficulty=0                              |
 |                                        |             |          |                                                            |e.block.gaslimit=0                                |
 |                                        |             |          |                                                            |e.block.number=0                                  |
 |                                        |             |          |                                                            |e.block.timestamp=0                               |
-|                                        |             |          |                                                            |e.msg.sender=MockERC20 (0x2711)                   |
+|                                        |             |          |                                                            |e.msg.sender=0x2711                               |
 |                                        |             |          |                                                            |e.msg.value=0                                     |
 |                                        |             |          |                                                            |e.tx.origin=0                                     |
-|                                        |             |          |                                                            |endingSharePrice=2                                |
-|                                        |             |          |                                                            |startingSharePrice=0                              |
+|                                        |             |          |                                                            |endingSharePrice=0                                |
+|                                        |             |          |                                                            |startingSharePrice=1                              |
 |repayBadDebtWithReservesSuccess         |Not violated |3         |                                                            |no local variables                                |
-|fixingUserZeroUserBalance               |Not violated |3         |                                                            |no local variables                                |
-|fixUserIncreasesBadDebt                 |Not violated |3         |                                                            |no local variables                                |
-|badDebtSymmetry                         |Violated     |2         |Assert message: reserves bad debt incorrect -               |no local variables                                |
-|                                        |             |          |certora/specs/SharePrice.spec line 229                      |                                                  |
-|allBadDebtRulesCash                     |Not violated |3         |                                                            |no local variables                                |
+|fixUserIncreasesBadDebt                 |Not violated |2         |                                                            |no local variables                                |
+|fixingUserZeroUserBalance               |Not violated |2         |                                                            |no local variables                                |
 |repayBadDebtDecreasesBadDebt            |Not violated |2         |                                                            |no local variables                                |
 |badDebtRulesCash                        |Not violated |2         |                                                            |no local variables                                |
-|fixingUserDoesNotChangeSharePrice       |Not violated |2         |                                                            |no local variables                                |
-|badDebtRules                            |Violated     |3         |Assert message: share price should not change repaying b... |no local variables                                |
+|allBadDebtRulesCash                     |Not violated |2         |                                                            |no local variables                                |
+|badDebtSymmetry                         |Violated     |3         |Assert message: reserves bad debt incorrect -               |no local variables                                |
+|                                        |             |          |certora/specs/SharePrice.spec line 229                      |                                                  |
+|fixingUserDoesNotChangeSharePrice       |Not violated |3         |                                                            |no local variables                                |
+|badDebtRules                            |Violated     |4         |Assert message: share price should not change repaying b... |no local variables                                |
 |                                        |             |          |- certora/specs/SharePrice.spec line 115                    |                                                  |
 *---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*
 Failures summary:
@@ -1807,13 +1827,13 @@ Failed on badDebtRules:
 Assert message: share price should not change repaying b... - certora/specs/SharePrice.spec line 115
 Violated for: 
 repayBadDebtWithReserves()
-Done 2m
-Done 2m
+Done 1m
+Done 1m
 Event reporter: all events were sent without errors
 [INFO]: Process returned with 100
 [INFO]: updated '41948e68b910f69c3218ad74de39b67e9de06ffa0d3fbf733cc48950b19227c8-optimisticTrue-iterNone-None--certora-cli-6.3.1' cache
 
-Job is completed! View the results at https://prover.certora.com/output/925723/4938e2c64d7d4ff7a79b2f0cf5dcb11c?anonymousKey=9b7b313aea5c720f3c92902a47ca2a68f6532084
+Job is completed! View the results at https://prover.certora.com/output/925723/00b697ad3b9347239e820bcbf26251b5?anonymousKey=f6f9266b4134d8ef238f382d4a25fc666d292a72
 Finished verification request
 ERROR: Prover found violations:
 [rule] badDebtRules: 
@@ -1876,13 +1896,13 @@ Results for all:
 |repayBadDebtWithReservesSuccess         |Not violated |3         |                                                            |no local variables                                |
 |fixingUserZeroUserBalance               |Not violated |3         |                                                            |no local variables                                |
 |fixUserIncreasesBadDebt                 |Not violated |3         |                                                            |no local variables                                |
-|repayBadDebtDecreasesBadDebt            |Not violated |2         |                                                            |no local variables                                |
 |repayBadDebtWithReservesDoesNotChangeSha|Not violated |2         |                                                            |no local variables                                |
 |rePrice                                 |             |          |                                                            |                                                  |
+|repayBadDebtDecreasesBadDebt            |Not violated |2         |                                                            |no local variables                                |
 |badDebtRulesCash                        |Not violated |2         |                                                            |no local variables                                |
-|badDebtSymmetry                         |Not violated |2         |                                                            |no local variables                                |
-|allBadDebtRulesCash                     |Not violated |3         |                                                            |no local variables                                |
-|fixingUserDoesNotChangeSharePrice       |Not violated |2         |                                                            |no local variables                                |
+|allBadDebtRulesCash                     |Not violated |2         |                                                            |no local variables                                |
+|badDebtSymmetry                         |Not violated |3         |                                                            |no local variables                                |
+|fixingUserDoesNotChangeSharePrice       |Not violated |3         |                                                            |no local variables                                |
 |badDebtRules                            |Not violated |4         |                                                            |no local variables                                |
 *---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*
 Done 1m
@@ -1890,7 +1910,7 @@ Done 1m
 Event reporter: all events were sent without errors
 [INFO]: updated '41948e68b910f69c3218ad74de39b67e9de06ffa0d3fbf733cc48950b19227c8-optimisticTrue-iterNone-None--certora-cli-6.3.1' cache
 
-Job is completed! View the results at https://prover.certora.com/output/925723/d322c5c94101424a9e76266d7b9cc68d?anonymousKey=adaf9fbf3a381496f0308ffd74f594a9e9b7b013
+Job is completed! View the results at https://prover.certora.com/output/925723/e7ee8b8b43db401f9786d341ae63271e?anonymousKey=11b4ddc22913f463c9d622803c80f86fd459cd75
 Finished verification request
 No errors found by Prover!
 ```
@@ -1948,23 +1968,23 @@ Results for all:
 |----------------------------------------|-------------|----------|------------------------------------------------------------|--------------------------------------------------|
 |envfreeFuncsStaticCheck                 |Not violated |0         |                                                            |no local variables                                |
 |repayBadDebtWithReservesSuccess         |Not violated |3         |                                                            |no local variables                                |
-|fixUserIncreasesBadDebt                 |Not violated |2         |                                                            |no local variables                                |
+|fixUserIncreasesBadDebt                 |Not violated |3         |                                                            |no local variables                                |
 |fixingUserZeroUserBalance               |Not violated |3         |                                                            |no local variables                                |
 |repayBadDebtDecreasesBadDebt            |Not violated |2         |                                                            |no local variables                                |
-|badDebtRulesCash                        |Not violated |2         |                                                            |no local variables                                |
+|badDebtSymmetry                         |Not violated |3         |                                                            |no local variables                                |
 |repayBadDebtWithReservesDoesNotChangeSha|Not violated |2         |                                                            |no local variables                                |
 |rePrice                                 |             |          |                                                            |                                                  |
+|badDebtRulesCash                        |Not violated |3         |                                                            |no local variables                                |
 |allBadDebtRulesCash                     |Not violated |3         |                                                            |no local variables                                |
-|badDebtSymmetry                         |Not violated |3         |                                                            |no local variables                                |
-|fixingUserDoesNotChangeSharePrice       |Not violated |2         |                                                            |no local variables                                |
-|badDebtRules                            |Not violated |4         |                                                            |no local variables                                |
+|fixingUserDoesNotChangeSharePrice       |Not violated |3         |                                                            |no local variables                                |
+|badDebtRules                            |Not violated |5         |                                                            |no local variables                                |
 *---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*
 Done 1m
 Done 1m
 Event reporter: all events were sent without errors
 [INFO]: updated '41948e68b910f69c3218ad74de39b67e9de06ffa0d3fbf733cc48950b19227c8-optimisticTrue-iterNone-None--certora-cli-6.3.1' cache
 
-Job is completed! View the results at https://prover.certora.com/output/925723/a01b0bcccfcc44949f15e4c3a6b2d559?anonymousKey=f24694db232895e3ced2c4637baf832872d809f7
+Job is completed! View the results at https://prover.certora.com/output/925723/52a3792c2f854a71b8c9bc92fcb35cff?anonymousKey=c60bb592864988eaa03b9c65088c2828baabb285
 Finished verification request
 No errors found by Prover!
 ```
@@ -2023,26 +2043,26 @@ Results for all:
 |envfreeFuncsStaticCheck                 |Not violated |0         |                                                            |no local variables                                |
 |fixingUserZeroUserBalance               |Sanity check |0         |                                                            |no local variables                                |
 |                                        |failed       |          |                                                            |                                                  |
-|fixUserIncreasesBadDebt                 |Sanity check |0         |                                                            |no local variables                                |
-|                                        |failed       |          |                                                            |                                                  |
 |fixingUserDoesNotChangeSharePrice       |Sanity check |0         |                                                            |no local variables                                |
 |                                        |failed       |          |                                                            |                                                  |
 |repayBadDebtWithReservesSuccess         |Not violated |3         |                                                            |no local variables                                |
-|repayBadDebtDecreasesBadDebt            |Not violated |3         |                                                            |no local variables                                |
-|badDebtSymmetry                         |Sanity check |3         |                                                            |no local variables                                |
-|                                        |failed       |          |                                                            |                                                  |
+|repayBadDebtDecreasesBadDebt            |Not violated |2         |                                                            |no local variables                                |
+|badDebtRulesCash                        |Not violated |3         |                                                            |no local variables                                |
 |repayBadDebtWithReservesDoesNotChangeSha|Not violated |3         |                                                            |no local variables                                |
 |rePrice                                 |             |          |                                                            |                                                  |
-|allBadDebtRulesCash                     |Not violated |3         |                                                            |no local variables                                |
-|badDebtRulesCash                        |Not violated |3         |                                                            |no local variables                                |
+|badDebtSymmetry                         |Sanity check |3         |                                                            |no local variables                                |
+|                                        |failed       |          |                                                            |                                                  |
+|allBadDebtRulesCash                     |Not violated |2         |                                                            |no local variables                                |
+|fixUserIncreasesBadDebt                 |Sanity check |0         |                                                            |no local variables                                |
+|                                        |failed       |          |                                                            |                                                  |
 |badDebtRules                            |Sanity check |5         |                                                            |no local variables                                |
 |                                        |failed       |          |                                                            |                                                  |
 *---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*
 Failures summary:
 Failed on fixingUserZeroUserBalance:
-Failed on fixUserIncreasesBadDebt:
 Failed on fixingUserDoesNotChangeSharePrice:
 Failed on badDebtSymmetry:
+Failed on fixUserIncreasesBadDebt:
 Failed on badDebtRules:
 Done 1m
 Done 1m
@@ -2050,7 +2070,7 @@ Event reporter: all events were sent without errors
 [INFO]: Process returned with 100
 [INFO]: updated '41948e68b910f69c3218ad74de39b67e9de06ffa0d3fbf733cc48950b19227c8-optimisticTrue-iterNone-None--certora-cli-6.3.1' cache
 
-Job is completed! View the results at https://prover.certora.com/output/925723/d5c5c6f08b2c48c8a7b9bcade74b4c01?anonymousKey=cfc7b588314675d2d72b7fb2596796bf22799ee0
+Job is completed! View the results at https://prover.certora.com/output/925723/26128a110e084afaa944f816e0f88930?anonymousKey=58d4050719b62bec145f9f4d3f2f35b08730c075
 Finished verification request
 ERROR: Prover found violations:
 [rule] badDebtRules: 
@@ -2119,7 +2139,7 @@ Results for all:
 |                                        |             |          |                                                            |e.block.gaslimit=0                                |
 |                                        |             |          |                                                            |e.block.number=0                                  |
 |                                        |             |          |                                                            |e.block.timestamp=0                               |
-|                                        |             |          |                                                            |e.msg.sender=0x2711                               |
+|                                        |             |          |                                                            |e.msg.sender=MockMErc20DelegateFixer (2)          |
 |                                        |             |          |                                                            |e.msg.value=0                                     |
 |                                        |             |          |                                                            |e.tx.origin=0                                     |
 |                                        |             |          |                                                            |liquidator=0x2711                                 |
@@ -2129,11 +2149,11 @@ Results for all:
 |repayBadDebtWithReservesSuccess         |Not violated |3         |                                                            |no local variables                                |
 |fixUserIncreasesBadDebt                 |Not violated |3         |                                                            |no local variables                                |
 |badDebtRulesCash                        |Not violated |2         |                                                            |no local variables                                |
+|repayBadDebtDecreasesBadDebt            |Not violated |2         |                                                            |no local variables                                |
+|badDebtSymmetry                         |Not violated |3         |                                                            |no local variables                                |
+|allBadDebtRulesCash                     |Not violated |2         |                                                            |no local variables                                |
 |repayBadDebtWithReservesDoesNotChangeSha|Not violated |2         |                                                            |no local variables                                |
 |rePrice                                 |             |          |                                                            |                                                  |
-|allBadDebtRulesCash                     |Not violated |2         |                                                            |no local variables                                |
-|badDebtSymmetry                         |Not violated |2         |                                                            |no local variables                                |
-|repayBadDebtDecreasesBadDebt            |Not violated |2         |                                                            |no local variables                                |
 |fixingUserDoesNotChangeSharePrice       |Not violated |2         |                                                            |no local variables                                |
 |badDebtRules                            |Not violated |4         |                                                            |no local variables                                |
 *---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*
@@ -2146,7 +2166,7 @@ Event reporter: all events were sent without errors
 [INFO]: Process returned with 100
 [INFO]: updated '41948e68b910f69c3218ad74de39b67e9de06ffa0d3fbf733cc48950b19227c8-optimisticTrue-iterNone-None--certora-cli-6.3.1' cache
 
-Job is completed! View the results at https://prover.certora.com/output/925723/575fb3c3d87f40aa9a9528b7d95fa529?anonymousKey=ddc392a2f68f579e4af17813118d278999217d70
+Job is completed! View the results at https://prover.certora.com/output/925723/97deb37041da4d039956c18ad9362a69?anonymousKey=e028d662349173974694bacc703ec79d2e5236b4
 Finished verification request
 ERROR: Prover found violations:
 [rule] fixingUserZeroUserBalance: FAIL
@@ -2204,7 +2224,7 @@ Results for all:
 |Rule name                               |Verified     |Time (sec)|Description                                                 |Local vars                                        |
 |----------------------------------------|-------------|----------|------------------------------------------------------------|--------------------------------------------------|
 |envfreeFuncsStaticCheck                 |Not violated |0         |                                                            |no local variables                                |
-|fixingUserZeroUserBalance               |Violated     |3         |Assert message: liquidator balance incorrect -              |MockERC20=MockERC20 (2)                           |
+|fixingUserZeroUserBalance               |Violated     |4         |Assert message: liquidator balance incorrect -              |MockERC20=MockERC20 (2)                           |
 |                                        |             |          |certora/specs/SharePrice.spec line 66                       |MockMErc20DelegateFixer=MockMErc20DelegateFixer   |
 |                                        |             |          |                                                            |(0x2711)                                          |
 |                                        |             |          |                                                            |e.block.basefee=0                                 |
@@ -2222,13 +2242,13 @@ Results for all:
 |                                        |             |          |                                                            |user=0x4a02                                       |
 |repayBadDebtWithReservesSuccess         |Not violated |3         |                                                            |no local variables                                |
 |fixUserIncreasesBadDebt                 |Not violated |3         |                                                            |no local variables                                |
-|repayBadDebtDecreasesBadDebt            |Not violated |2         |                                                            |no local variables                                |
-|allBadDebtRulesCash                     |Not violated |3         |                                                            |no local variables                                |
-|repayBadDebtWithReservesDoesNotChangeSha|Not violated |3         |                                                            |no local variables                                |
+|repayBadDebtWithReservesDoesNotChangeSha|Not violated |2         |                                                            |no local variables                                |
 |rePrice                                 |             |          |                                                            |                                                  |
-|badDebtSymmetry                         |Not violated |3         |                                                            |no local variables                                |
+|badDebtSymmetry                         |Not violated |2         |                                                            |no local variables                                |
 |badDebtRulesCash                        |Not violated |2         |                                                            |no local variables                                |
-|fixingUserDoesNotChangeSharePrice       |Not violated |3         |                                                            |no local variables                                |
+|allBadDebtRulesCash                     |Not violated |3         |                                                            |no local variables                                |
+|repayBadDebtDecreasesBadDebt            |Not violated |2         |                                                            |no local variables                                |
+|fixingUserDoesNotChangeSharePrice       |Not violated |2         |                                                            |no local variables                                |
 |badDebtRules                            |Not violated |4         |                                                            |no local variables                                |
 *---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*
 Failures summary:
@@ -2240,7 +2260,7 @@ Event reporter: all events were sent without errors
 [INFO]: Process returned with 100
 [INFO]: updated '41948e68b910f69c3218ad74de39b67e9de06ffa0d3fbf733cc48950b19227c8-optimisticTrue-iterNone-None--certora-cli-6.3.1' cache
 
-Job is completed! View the results at https://prover.certora.com/output/925723/b1874769c511485d8c8d04347061e4cf?anonymousKey=715bed3896f299ac6904ad95ef79a9dddb21bd9a
+Job is completed! View the results at https://prover.certora.com/output/925723/55968105d30947e2b83328ffaca4a3dd?anonymousKey=a79e508332fc1e102838aea6ba766c6cc8e3ffe9
 Finished verification request
 ERROR: Prover found violations:
 [rule] fixingUserZeroUserBalance: FAIL
@@ -2298,26 +2318,26 @@ Results for all:
 |Rule name                               |Verified     |Time (sec)|Description                                                 |Local vars                                        |
 |----------------------------------------|-------------|----------|------------------------------------------------------------|--------------------------------------------------|
 |envfreeFuncsStaticCheck                 |Not violated |0         |                                                            |no local variables                                |
-|fixUserIncreasesBadDebt                 |Sanity check |0         |                                                            |no local variables                                |
-|                                        |failed       |          |                                                            |                                                  |
 |fixingUserZeroUserBalance               |Sanity check |0         |                                                            |no local variables                                |
+|                                        |failed       |          |                                                            |                                                  |
+|fixUserIncreasesBadDebt                 |Sanity check |0         |                                                            |no local variables                                |
 |                                        |failed       |          |                                                            |                                                  |
 |fixingUserDoesNotChangeSharePrice       |Sanity check |0         |                                                            |no local variables                                |
 |                                        |failed       |          |                                                            |                                                  |
 |repayBadDebtWithReservesSuccess         |Not violated |3         |                                                            |no local variables                                |
 |repayBadDebtDecreasesBadDebt            |Not violated |3         |                                                            |no local variables                                |
+|badDebtRulesCash                        |Not violated |2         |                                                            |no local variables                                |
+|badDebtSymmetry                         |Sanity check |4         |                                                            |no local variables                                |
+|                                        |failed       |          |                                                            |                                                  |
+|allBadDebtRulesCash                     |Not violated |3         |                                                            |no local variables                                |
 |repayBadDebtWithReservesDoesNotChangeSha|Not violated |3         |                                                            |no local variables                                |
 |rePrice                                 |             |          |                                                            |                                                  |
-|badDebtSymmetry                         |Sanity check |3         |                                                            |no local variables                                |
-|                                        |failed       |          |                                                            |                                                  |
-|badDebtRulesCash                        |Not violated |3         |                                                            |no local variables                                |
-|allBadDebtRulesCash                     |Not violated |3         |                                                            |no local variables                                |
-|badDebtRules                            |Sanity check |4         |                                                            |no local variables                                |
+|badDebtRules                            |Sanity check |5         |                                                            |no local variables                                |
 |                                        |failed       |          |                                                            |                                                  |
 *---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*
 Failures summary:
-Failed on fixUserIncreasesBadDebt:
 Failed on fixingUserZeroUserBalance:
+Failed on fixUserIncreasesBadDebt:
 Failed on fixingUserDoesNotChangeSharePrice:
 Failed on badDebtSymmetry:
 Failed on badDebtRules:
@@ -2327,7 +2347,7 @@ Event reporter: all events were sent without errors
 [INFO]: Process returned with 100
 [INFO]: updated '41948e68b910f69c3218ad74de39b67e9de06ffa0d3fbf733cc48950b19227c8-optimisticTrue-iterNone-None--certora-cli-6.3.1' cache
 
-Job is completed! View the results at https://prover.certora.com/output/925723/ea4b95b380f041f1a9950294006843a8?anonymousKey=8c6311ada998ad711e4ebf0c89f8913d46f8ac82
+Job is completed! View the results at https://prover.certora.com/output/925723/a2961b64aab548ed8a075f3609c74876?anonymousKey=b524c48ad209edc8ea5beea42e3610a18d8c5a8c
 Finished verification request
 ERROR: Prover found violations:
 [rule] badDebtRules: 
@@ -2389,23 +2409,23 @@ Results for all:
 |----------------------------------------|-------------|----------|------------------------------------------------------------|--------------------------------------------------|
 |envfreeFuncsStaticCheck                 |Not violated |0         |                                                            |no local variables                                |
 |repayBadDebtWithReservesSuccess         |Not violated |3         |                                                            |no local variables                                |
-|fixingUserZeroUserBalance               |Not violated |3         |                                                            |no local variables                                |
 |fixUserIncreasesBadDebt                 |Not violated |3         |                                                            |no local variables                                |
-|badDebtRulesCash                        |Not violated |2         |                                                            |no local variables                                |
+|fixingUserZeroUserBalance               |Not violated |3         |                                                            |no local variables                                |
 |repayBadDebtDecreasesBadDebt            |Not violated |2         |                                                            |no local variables                                |
-|badDebtSymmetry                         |Not violated |3         |                                                            |no local variables                                |
-|allBadDebtRulesCash                     |Not violated |3         |                                                            |no local variables                                |
-|repayBadDebtWithReservesDoesNotChangeSha|Not violated |3         |                                                            |no local variables                                |
+|repayBadDebtWithReservesDoesNotChangeSha|Not violated |2         |                                                            |no local variables                                |
 |rePrice                                 |             |          |                                                            |                                                  |
+|badDebtRulesCash                        |Not violated |3         |                                                            |no local variables                                |
+|badDebtSymmetry                         |Not violated |2         |                                                            |no local variables                                |
+|allBadDebtRulesCash                     |Not violated |3         |                                                            |no local variables                                |
 |fixingUserDoesNotChangeSharePrice       |Not violated |3         |                                                            |no local variables                                |
-|badDebtRules                            |Not violated |3         |                                                            |no local variables                                |
+|badDebtRules                            |Not violated |5         |                                                            |no local variables                                |
 *---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*
 Done 1m
 Done 1m
 Event reporter: all events were sent without errors
 [INFO]: updated '41948e68b910f69c3218ad74de39b67e9de06ffa0d3fbf733cc48950b19227c8-optimisticTrue-iterNone-None--certora-cli-6.3.1' cache
 
-Job is completed! View the results at https://prover.certora.com/output/925723/6631a34708484d3087802a7439a685f5?anonymousKey=d5211f3d07d182071ba81de4c926bf10f37591bc
+Job is completed! View the results at https://prover.certora.com/output/925723/0bf53419c9e44ef3816eda8d0997576e?anonymousKey=badd779202646d0ad379753a81d07490bdde4a4b
 Finished verification request
 No errors found by Prover!
 ```
@@ -2463,24 +2483,24 @@ Results for all:
 |Rule name                               |Verified     |Time (sec)|Description                                                 |Local vars                                        |
 |----------------------------------------|-------------|----------|------------------------------------------------------------|--------------------------------------------------|
 |envfreeFuncsStaticCheck                 |Not violated |0         |                                                            |no local variables                                |
-|fixUserIncreasesBadDebt                 |Not violated |3         |                                                            |no local variables                                |
 |repayBadDebtWithReservesSuccess         |Not violated |3         |                                                            |no local variables                                |
+|fixUserIncreasesBadDebt                 |Not violated |3         |                                                            |no local variables                                |
 |fixingUserZeroUserBalance               |Not violated |3         |                                                            |no local variables                                |
-|badDebtSymmetry                         |Not violated |2         |                                                            |no local variables                                |
-|repayBadDebtDecreasesBadDebt            |Not violated |2         |                                                            |no local variables                                |
-|allBadDebtRulesCash                     |Not violated |3         |                                                            |no local variables                                |
 |repayBadDebtWithReservesDoesNotChangeSha|Not violated |2         |                                                            |no local variables                                |
 |rePrice                                 |             |          |                                                            |                                                  |
-|badDebtRulesCash                        |Not violated |3         |                                                            |no local variables                                |
-|fixingUserDoesNotChangeSharePrice       |Not violated |2         |                                                            |no local variables                                |
-|badDebtRules                            |Not violated |5         |                                                            |no local variables                                |
+|allBadDebtRulesCash                     |Not violated |2         |                                                            |no local variables                                |
+|badDebtSymmetry                         |Not violated |3         |                                                            |no local variables                                |
+|repayBadDebtDecreasesBadDebt            |Not violated |2         |                                                            |no local variables                                |
+|badDebtRulesCash                        |Not violated |2         |                                                            |no local variables                                |
+|fixingUserDoesNotChangeSharePrice       |Not violated |3         |                                                            |no local variables                                |
+|badDebtRules                            |Not violated |4         |                                                            |no local variables                                |
 *---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*
 Done 1m
 Done 1m
 Event reporter: all events were sent without errors
 [INFO]: updated '41948e68b910f69c3218ad74de39b67e9de06ffa0d3fbf733cc48950b19227c8-optimisticTrue-iterNone-None--certora-cli-6.3.1' cache
 
-Job is completed! View the results at https://prover.certora.com/output/925723/36a6c6903f8743b5bf7cfbfdd9c40e77?anonymousKey=36d8c4062074917922acaa249c1610939c2e5dc9
+Job is completed! View the results at https://prover.certora.com/output/925723/f4dea1ed5bdd47c8a8fa19dc1005fe42?anonymousKey=d9226e6511b950121e114bc5dbd29f56cbb1c2b2
 Finished verification request
 No errors found by Prover!
 ```
@@ -2539,25 +2559,25 @@ Results for all:
 |envfreeFuncsStaticCheck                 |Not violated |0         |                                                            |no local variables                                |
 |fixingUserZeroUserBalance               |Sanity check |0         |                                                            |no local variables                                |
 |                                        |failed       |          |                                                            |                                                  |
-|fixUserIncreasesBadDebt                 |Sanity check |0         |                                                            |no local variables                                |
-|                                        |failed       |          |                                                            |                                                  |
 |fixingUserDoesNotChangeSharePrice       |Sanity check |0         |                                                            |no local variables                                |
 |                                        |failed       |          |                                                            |                                                  |
-|repayBadDebtWithReservesSuccess         |Not violated |4         |                                                            |no local variables                                |
-|badDebtSymmetry                         |Sanity check |3         |                                                            |no local variables                                |
+|fixUserIncreasesBadDebt                 |Sanity check |0         |                                                            |no local variables                                |
 |                                        |failed       |          |                                                            |                                                  |
-|badDebtRulesCash                        |Not violated |3         |                                                            |no local variables                                |
-|repayBadDebtDecreasesBadDebt            |Not violated |3         |                                                            |no local variables                                |
+|repayBadDebtWithReservesSuccess         |Not violated |3         |                                                            |no local variables                                |
+|repayBadDebtDecreasesBadDebt            |Not violated |2         |                                                            |no local variables                                |
+|badDebtRulesCash                        |Not violated |2         |                                                            |no local variables                                |
 |repayBadDebtWithReservesDoesNotChangeSha|Not violated |3         |                                                            |no local variables                                |
 |rePrice                                 |             |          |                                                            |                                                  |
-|allBadDebtRulesCash                     |Not violated |4         |                                                            |no local variables                                |
+|badDebtSymmetry                         |Sanity check |3         |                                                            |no local variables                                |
+|                                        |failed       |          |                                                            |                                                  |
+|allBadDebtRulesCash                     |Not violated |3         |                                                            |no local variables                                |
 |badDebtRules                            |Sanity check |5         |                                                            |no local variables                                |
 |                                        |failed       |          |                                                            |                                                  |
 *---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*
 Failures summary:
 Failed on fixingUserZeroUserBalance:
-Failed on fixUserIncreasesBadDebt:
 Failed on fixingUserDoesNotChangeSharePrice:
+Failed on fixUserIncreasesBadDebt:
 Failed on badDebtSymmetry:
 Failed on badDebtRules:
 Done 1m
@@ -2566,7 +2586,7 @@ Event reporter: all events were sent without errors
 [INFO]: Process returned with 100
 [INFO]: updated '41948e68b910f69c3218ad74de39b67e9de06ffa0d3fbf733cc48950b19227c8-optimisticTrue-iterNone-None--certora-cli-6.3.1' cache
 
-Job is completed! View the results at https://prover.certora.com/output/925723/a8b10a9baa6d4124b4edb880421db49d?anonymousKey=738be915fe2b48026bca19285e2ab75d59e6dd99
+Job is completed! View the results at https://prover.certora.com/output/925723/62b1d223f3d64e32a82a17d54239ad54?anonymousKey=36f5249471ae017927f2f5abd702f44079f32a0f
 Finished verification request
 ERROR: Prover found violations:
 [rule] badDebtRules: 
@@ -2626,45 +2646,34 @@ Results for all:
 |Rule name                               |Verified     |Time (sec)|Description                                                 |Local vars                                        |
 |----------------------------------------|-------------|----------|------------------------------------------------------------|--------------------------------------------------|
 |envfreeFuncsStaticCheck                 |Not violated |0         |                                                            |no local variables                                |
-|repayBadDebtWithReservesSuccess         |Not violated |4         |                                                            |no local variables                                |
+|fixUserIncreasesBadDebt                 |Violated     |3         |Assert message: bad debt not increased from fixing a use... |MockERC20=MockERC20 (0x49aa)                      |
+|                                        |             |          |- certora/specs/SharePrice.spec line 53                     |MockMErc20DelegateFixer=MockMErc20DelegateFixer   |
+|                                        |             |          |                                                            |(0x49a9)                                          |
+|                                        |             |          |                                                            |badDebt=0x760                                     |
+|                                        |             |          |                                                            |badDebtAfter=0x760                                |
+|                                        |             |          |                                                            |e.block.basefee=0                                 |
+|                                        |             |          |                                                            |e.block.coinbase=0                                |
+|                                        |             |          |                                                            |e.block.difficulty=0                              |
+|                                        |             |          |                                                            |e.block.gaslimit=0                                |
+|                                        |             |          |                                                            |e.block.number=0                                  |
+|                                        |             |          |                                                            |e.block.timestamp=0                               |
+|                                        |             |          |                                                            |e.msg.sender=0x49a8                               |
+|                                        |             |          |                                                            |e.msg.value=0                                     |
+|                                        |             |          |                                                            |e.tx.origin=0                                     |
+|                                        |             |          |                                                            |interestIndex=0                                   |
+|                                        |             |          |                                                            |liquidator=0x2e15                                 |
+|                                        |             |          |                                                            |principle=0                                       |
+|                                        |             |          |                                                            |user=0x2e16                                       |
+|repayBadDebtWithReservesSuccess         |Not violated |3         |                                                            |no local variables                                |
 |fixingUserZeroUserBalance               |Not violated |3         |                                                            |no local variables                                |
-|repayBadDebtDecreasesBadDebt            |Not violated |2         |                                                            |no local variables                                |
-|badDebtRulesCash                        |Not violated |2         |                                                            |no local variables                                |
-|badDebtSymmetry                         |Not violated |3         |                                                            |no local variables                                |
 |repayBadDebtWithReservesDoesNotChangeSha|Not violated |2         |                                                            |no local variables                                |
 |rePrice                                 |             |          |                                                            |                                                  |
+|badDebtRulesCash                        |Not violated |2         |                                                            |no local variables                                |
+|repayBadDebtDecreasesBadDebt            |Not violated |2         |                                                            |no local variables                                |
+|badDebtSymmetry                         |Not violated |2         |                                                            |no local variables                                |
 |allBadDebtRulesCash                     |Not violated |3         |                                                            |no local variables                                |
-|fixingUserDoesNotChangeSharePrice       |Not violated |4         |                                                            |no local variables                                |
-|fixUserIncreasesBadDebt                 |Violated     |1         |Assert message: bad debt not increased from fixing a use... |MockERC20=MockERC20 (2)                           |
-|                                        |             |          |- certora/specs/SharePrice.spec line 53                     |MockMErc20DelegateFixer=MockMErc20DelegateFixer   |
-|                                        |             |          |                                                            |(1)                                               |
-|                                        |             |          |                                                            |badDebt=0xffffffffffffffffffffffffffffffffffffffff|
-|                                        |             |          |                                                            |ffffffffffffffffffffffff (MAX_UINT256)            |
-|                                        |             |          |                                                            |badDebtAfter=0xfffffffffffffffffffffffffffffffffff|
-|                                        |             |          |                                                            |fffffffffffffffffffffffffffff (MAX_UINT256)       |
-|                                        |             |          |                                                            |e.block.basefee=0xffffffffffffffffffffffffffffffff|
-|                                        |             |          |                                                            |ffffffffffffffffffffffffffffffff (MAX_UINT256)    |
-|                                        |             |          |                                                            |e.block.coinbase=0xfffffffffffffffffffffffffffffff|
-|                                        |             |          |                                                            |fffffffff (MAX_EVM_ADDRESS)                       |
-|                                        |             |          |                                                            |e.block.difficulty=0xfffffffffffffffffffffffffffff|
-|                                        |             |          |                                                            |fffffffffffffffffffffffffffffffffff (MAX_UINT256) |
-|                                        |             |          |                                                            |e.block.gaslimit=0xfffffffffffffffffffffffffffffff|
-|                                        |             |          |                                                            |fffffffffffffffffffffffffffffffff (MAX_UINT256)   |
-|                                        |             |          |                                                            |e.block.number=0xfffffffffffffffffffffffffffffffff|
-|                                        |             |          |                                                            |fffffffffffffffffffffffffffffff (MAX_UINT256)     |
-|                                        |             |          |                                                            |e.block.timestamp=0xffffffffffffffffffffffffffffff|
-|                                        |             |          |                                                            |ffffffffffffffffffffffffffffffffff (MAX_UINT256)  |
-|                                        |             |          |                                                            |e.msg.sender=0x2710                               |
-|                                        |             |          |                                                            |e.msg.value=0                                     |
-|                                        |             |          |                                                            |e.tx.origin=0xffffffffffffffffffffffffffffffffffff|
-|                                        |             |          |                                                            |ffff (MAX_EVM_ADDRESS)                            |
-|                                        |             |          |                                                            |interestIndex=0xffffffffffffffffffffffffffffffffff|
-|                                        |             |          |                                                            |ffffffffffffffffffffffffffffff (MAX_UINT256)      |
-|                                        |             |          |                                                            |liquidator=0x52b                                  |
-|                                        |             |          |                                                            |principle=0xffffffffffffffffffffffffffffffffffffff|
-|                                        |             |          |                                                            |ffffffffffffffffffffffffff (MAX_UINT256)          |
-|                                        |             |          |                                                            |user=0x1f8f                                       |
-|badDebtRules                            |Not violated |5         |                                                            |no local variables                                |
+|fixingUserDoesNotChangeSharePrice       |Not violated |3         |                                                            |no local variables                                |
+|badDebtRules                            |Not violated |4         |                                                            |no local variables                                |
 *---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*
 Failures summary:
 Failed on fixUserIncreasesBadDebt:
@@ -2675,7 +2684,7 @@ Event reporter: all events were sent without errors
 [INFO]: Process returned with 100
 [INFO]: updated '41948e68b910f69c3218ad74de39b67e9de06ffa0d3fbf733cc48950b19227c8-optimisticTrue-iterNone-None--certora-cli-6.3.1' cache
 
-Job is completed! View the results at https://prover.certora.com/output/925723/f6b62bc9910940f5b5d047397b567bbf?anonymousKey=d182c69630971393d5b7a9e7e9f097d0ef8a12c3
+Job is completed! View the results at https://prover.certora.com/output/925723/1c99e60a295445c488fb1eefd97e252d?anonymousKey=6478d15f8880b1b019bb7e3ef8a4a79e3f07e1d9
 Finished verification request
 ERROR: Prover found violations:
 [rule] fixUserIncreasesBadDebt: FAIL
@@ -2733,9 +2742,9 @@ Results for all:
 |Rule name                               |Verified     |Time (sec)|Description                                                 |Local vars                                        |
 |----------------------------------------|-------------|----------|------------------------------------------------------------|--------------------------------------------------|
 |envfreeFuncsStaticCheck                 |Not violated |0         |                                                            |no local variables                                |
-|fixUserIncreasesBadDebt                 |Violated     |3         |Assert message: bad debt not increased from fixing a use... |MockERC20=MockERC20 (0x6069)                      |
+|fixUserIncreasesBadDebt                 |Violated     |3         |Assert message: bad debt not increased from fixing a use... |MockERC20=MockERC20 (1)                           |
 |                                        |             |          |- certora/specs/SharePrice.spec line 53                     |MockMErc20DelegateFixer=MockMErc20DelegateFixer   |
-|                                        |             |          |                                                            |(0x606a)                                          |
+|                                        |             |          |                                                            |(2)                                               |
 |                                        |             |          |                                                            |badDebt=0                                         |
 |                                        |             |          |                                                            |badDebtAfter=0                                    |
 |                                        |             |          |                                                            |e.block.basefee=0                                 |
@@ -2744,21 +2753,21 @@ Results for all:
 |                                        |             |          |                                                            |e.block.gaslimit=0                                |
 |                                        |             |          |                                                            |e.block.number=0                                  |
 |                                        |             |          |                                                            |e.block.timestamp=0                               |
-|                                        |             |          |                                                            |e.msg.sender=0x606b                               |
+|                                        |             |          |                                                            |e.msg.sender=MockMErc20DelegateFixer (2)          |
 |                                        |             |          |                                                            |e.msg.value=0                                     |
 |                                        |             |          |                                                            |e.tx.origin=0                                     |
 |                                        |             |          |                                                            |interestIndex=0                                   |
-|                                        |             |          |                                                            |liquidator=0x2e15                                 |
+|                                        |             |          |                                                            |liquidator=0x2711                                 |
 |                                        |             |          |                                                            |principle=0                                       |
-|                                        |             |          |                                                            |user=0x2e16                                       |
+|                                        |             |          |                                                            |user=0x2712                                       |
 |repayBadDebtWithReservesSuccess         |Not violated |3         |                                                            |no local variables                                |
 |fixingUserZeroUserBalance               |Not violated |3         |                                                            |no local variables                                |
-|allBadDebtRulesCash                     |Not violated |2         |                                                            |no local variables                                |
 |repayBadDebtDecreasesBadDebt            |Not violated |2         |                                                            |no local variables                                |
+|allBadDebtRulesCash                     |Not violated |2         |                                                            |no local variables                                |
+|badDebtSymmetry                         |Not violated |3         |                                                            |no local variables                                |
+|badDebtRulesCash                        |Not violated |2         |                                                            |no local variables                                |
 |repayBadDebtWithReservesDoesNotChangeSha|Not violated |2         |                                                            |no local variables                                |
 |rePrice                                 |             |          |                                                            |                                                  |
-|badDebtRulesCash                        |Not violated |2         |                                                            |no local variables                                |
-|badDebtSymmetry                         |Not violated |3         |                                                            |no local variables                                |
 |fixingUserDoesNotChangeSharePrice       |Not violated |3         |                                                            |no local variables                                |
 |badDebtRules                            |Not violated |4         |                                                            |no local variables                                |
 *---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*
@@ -2771,7 +2780,7 @@ Event reporter: all events were sent without errors
 [INFO]: Process returned with 100
 [INFO]: updated '41948e68b910f69c3218ad74de39b67e9de06ffa0d3fbf733cc48950b19227c8-optimisticTrue-iterNone-None--certora-cli-6.3.1' cache
 
-Job is completed! View the results at https://prover.certora.com/output/925723/5a8a6f9e7f7047bf8c76d91ff2fccfff?anonymousKey=8cdd5a3095e264b52206a6eae87b962dd937b992
+Job is completed! View the results at https://prover.certora.com/output/925723/acc9ad0b781744ae89ff5f7a38fcd509?anonymousKey=a991a783dcbd599923ee72e06757967cbea37f82
 Finished verification request
 ERROR: Prover found violations:
 [rule] fixUserIncreasesBadDebt: FAIL
@@ -2838,12 +2847,12 @@ Results for all:
 |repayBadDebtWithReservesSuccess         |Not violated |3         |                                                            |no local variables                                |
 |repayBadDebtDecreasesBadDebt            |Not violated |2         |                                                            |no local variables                                |
 |badDebtRulesCash                        |Not violated |2         |                                                            |no local variables                                |
+|badDebtSymmetry                         |Sanity check |4         |                                                            |no local variables                                |
+|                                        |failed       |          |                                                            |                                                  |
 |repayBadDebtWithReservesDoesNotChangeSha|Not violated |3         |                                                            |no local variables                                |
 |rePrice                                 |             |          |                                                            |                                                  |
-|allBadDebtRulesCash                     |Not violated |3         |                                                            |no local variables                                |
-|badDebtSymmetry                         |Sanity check |3         |                                                            |no local variables                                |
-|                                        |failed       |          |                                                            |                                                  |
-|badDebtRules                            |Sanity check |5         |                                                            |no local variables                                |
+|allBadDebtRulesCash                     |Not violated |4         |                                                            |no local variables                                |
+|badDebtRules                            |Sanity check |4         |                                                            |no local variables                                |
 |                                        |failed       |          |                                                            |                                                  |
 *---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*
 Failures summary:
@@ -2858,7 +2867,7 @@ Event reporter: all events were sent without errors
 [INFO]: Process returned with 100
 [INFO]: updated '41948e68b910f69c3218ad74de39b67e9de06ffa0d3fbf733cc48950b19227c8-optimisticTrue-iterNone-None--certora-cli-6.3.1' cache
 
-Job is completed! View the results at https://prover.certora.com/output/925723/ab7adb5c3a984268adde4aad734a626a?anonymousKey=6e6ac5937f570d7ed544ddb7bfdd1ce3c930a14d
+Job is completed! View the results at https://prover.certora.com/output/925723/85c1b34890fb4c328a2c30fb2ce3093d?anonymousKey=019b8b77b3d42bead358297345303bab7d8f02d0
 Finished verification request
 ERROR: Prover found violations:
 [rule] badDebtRules: 
@@ -2919,23 +2928,23 @@ Results for all:
 |----------------------------------------|-------------|----------|------------------------------------------------------------|--------------------------------------------------|
 |envfreeFuncsStaticCheck                 |Not violated |0         |                                                            |no local variables                                |
 |repayBadDebtWithReservesSuccess         |Not violated |3         |                                                            |no local variables                                |
-|fixingUserZeroUserBalance               |Not violated |3         |                                                            |no local variables                                |
-|fixUserIncreasesBadDebt                 |Not violated |3         |                                                            |no local variables                                |
+|fixUserIncreasesBadDebt                 |Not violated |2         |                                                            |no local variables                                |
+|fixingUserZeroUserBalance               |Not violated |2         |                                                            |no local variables                                |
 |repayBadDebtDecreasesBadDebt            |Not violated |2         |                                                            |no local variables                                |
-|badDebtSymmetry                         |Not violated |3         |                                                            |no local variables                                |
+|badDebtSymmetry                         |Not violated |2         |                                                            |no local variables                                |
+|badDebtRulesCash                        |Not violated |2         |                                                            |no local variables                                |
 |repayBadDebtWithReservesDoesNotChangeSha|Not violated |2         |                                                            |no local variables                                |
 |rePrice                                 |             |          |                                                            |                                                  |
-|badDebtRulesCash                        |Not violated |2         |                                                            |no local variables                                |
-|allBadDebtRulesCash                     |Not violated |2         |                                                            |no local variables                                |
+|allBadDebtRulesCash                     |Not violated |4         |                                                            |no local variables                                |
 |fixingUserDoesNotChangeSharePrice       |Not violated |3         |                                                            |no local variables                                |
-|badDebtRules                            |Not violated |5         |                                                            |no local variables                                |
+|badDebtRules                            |Not violated |2         |                                                            |no local variables                                |
 *---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*
 Done 1m
 Done 1m
 Event reporter: all events were sent without errors
 [INFO]: updated '41948e68b910f69c3218ad74de39b67e9de06ffa0d3fbf733cc48950b19227c8-optimisticTrue-iterNone-None--certora-cli-6.3.1' cache
 
-Job is completed! View the results at https://prover.certora.com/output/925723/8d2014a1012742cab0e7bb73543100c7?anonymousKey=3835253dc9c7a09d5b056aae054ceec92d0fce60
+Job is completed! View the results at https://prover.certora.com/output/925723/b5e02c8be0eb4eed9ea7766addf7712b?anonymousKey=5e21d65b6a3b4ed1642c0ca76533f47aea0c2137
 Finished verification request
 No errors found by Prover!
 ```
@@ -2993,23 +3002,23 @@ Results for all:
 |----------------------------------------|-------------|----------|------------------------------------------------------------|--------------------------------------------------|
 |envfreeFuncsStaticCheck                 |Not violated |0         |                                                            |no local variables                                |
 |repayBadDebtWithReservesSuccess         |Not violated |4         |                                                            |no local variables                                |
-|fixingUserZeroUserBalance               |Not violated |4         |                                                            |no local variables                                |
-|fixUserIncreasesBadDebt                 |Not violated |4         |                                                            |no local variables                                |
+|fixUserIncreasesBadDebt                 |Not violated |3         |                                                            |no local variables                                |
+|fixingUserZeroUserBalance               |Not violated |3         |                                                            |no local variables                                |
 |repayBadDebtDecreasesBadDebt            |Not violated |2         |                                                            |no local variables                                |
-|allBadDebtRulesCash                     |Not violated |2         |                                                            |no local variables                                |
+|badDebtRulesCash                        |Not violated |2         |                                                            |no local variables                                |
 |repayBadDebtWithReservesDoesNotChangeSha|Not violated |2         |                                                            |no local variables                                |
 |rePrice                                 |             |          |                                                            |                                                  |
-|badDebtSymmetry                         |Not violated |2         |                                                            |no local variables                                |
-|badDebtRulesCash                        |Not violated |2         |                                                            |no local variables                                |
-|fixingUserDoesNotChangeSharePrice       |Not violated |2         |                                                            |no local variables                                |
-|badDebtRules                            |Not violated |5         |                                                            |no local variables                                |
+|badDebtSymmetry                         |Not violated |3         |                                                            |no local variables                                |
+|allBadDebtRulesCash                     |Not violated |4         |                                                            |no local variables                                |
+|fixingUserDoesNotChangeSharePrice       |Not violated |3         |                                                            |no local variables                                |
+|badDebtRules                            |Not violated |4         |                                                            |no local variables                                |
 *---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*
 Done 1m
 Done 1m
 Event reporter: all events were sent without errors
 [INFO]: updated '41948e68b910f69c3218ad74de39b67e9de06ffa0d3fbf733cc48950b19227c8-optimisticTrue-iterNone-None--certora-cli-6.3.1' cache
 
-Job is completed! View the results at https://prover.certora.com/output/925723/0a87669b80a444c68afa31d337836a2d?anonymousKey=b9a392b359530a70860519b49dec06ea4afeae49
+Job is completed! View the results at https://prover.certora.com/output/925723/5c2508415f89419f88d38f6b6011316e?anonymousKey=5af94373707abbf282c215b6fb9b8005dde38cc4
 Finished verification request
 No errors found by Prover!
 ```
@@ -3056,23 +3065,23 @@ Results for all:
 |----------------------------------------|-------------|----------|------------------------------------------------------------|--------------------------------------------------|
 |envfreeFuncsStaticCheck                 |Not violated |0         |                                                            |no local variables                                |
 |repayBadDebtWithReservesSuccess         |Not violated |3         |                                                            |no local variables                                |
+|fixingUserZeroUserBalance               |Not violated |3         |                                                            |no local variables                                |
 |fixUserIncreasesBadDebt                 |Not violated |3         |                                                            |no local variables                                |
-|fixingUserZeroUserBalance               |Not violated |2         |                                                            |no local variables                                |
 |repayBadDebtDecreasesBadDebt            |Not violated |2         |                                                            |no local variables                                |
 |repayBadDebtWithReservesDoesNotChangeSha|Not violated |2         |                                                            |no local variables                                |
 |rePrice                                 |             |          |                                                            |                                                  |
+|badDebtSymmetry                         |Not violated |2         |                                                            |no local variables                                |
 |badDebtRulesCash                        |Not violated |3         |                                                            |no local variables                                |
-|allBadDebtRulesCash                     |Not violated |4         |                                                            |no local variables                                |
-|badDebtSymmetry                         |Not violated |4         |                                                            |no local variables                                |
+|allBadDebtRulesCash                     |Not violated |2         |                                                            |no local variables                                |
 |fixingUserDoesNotChangeSharePrice       |Not violated |3         |                                                            |no local variables                                |
-|badDebtRules                            |Not violated |5         |                                                            |no local variables                                |
+|badDebtRules                            |Not violated |6         |                                                            |no local variables                                |
 *---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*
 Done 1m
 Done 1m
 Event reporter: all events were sent without errors
 [INFO]: updated '41948e68b910f69c3218ad74de39b67e9de06ffa0d3fbf733cc48950b19227c8-optimisticTrue-iterNone-None--certora-cli-6.3.1' cache
 
-Job is completed! View the results at https://prover.certora.com/output/925723/2e9025df9ad34f289ecc3a9174ee92c4?anonymousKey=2dbf4a3112360533d199099e887dc982aaaa7bd8
+Job is completed! View the results at https://prover.certora.com/output/925723/dc36ea177c6b45d79a2757ad62eab4b1?anonymousKey=b9d47febedff07299b263cb6c897de4357cdce00
 Finished verification request
 No errors found by Prover!
 ```
@@ -3121,21 +3130,21 @@ Results for all:
 |repayBadDebtWithReservesSuccess         |Not violated |3         |                                                            |no local variables                                |
 |fixUserIncreasesBadDebt                 |Not violated |3         |                                                            |no local variables                                |
 |fixingUserZeroUserBalance               |Not violated |3         |                                                            |no local variables                                |
-|repayBadDebtDecreasesBadDebt            |Not violated |2         |                                                            |no local variables                                |
 |repayBadDebtWithReservesDoesNotChangeSha|Not violated |2         |                                                            |no local variables                                |
 |rePrice                                 |             |          |                                                            |                                                  |
-|badDebtSymmetry                         |Not violated |2         |                                                            |no local variables                                |
+|repayBadDebtDecreasesBadDebt            |Not violated |2         |                                                            |no local variables                                |
 |allBadDebtRulesCash                     |Not violated |2         |                                                            |no local variables                                |
+|badDebtSymmetry                         |Not violated |2         |                                                            |no local variables                                |
 |badDebtRulesCash                        |Not violated |3         |                                                            |no local variables                                |
-|fixingUserDoesNotChangeSharePrice       |Not violated |2         |                                                            |no local variables                                |
-|badDebtRules                            |Not violated |5         |                                                            |no local variables                                |
+|fixingUserDoesNotChangeSharePrice       |Not violated |3         |                                                            |no local variables                                |
+|badDebtRules                            |Not violated |4         |                                                            |no local variables                                |
 *---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*
 Done 1m
 Done 1m
 Event reporter: all events were sent without errors
 [INFO]: updated '41948e68b910f69c3218ad74de39b67e9de06ffa0d3fbf733cc48950b19227c8-optimisticTrue-iterNone-None--certora-cli-6.3.1' cache
 
-Job is completed! View the results at https://prover.certora.com/output/925723/2b5823a9284e48b18d9321f0f80d1d17?anonymousKey=9426a98eb0b9fb11a632a844a947a585bc4bc499
+Job is completed! View the results at https://prover.certora.com/output/925723/30fa7811fd2a4833a065de2f43b4ba65?anonymousKey=8e4554d4f38acf2bf20ab1d2352468542b73dfb6
 Finished verification request
 No errors found by Prover!
 ```
@@ -3181,24 +3190,24 @@ Results for all:
 |Rule name                               |Verified     |Time (sec)|Description                                                 |Local vars                                        |
 |----------------------------------------|-------------|----------|------------------------------------------------------------|--------------------------------------------------|
 |envfreeFuncsStaticCheck                 |Not violated |0         |                                                            |no local variables                                |
-|repayBadDebtWithReservesSuccess         |Not violated |5         |                                                            |no local variables                                |
-|fixUserIncreasesBadDebt                 |Not violated |5         |                                                            |no local variables                                |
-|fixingUserZeroUserBalance               |Not violated |5         |                                                            |no local variables                                |
-|badDebtSymmetry                         |Not violated |3         |                                                            |no local variables                                |
-|repayBadDebtDecreasesBadDebt            |Not violated |4         |                                                            |no local variables                                |
-|badDebtRulesCash                        |Not violated |3         |                                                            |no local variables                                |
-|allBadDebtRulesCash                     |Not violated |3         |                                                            |no local variables                                |
-|repayBadDebtWithReservesDoesNotChangeSha|Not violated |4         |                                                            |no local variables                                |
+|repayBadDebtWithReservesSuccess         |Not violated |3         |                                                            |no local variables                                |
+|fixUserIncreasesBadDebt                 |Not violated |2         |                                                            |no local variables                                |
+|fixingUserZeroUserBalance               |Not violated |2         |                                                            |no local variables                                |
+|repayBadDebtDecreasesBadDebt            |Not violated |1         |                                                            |no local variables                                |
+|repayBadDebtWithReservesDoesNotChangeSha|Not violated |3         |                                                            |no local variables                                |
 |rePrice                                 |             |          |                                                            |                                                  |
-|fixingUserDoesNotChangeSharePrice       |Not violated |4         |                                                            |no local variables                                |
-|badDebtRules                            |Not violated |6         |                                                            |no local variables                                |
+|allBadDebtRulesCash                     |Not violated |2         |                                                            |no local variables                                |
+|badDebtSymmetry                         |Not violated |2         |                                                            |no local variables                                |
+|badDebtRulesCash                        |Not violated |3         |                                                            |no local variables                                |
+|fixingUserDoesNotChangeSharePrice       |Not violated |3         |                                                            |no local variables                                |
+|badDebtRules                            |Not violated |5         |                                                            |no local variables                                |
 *---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*
 Done 1m
-Done 2m
+Done 1m
 Event reporter: all events were sent without errors
 [INFO]: updated '41948e68b910f69c3218ad74de39b67e9de06ffa0d3fbf733cc48950b19227c8-optimisticTrue-iterNone-None--certora-cli-6.3.1' cache
 
-Job is completed! View the results at https://prover.certora.com/output/925723/f88bc10ff4e3462bb9396f3f9cd976df?anonymousKey=05034afaf31c32bcd35a5a50079b033419b6883e
+Job is completed! View the results at https://prover.certora.com/output/925723/f4545804ad124226b94c004aadec3ad3?anonymousKey=1c18ceb75eefc57f2bac4d31632336fd598dfba5
 Finished verification request
 No errors found by Prover!
 ```
@@ -3245,13 +3254,13 @@ Results for all:
 |----------------------------------------|-------------|----------|------------------------------------------------------------|--------------------------------------------------|
 |envfreeFuncsStaticCheck                 |Not violated |0         |                                                            |no local variables                                |
 |repayBadDebtWithReservesSuccess         |Not violated |3         |                                                            |no local variables                                |
-|fixingUserZeroUserBalance               |Not violated |3         |                                                            |no local variables                                |
 |fixUserIncreasesBadDebt                 |Not violated |3         |                                                            |no local variables                                |
-|repayBadDebtWithReservesDoesNotChangeSha|Not violated |3         |                                                            |no local variables                                |
-|rePrice                                 |             |          |                                                            |                                                  |
+|fixingUserZeroUserBalance               |Not violated |3         |                                                            |no local variables                                |
 |repayBadDebtDecreasesBadDebt            |Not violated |2         |                                                            |no local variables                                |
-|badDebtRulesCash                        |Not violated |3         |                                                            |no local variables                                |
-|badDebtSymmetry                         |Not violated |2         |                                                            |no local variables                                |
+|badDebtRulesCash                        |Not violated |2         |                                                            |no local variables                                |
+|badDebtSymmetry                         |Not violated |3         |                                                            |no local variables                                |
+|repayBadDebtWithReservesDoesNotChangeSha|Not violated |2         |                                                            |no local variables                                |
+|rePrice                                 |             |          |                                                            |                                                  |
 |allBadDebtRulesCash                     |Not violated |3         |                                                            |no local variables                                |
 |fixingUserDoesNotChangeSharePrice       |Not violated |3         |                                                            |no local variables                                |
 |badDebtRules                            |Not violated |4         |                                                            |no local variables                                |
@@ -3261,7 +3270,7 @@ Done 1m
 Event reporter: all events were sent without errors
 [INFO]: updated '41948e68b910f69c3218ad74de39b67e9de06ffa0d3fbf733cc48950b19227c8-optimisticTrue-iterNone-None--certora-cli-6.3.1' cache
 
-Job is completed! View the results at https://prover.certora.com/output/925723/59da487d04c042aa9d7db76203a423ca?anonymousKey=b21ee8a89da6e4f65b5562ddd7669e8e41b6d864
+Job is completed! View the results at https://prover.certora.com/output/925723/ad1919580a4144c28f3a0a1df43e68e2?anonymousKey=529d57b962af5fc7d582d14728d42be1f73c9112
 Finished verification request
 No errors found by Prover!
 ```
@@ -3318,31 +3327,44 @@ Results for all:
 |Rule name                               |Verified     |Time (sec)|Description                                                 |Local vars                                        |
 |----------------------------------------|-------------|----------|------------------------------------------------------------|--------------------------------------------------|
 |envfreeFuncsStaticCheck                 |Not violated |0         |                                                            |no local variables                                |
-|fixingUserZeroUserBalance               |Violated     |3         |Assert message: user balance should be zero after fix -     |MockERC20=MockERC20 (1)                           |
-|                                        |             |          |certora/specs/SharePrice.spec line 65                       |MockMErc20DelegateFixer=MockMErc20DelegateFixer   |
-|                                        |             |          |                                                            |(2)                                               |
-|                                        |             |          |                                                            |e.block.basefee=0                                 |
-|                                        |             |          |                                                            |e.block.coinbase=0                                |
-|                                        |             |          |                                                            |e.block.difficulty=0                              |
-|                                        |             |          |                                                            |e.block.gaslimit=0                                |
-|                                        |             |          |                                                            |e.block.number=0                                  |
-|                                        |             |          |                                                            |e.block.timestamp=0                               |
-|                                        |             |          |                                                            |e.msg.sender=MockMErc20DelegateFixer (2)          |
+|fixingUserZeroUserBalance               |Violated     |3         |Assert message: user balance should be zero after fix -     |MockERC20=MockERC20                               |
+|                                        |             |          |certora/specs/SharePrice.spec line 65                       |(0xbfffffffffffffffffffffffffffffffffffffff)      |
+|                                        |             |          |                                                            |MockMErc20DelegateFixer=MockMErc20DelegateFixer   |
+|                                        |             |          |                                                            |(0x7fffffffffffffffffffffffffffffffffffffff)      |
+|                                        |             |          |                                                            |e.block.basefee=0x7fffffffffffffffffffffffffffffff|
+|                                        |             |          |                                                            |ffffffffffffffffffffffffffffffff                  |
+|                                        |             |          |                                                            |e.block.coinbase=MockMErc20DelegateFixer          |
+|                                        |             |          |                                                            |(0x7fffffffffffffffffffffffffffffffffffffff)      |
+|                                        |             |          |                                                            |e.block.difficulty=0x7ffffffffffffffffffffffffffff|
+|                                        |             |          |                                                            |fffffffffffffffffffffffffffffffffff               |
+|                                        |             |          |                                                            |e.block.gaslimit=0x7ffffffffffffffffffffffffffffff|
+|                                        |             |          |                                                            |fffffffffffffffffffffffffffffffff                 |
+|                                        |             |          |                                                            |e.block.number=0x7ffffffffffffffffffffffffffffffff|
+|                                        |             |          |                                                            |fffffffffffffffffffffffffffffff                   |
+|                                        |             |          |                                                            |e.block.timestamp=0x7fffffffffffffffffffffffffffff|
+|                                        |             |          |                                                            |ffffffffffffffffffffffffffffffffff                |
+|                                        |             |          |                                                            |e.msg.sender=MockMErc20DelegateFixer              |
+|                                        |             |          |                                                            |(0x7fffffffffffffffffffffffffffffffffffffff)      |
 |                                        |             |          |                                                            |e.msg.value=0                                     |
-|                                        |             |          |                                                            |e.tx.origin=0                                     |
-|                                        |             |          |                                                            |liquidator=0x2711                                 |
-|                                        |             |          |                                                            |startingLiquidatorBalance=0                       |
-|                                        |             |          |                                                            |startingUserBalance=1                             |
-|                                        |             |          |                                                            |user=0x2712                                       |
+|                                        |             |          |                                                            |e.tx.origin=MockMErc20DelegateFixer               |
+|                                        |             |          |                                                            |(0x7fffffffffffffffffffffffffffffffffffffff)      |
+|                                        |             |          |                                                            |liquidator=MockMErc20DelegateFixer                |
+|                                        |             |          |                                                            |(0x7fffffffffffffffffffffffffffffffffffffff)      |
+|                                        |             |          |                                                            |startingLiquidatorBalance=0x8000000000000000000000|
+|                                        |             |          |                                                            |000000000000000000000000000000000000000000        |
+|                                        |             |          |                                                            |startingUserBalance=0x8000000000000000000000000000|
+|                                        |             |          |                                                            |000000000000000000000000000000000000              |
+|                                        |             |          |                                                            |user=MockERC20                                    |
+|                                        |             |          |                                                            |(0xbfffffffffffffffffffffffffffffffffffffff)      |
 |repayBadDebtWithReservesSuccess         |Not violated |3         |                                                            |no local variables                                |
 |fixUserIncreasesBadDebt                 |Not violated |3         |                                                            |no local variables                                |
-|allBadDebtRulesCash                     |Not violated |2         |                                                            |no local variables                                |
-|repayBadDebtDecreasesBadDebt            |Not violated |3         |                                                            |no local variables                                |
-|badDebtRulesCash                        |Not violated |2         |                                                            |no local variables                                |
-|badDebtSymmetry                         |Not violated |2         |                                                            |no local variables                                |
-|repayBadDebtWithReservesDoesNotChangeSha|Not violated |3         |                                                            |no local variables                                |
+|repayBadDebtWithReservesDoesNotChangeSha|Not violated |2         |                                                            |no local variables                                |
 |rePrice                                 |             |          |                                                            |                                                  |
-|fixingUserDoesNotChangeSharePrice       |Not violated |3         |                                                            |no local variables                                |
+|badDebtSymmetry                         |Not violated |3         |                                                            |no local variables                                |
+|repayBadDebtDecreasesBadDebt            |Not violated |2         |                                                            |no local variables                                |
+|allBadDebtRulesCash                     |Not violated |3         |                                                            |no local variables                                |
+|badDebtRulesCash                        |Not violated |2         |                                                            |no local variables                                |
+|fixingUserDoesNotChangeSharePrice       |Not violated |2         |                                                            |no local variables                                |
 |badDebtRules                            |Not violated |4         |                                                            |no local variables                                |
 *---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*
 Failures summary:
@@ -3354,7 +3376,7 @@ Event reporter: all events were sent without errors
 [INFO]: Process returned with 100
 [INFO]: updated '41948e68b910f69c3218ad74de39b67e9de06ffa0d3fbf733cc48950b19227c8-optimisticTrue-iterNone-None--certora-cli-6.3.1' cache
 
-Job is completed! View the results at https://prover.certora.com/output/925723/af143354cc7547c3ab018b7ec586a0eb?anonymousKey=257343e8176a6ad6fe74d0f601e8cfa86e89a66f
+Job is completed! View the results at https://prover.certora.com/output/925723/dfccb5958e7d4f7c816525dea535b98c?anonymousKey=657d4840ec6aa1354282ee47a06ad5f6ac00c0f8
 Finished verification request
 ERROR: Prover found violations:
 [rule] fixingUserZeroUserBalance: FAIL
@@ -3412,32 +3434,32 @@ Results for all:
 |Rule name                               |Verified     |Time (sec)|Description                                                 |Local vars                                        |
 |----------------------------------------|-------------|----------|------------------------------------------------------------|--------------------------------------------------|
 |envfreeFuncsStaticCheck                 |Not violated |0         |                                                            |no local variables                                |
-|fixingUserZeroUserBalance               |Violated     |5         |Assert message: user balance should be zero after fix -     |MockERC20=MockERC20 (1)                           |
+|fixingUserZeroUserBalance               |Violated     |3         |Assert message: user balance should be zero after fix -     |MockERC20=MockERC20 (243)                         |
 |                                        |             |          |certora/specs/SharePrice.spec line 65                       |MockMErc20DelegateFixer=MockMErc20DelegateFixer   |
-|                                        |             |          |                                                            |(2)                                               |
+|                                        |             |          |                                                            |(0x2715)                                          |
 |                                        |             |          |                                                            |e.block.basefee=0                                 |
 |                                        |             |          |                                                            |e.block.coinbase=0                                |
 |                                        |             |          |                                                            |e.block.difficulty=0                              |
 |                                        |             |          |                                                            |e.block.gaslimit=0                                |
 |                                        |             |          |                                                            |e.block.number=0                                  |
 |                                        |             |          |                                                            |e.block.timestamp=0                               |
-|                                        |             |          |                                                            |e.msg.sender=MockMErc20DelegateFixer (2)          |
+|                                        |             |          |                                                            |e.msg.sender=0x2714                               |
 |                                        |             |          |                                                            |e.msg.value=0                                     |
 |                                        |             |          |                                                            |e.tx.origin=0                                     |
-|                                        |             |          |                                                            |liquidator=0x2711                                 |
+|                                        |             |          |                                                            |liquidator=0x2712                                 |
 |                                        |             |          |                                                            |startingLiquidatorBalance=0                       |
 |                                        |             |          |                                                            |startingUserBalance=1                             |
-|                                        |             |          |                                                            |user=0x2714                                       |
-|repayBadDebtWithReservesSuccess         |Not violated |4         |                                                            |no local variables                                |
-|fixUserIncreasesBadDebt                 |Not violated |4         |                                                            |no local variables                                |
-|repayBadDebtDecreasesBadDebt            |Not violated |3         |                                                            |no local variables                                |
-|badDebtSymmetry                         |Not violated |2         |                                                            |no local variables                                |
+|                                        |             |          |                                                            |user=0x2713                                       |
+|repayBadDebtWithReservesSuccess         |Not violated |3         |                                                            |no local variables                                |
+|fixUserIncreasesBadDebt                 |Not violated |2         |                                                            |no local variables                                |
 |badDebtRulesCash                        |Not violated |2         |                                                            |no local variables                                |
-|repayBadDebtWithReservesDoesNotChangeSha|Not violated |3         |                                                            |no local variables                                |
+|repayBadDebtWithReservesDoesNotChangeSha|Not violated |2         |                                                            |no local variables                                |
 |rePrice                                 |             |          |                                                            |                                                  |
-|allBadDebtRulesCash                     |Not violated |3         |                                                            |no local variables                                |
-|fixingUserDoesNotChangeSharePrice       |Not violated |2         |                                                            |no local variables                                |
-|badDebtRules                            |Not violated |6         |                                                            |no local variables                                |
+|repayBadDebtDecreasesBadDebt            |Not violated |2         |                                                            |no local variables                                |
+|badDebtSymmetry                         |Not violated |3         |                                                            |no local variables                                |
+|allBadDebtRulesCash                     |Not violated |4         |                                                            |no local variables                                |
+|fixingUserDoesNotChangeSharePrice       |Not violated |3         |                                                            |no local variables                                |
+|badDebtRules                            |Not violated |5         |                                                            |no local variables                                |
 *---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*
 Failures summary:
 Failed on fixingUserZeroUserBalance:
@@ -3448,7 +3470,7 @@ Event reporter: all events were sent without errors
 [INFO]: Process returned with 100
 [INFO]: updated '41948e68b910f69c3218ad74de39b67e9de06ffa0d3fbf733cc48950b19227c8-optimisticTrue-iterNone-None--certora-cli-6.3.1' cache
 
-Job is completed! View the results at https://prover.certora.com/output/925723/1bb1267445dc4e57979760b7fd14c0b0?anonymousKey=2bb6a7dd43978c9e3b2216909e2495d22053d3f0
+Job is completed! View the results at https://prover.certora.com/output/925723/87f85418edce4233b4cc84f46bff56a5?anonymousKey=ad86f60a636e40d9cd551b7d8ae29b0c74df4660
 Finished verification request
 ERROR: Prover found violations:
 [rule] fixingUserZeroUserBalance: FAIL
@@ -3501,62 +3523,28 @@ Encountered a total of 1 failing tests, 0 tests succeeded
 <summary>View Result</summary>
 
 ```
-Results for all:
-*---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*
-|Rule name                               |Verified     |Time (sec)|Description                                                 |Local vars                                        |
-|----------------------------------------|-------------|----------|------------------------------------------------------------|--------------------------------------------------|
-|envfreeFuncsStaticCheck                 |Not violated |0         |                                                            |no local variables                                |
-|fixingUserZeroUserBalance               |Violated     |4         |Assert message: user balance should be zero after fix -     |MockERC20=MockERC20                               |
-|                                        |             |          |certora/specs/SharePrice.spec line 65                       |(0xbfffffffffffffffffffffffffffffffffffffff)      |
-|                                        |             |          |                                                            |MockMErc20DelegateFixer=MockMErc20DelegateFixer   |
-|                                        |             |          |                                                            |(0x7fffffffffffffffffffffffffffffffffffffff)      |
-|                                        |             |          |                                                            |e.block.basefee=0x7fffffffffffffffffffffffffffffff|
-|                                        |             |          |                                                            |ffffffffffffffffffffffffffffffff                  |
-|                                        |             |          |                                                            |e.block.coinbase=MockMErc20DelegateFixer          |
-|                                        |             |          |                                                            |(0x7fffffffffffffffffffffffffffffffffffffff)      |
-|                                        |             |          |                                                            |e.block.difficulty=0x7ffffffffffffffffffffffffffff|
-|                                        |             |          |                                                            |fffffffffffffffffffffffffffffffffff               |
-|                                        |             |          |                                                            |e.block.gaslimit=0x7ffffffffffffffffffffffffffffff|
-|                                        |             |          |                                                            |fffffffffffffffffffffffffffffffff                 |
-|                                        |             |          |                                                            |e.block.number=0x7ffffffffffffffffffffffffffffffff|
-|                                        |             |          |                                                            |fffffffffffffffffffffffffffffff                   |
-|                                        |             |          |                                                            |e.block.timestamp=0x7fffffffffffffffffffffffffffff|
-|                                        |             |          |                                                            |ffffffffffffffffffffffffffffffffff                |
-|                                        |             |          |                                                            |e.msg.sender=MockMErc20DelegateFixer              |
-|                                        |             |          |                                                            |(0x7fffffffffffffffffffffffffffffffffffffff)      |
-|                                        |             |          |                                                            |e.msg.value=0                                     |
-|                                        |             |          |                                                            |e.tx.origin=MockMErc20DelegateFixer               |
-|                                        |             |          |                                                            |(0x7fffffffffffffffffffffffffffffffffffffff)      |
-|                                        |             |          |                                                            |liquidator=MockERC20                              |
-|                                        |             |          |                                                            |(0xbfffffffffffffffffffffffffffffffffffffff)      |
-|                                        |             |          |                                                            |startingLiquidatorBalance=0x8000000000000000000000|
-|                                        |             |          |                                                            |000000000000000000000000000000000000000000        |
-|                                        |             |          |                                                            |startingUserBalance=1                             |
-|                                        |             |          |                                                            |user=0x5fffffffffffffffffffffffffffffffffffffff   |
-|repayBadDebtWithReservesSuccess         |Not violated |4         |                                                            |no local variables                                |
-|fixUserIncreasesBadDebt                 |Not violated |4         |                                                            |no local variables                                |
-|repayBadDebtWithReservesDoesNotChangeSha|Not violated |2         |                                                            |no local variables                                |
-|rePrice                                 |             |          |                                                            |                                                  |
-|repayBadDebtDecreasesBadDebt            |Not violated |2         |                                                            |no local variables                                |
-|allBadDebtRulesCash                     |Not violated |3         |                                                            |no local variables                                |
-|badDebtRulesCash                        |Not violated |2         |                                                            |no local variables                                |
-|badDebtSymmetry                         |Not violated |3         |                                                            |no local variables                                |
-|fixingUserDoesNotChangeSharePrice       |Not violated |2         |                                                            |no local variables                                |
-|badDebtRules                            |Not violated |4         |                                                            |no local variables                                |
-*---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*
-Failures summary:
-Failed on fixingUserZeroUserBalance:
-Assert message: user balance should be zero after fix - certora/specs/SharePrice.spec line 65
-Done 1m
-Done 1m
-Event reporter: all events were sent without errors
-[INFO]: Process returned with 100
-[INFO]: updated '41948e68b910f69c3218ad74de39b67e9de06ffa0d3fbf733cc48950b19227c8-optimisticTrue-iterNone-None--certora-cli-6.3.1' cache
+WARNING: 'send_only' is deprecated and is now the default. In CI, use 'wait_for_results false' instead
+WARNING: Incompatible package certora-cli version 6.3.1 with the latest version 7.0.7. Please upgrade by running:
+pip install certora-cli --upgrade
+or
+pip3 install certora-cli --upgrade
+Compiling test/mock/MockERC20.sol...
+Compiling test/mock/MockERC20.sol to expose internal function information...
+Compiling test/mock/MockMErc20DelegateFixer.sol...
+Compiling test/mock/MockMErc20DelegateFixer.sol to expose internal function information...
 
-Job is completed! View the results at https://prover.certora.com/output/925723/8b0b4d600f7f4172aa57a890890c699c?anonymousKey=7266a2589dbb999609de6b8e85f0e5034c86b9c8
-Finished verification request
-ERROR: Prover found violations:
-[rule] fixingUserZeroUserBalance: FAIL
+Connecting to server...
+
+ERROR: An error occurred: couldn't upload file - .certora_internal/e9098173bfb642a28418bb9b03f3bc20.zip
+ssl.SSLEOFError: EOF occurred in violation of protocol (_ssl.c:2426)
+
+During handling of the above exception, another exception occurred:
+
+urllib3.exceptions.MaxRetryError: HTTPSConnectionPool(host='certora-prod.s3.amazonaws.com', port=443): Max retries exceeded with url: /uploadFiles/925723/e9098173bfb642a28418bb9b03f3bc20.zip?AWSAccessKeyId=ASIAXXOD664BDO25DNXC&Signature=2wXzjXkngRv3dI2ZoIjcAU4o5EI%3D&content-type=application%2Fzip&x-amz-security-token=IQoJb3JpZ2luX2VjEMv%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQCrx2KmKJUwvLzr2TX%2FL2P5H7TiSX2sCoBEqqLqcTIjJgIhANvopE9J6t0CV7iCwpiuacwSAAhTaPAVshst8qmGf4jRKo8DCNT%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEQAxoMNTMxMzc2MzA1OTIyIgwOgX5dy9kMU%2F29yRUq4wJCNL5XJoWerCaFF2y7K89Vo6ArqYImD%2BHGKv5ciIMlDQh6Rl35ud%2BX8dQggR6IIP%2FxkMrts6dhN8l7eajNiSv8NZufb9O1JTH32LRJRMB9vqQkYyAPWq%2F67aN1F3G2tPykUw8Qx7Pmut%2FLUNmvBsjLnS8%2FndLNdTwrcYBFTm1pNpp2IVuE8XS2ypHMi%2BIVJddLDZPQTgTtWkR1fc4K0hPnYjtD1b4aQN2b1IzdMXjy9dZ3iT9WyI5%2BYmdPAEXCRNMAWIayQDWiA1nzDAmnD7PJwQoYoTvmhU83SLgKEntBW6j34fHhRW0Y6CY2yAbjlirev0K2GNLzDudHs2hChrrtXmwGmpi0%2BwQrkBrfylsqNNOSS2cxdsGS4ZAKuuodUYKG7YhlspH6uO%2F2LWfsAMxOq4yz%2FGZt78%2FRmGcIKNeFzj08I1QPSR4gcc0YR9nPlP1fJJVkqh7hQWAaYROt6GdW%2Bb%2FBMJey4K8GOp0BhS7EYOcl1q6%2B5l5vBJQXwUlhhIfRq1xCzU79IfhOLQZkRaS%2BbdpqW3OhecCEk0vfNwDP7hrr%2BLair8TcDDzLqLTUn9UAPV0LCck%2BEIALoaxBmjQNKT7iRaNFJw3IY2Xz9hE%2FdZlA2yUXyxSmhbsnSa18kThBsE5Kl5orQDFXteemEIalUaS0F7QYJnBlSmyLRRaiu7MLwwJ9jjdzhQ%3D%3D&Expires=1710760807 (Caused by SSLError(SSLEOFError(8, 'EOF occurred in violation of protocol (_ssl.c:2426)')))
+
+During handling of the above exception, another exception occurred:
+
+requests.exceptions.SSLError: HTTPSConnectionPool(host='certora-prod.s3.amazonaws.com', port=443): Max retries exceeded with url: /uploadFiles/925723/e9098173bfb642a28418bb9b03f3bc20.zip?AWSAccessKeyId=ASIAXXOD664BDO25DNXC&Signature=2wXzjXkngRv3dI2ZoIjcAU4o5EI%3D&content-type=application%2Fzip&x-amz-security-token=IQoJb3JpZ2luX2VjEMv%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQCrx2KmKJUwvLzr2TX%2FL2P5H7TiSX2sCoBEqqLqcTIjJgIhANvopE9J6t0CV7iCwpiuacwSAAhTaPAVshst8qmGf4jRKo8DCNT%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEQAxoMNTMxMzc2MzA1OTIyIgwOgX5dy9kMU%2F29yRUq4wJCNL5XJoWerCaFF2y7K89Vo6ArqYImD%2BHGKv5ciIMlDQh6Rl35ud%2BX8dQggR6IIP%2FxkMrts6dhN8l7eajNiSv8NZufb9O1JTH32LRJRMB9vqQkYyAPWq%2F67aN1F3G2tPykUw8Qx7Pmut%2FLUNmvBsjLnS8%2FndLNdTwrcYBFTm1pNpp2IVuE8XS2ypHMi%2BIVJddLDZPQTgTtWkR1fc4K0hPnYjtD1b4aQN2b1IzdMXjy9dZ3iT9WyI5%2BYmdPAEXCRNMAWIayQDWiA1nzDAmnD7PJwQoYoTvmhU83SLgKEntBW6j34fHhRW0Y6CY2yAbjlirev0K2GNLzDudHs2hChrrtXmwGmpi0%2BwQrkBrfylsqNNOSS2cxdsGS4ZAKuuodUYKG7YhlspH6uO%2F2LWfsAMxOq4yz%2FGZt78%2FRmGcIKNeFzj08I1QPSR4gcc0YR9nPlP1fJJVkqh7hQWAaYROt6GdW%2Bb%2FBMJey4K8GOp0BhS7EYOcl1q6%2B5l5vBJQXwUlhhIfRq1xCzU79IfhOLQZkRaS%2BbdpqW3OhecCEk0vfNwDP7hrr%2BLair8TcDDzLqLTUn9UAPV0LCck%2BEIALoaxBmjQNKT7iRaNFJw3IY2Xz9hE%2FdZlA2yUXyxSmhbsnSa18kThBsE5Kl5orQDFXteemEIalUaS0F7QYJnBlSmyLRRaiu7MLwwJ9jjdzhQ%3D%3D&Expires=1710760807 (Caused by SSLError(SSLEOFError(8, 'EOF occurred in violation of protocol (_ssl.c:2426)')))
 ```
 </details>
 
@@ -3606,51 +3594,17 @@ Encountered a total of 1 failing tests, 0 tests succeeded
 <summary>View Result</summary>
 
 ```
-Results for all:
-*---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*
-|Rule name                               |Verified     |Time (sec)|Description                                                 |Local vars                                        |
-|----------------------------------------|-------------|----------|------------------------------------------------------------|--------------------------------------------------|
-|envfreeFuncsStaticCheck                 |Not violated |0         |                                                            |no local variables                                |
-|fixingUserZeroUserBalance               |Violated     |3         |Assert message: user balance should be zero after fix -     |MockERC20=MockERC20 (9)                           |
-|                                        |             |          |certora/specs/SharePrice.spec line 65                       |MockMErc20DelegateFixer=MockMErc20DelegateFixer   |
-|                                        |             |          |                                                            |(10)                                              |
-|                                        |             |          |                                                            |e.block.basefee=0                                 |
-|                                        |             |          |                                                            |e.block.coinbase=0                                |
-|                                        |             |          |                                                            |e.block.difficulty=0                              |
-|                                        |             |          |                                                            |e.block.gaslimit=0                                |
-|                                        |             |          |                                                            |e.block.number=0                                  |
-|                                        |             |          |                                                            |e.block.timestamp=0                               |
-|                                        |             |          |                                                            |e.msg.sender=0                                    |
-|                                        |             |          |                                                            |e.msg.value=0                                     |
-|                                        |             |          |                                                            |e.tx.origin=0                                     |
-|                                        |             |          |                                                            |liquidator=0x2712                                 |
-|                                        |             |          |                                                            |startingLiquidatorBalance=1                       |
-|                                        |             |          |                                                            |startingUserBalance=2                             |
-|                                        |             |          |                                                            |user=0x2711                                       |
-|fixUserIncreasesBadDebt                 |Not violated |3         |                                                            |no local variables                                |
-|repayBadDebtWithReservesSuccess         |Not violated |3         |                                                            |no local variables                                |
-|repayBadDebtDecreasesBadDebt            |Not violated |2         |                                                            |no local variables                                |
-|repayBadDebtWithReservesDoesNotChangeSha|Not violated |2         |                                                            |no local variables                                |
-|rePrice                                 |             |          |                                                            |                                                  |
-|badDebtSymmetry                         |Not violated |2         |                                                            |no local variables                                |
-|badDebtRulesCash                        |Not violated |3         |                                                            |no local variables                                |
-|allBadDebtRulesCash                     |Not violated |3         |                                                            |no local variables                                |
-|fixingUserDoesNotChangeSharePrice       |Not violated |3         |                                                            |no local variables                                |
-|badDebtRules                            |Not violated |3         |                                                            |no local variables                                |
-*---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*
-Failures summary:
-Failed on fixingUserZeroUserBalance:
-Assert message: user balance should be zero after fix - certora/specs/SharePrice.spec line 65
-Done 1m
-Done 1m
-Event reporter: all events were sent without errors
-[INFO]: Process returned with 100
-[INFO]: updated '41948e68b910f69c3218ad74de39b67e9de06ffa0d3fbf733cc48950b19227c8-optimisticTrue-iterNone-None--certora-cli-6.3.1' cache
+WARNING: 'send_only' is deprecated and is now the default. In CI, use 'wait_for_results false' instead
+WARNING: Incompatible package certora-cli version 6.3.1 with the latest version 7.0.7. Please upgrade by running:
+pip install certora-cli --upgrade
+or
+pip3 install certora-cli --upgrade
+Compiling test/mock/MockERC20.sol...
+Compiling test/mock/MockERC20.sol to expose internal function information...
+Compiling test/mock/MockMErc20DelegateFixer.sol...
+Compiling test/mock/MockMErc20DelegateFixer.sol to expose internal function information...
 
-Job is completed! View the results at https://prover.certora.com/output/925723/9846fe65e7b64b3d9a61ed31cb668006?anonymousKey=02fe201d6a5e21cb2c22081c1ed53c39b491f2fb
-Finished verification request
-ERROR: Prover found violations:
-[rule] fixingUserZeroUserBalance: FAIL
+Connecting to server...
 ```
 </details>
 
@@ -3705,32 +3659,45 @@ Results for all:
 |Rule name                               |Verified     |Time (sec)|Description                                                 |Local vars                                        |
 |----------------------------------------|-------------|----------|------------------------------------------------------------|--------------------------------------------------|
 |envfreeFuncsStaticCheck                 |Not violated |0         |                                                            |no local variables                                |
-|fixingUserZeroUserBalance               |Violated     |4         |Assert message: user balance should be zero after fix -     |MockERC20=MockERC20 (0x2711)                      |
-|                                        |             |          |certora/specs/SharePrice.spec line 65                       |MockMErc20DelegateFixer=MockMErc20DelegateFixer   |
-|                                        |             |          |                                                            |(0x2712)                                          |
-|                                        |             |          |                                                            |e.block.basefee=0                                 |
-|                                        |             |          |                                                            |e.block.coinbase=0                                |
-|                                        |             |          |                                                            |e.block.difficulty=0                              |
-|                                        |             |          |                                                            |e.block.gaslimit=0                                |
-|                                        |             |          |                                                            |e.block.number=0                                  |
-|                                        |             |          |                                                            |e.block.timestamp=0                               |
-|                                        |             |          |                                                            |e.msg.sender=0x2715                               |
+|fixingUserZeroUserBalance               |Violated     |3         |Assert message: user balance should be zero after fix -     |MockERC20=MockERC20                               |
+|                                        |             |          |certora/specs/SharePrice.spec line 65                       |(0xbfffffffffffffffffffffffffffffffffffffff)      |
+|                                        |             |          |                                                            |MockMErc20DelegateFixer=MockMErc20DelegateFixer   |
+|                                        |             |          |                                                            |(0x7fffffffffffffffffffffffffffffffffffffff)      |
+|                                        |             |          |                                                            |e.block.basefee=0x7fffffffffffffffffffffffffffffff|
+|                                        |             |          |                                                            |ffffffffffffffffffffffffffffffff                  |
+|                                        |             |          |                                                            |e.block.coinbase=MockMErc20DelegateFixer          |
+|                                        |             |          |                                                            |(0x7fffffffffffffffffffffffffffffffffffffff)      |
+|                                        |             |          |                                                            |e.block.difficulty=0x7ffffffffffffffffffffffffffff|
+|                                        |             |          |                                                            |fffffffffffffffffffffffffffffffffff               |
+|                                        |             |          |                                                            |e.block.gaslimit=0x7ffffffffffffffffffffffffffffff|
+|                                        |             |          |                                                            |fffffffffffffffffffffffffffffffff                 |
+|                                        |             |          |                                                            |e.block.number=0x7ffffffffffffffffffffffffffffffff|
+|                                        |             |          |                                                            |fffffffffffffffffffffffffffffff                   |
+|                                        |             |          |                                                            |e.block.timestamp=0x7fffffffffffffffffffffffffffff|
+|                                        |             |          |                                                            |ffffffffffffffffffffffffffffffffff                |
+|                                        |             |          |                                                            |e.msg.sender=MockMErc20DelegateFixer              |
+|                                        |             |          |                                                            |(0x7fffffffffffffffffffffffffffffffffffffff)      |
 |                                        |             |          |                                                            |e.msg.value=0                                     |
-|                                        |             |          |                                                            |e.tx.origin=0                                     |
-|                                        |             |          |                                                            |liquidator=0x2ffc                                 |
-|                                        |             |          |                                                            |startingLiquidatorBalance=0                       |
-|                                        |             |          |                                                            |startingUserBalance=1                             |
-|                                        |             |          |                                                            |user=0x2ffb                                       |
+|                                        |             |          |                                                            |e.tx.origin=MockMErc20DelegateFixer               |
+|                                        |             |          |                                                            |(0x7fffffffffffffffffffffffffffffffffffffff)      |
+|                                        |             |          |                                                            |liquidator=MockERC20                              |
+|                                        |             |          |                                                            |(0xbfffffffffffffffffffffffffffffffffffffff)      |
+|                                        |             |          |                                                            |startingLiquidatorBalance=0x4000000000000000000000|
+|                                        |             |          |                                                            |000000000000000000000000000000000000000000        |
+|                                        |             |          |                                                            |startingUserBalance=0x8000000000000000000000000000|
+|                                        |             |          |                                                            |000000000000000000000000000000000000              |
+|                                        |             |          |                                                            |user=MockMErc20DelegateFixer                      |
+|                                        |             |          |                                                            |(0x7fffffffffffffffffffffffffffffffffffffff)      |
 |repayBadDebtWithReservesSuccess         |Not violated |3         |                                                            |no local variables                                |
 |fixUserIncreasesBadDebt                 |Not violated |3         |                                                            |no local variables                                |
 |repayBadDebtDecreasesBadDebt            |Not violated |2         |                                                            |no local variables                                |
-|repayBadDebtWithReservesDoesNotChangeSha|Not violated |3         |                                                            |no local variables                                |
+|repayBadDebtWithReservesDoesNotChangeSha|Not violated |2         |                                                            |no local variables                                |
 |rePrice                                 |             |          |                                                            |                                                  |
-|badDebtSymmetry                         |Not violated |3         |                                                            |no local variables                                |
+|badDebtRulesCash                        |Not violated |2         |                                                            |no local variables                                |
+|badDebtSymmetry                         |Not violated |4         |                                                            |no local variables                                |
 |allBadDebtRulesCash                     |Not violated |3         |                                                            |no local variables                                |
-|badDebtRulesCash                        |Not violated |3         |                                                            |no local variables                                |
 |fixingUserDoesNotChangeSharePrice       |Not violated |2         |                                                            |no local variables                                |
-|badDebtRules                            |Not violated |5         |                                                            |no local variables                                |
+|badDebtRules                            |Not violated |3         |                                                            |no local variables                                |
 *---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*
 Failures summary:
 Failed on fixingUserZeroUserBalance:
@@ -3741,7 +3708,7 @@ Event reporter: all events were sent without errors
 [INFO]: Process returned with 100
 [INFO]: updated '41948e68b910f69c3218ad74de39b67e9de06ffa0d3fbf733cc48950b19227c8-optimisticTrue-iterNone-None--certora-cli-6.3.1' cache
 
-Job is completed! View the results at https://prover.certora.com/output/925723/919b1dc8a4b647fdae39565f95f88d93?anonymousKey=784315d97a9716a2eb6baae0f9b12c06cc90ec57
+Job is completed! View the results at https://prover.certora.com/output/925723/adf2902a068645f188ad8dea675dab98?anonymousKey=8e49c3fc1edf3187ef781f8663a3d1bef903ba42
 Finished verification request
 ERROR: Prover found violations:
 [rule] fixingUserZeroUserBalance: FAIL
@@ -3831,7 +3798,7 @@ Results for all:
 |                                        |             |          |                                                            |principle=0x7fffffffffffffffffffffffffffffffffffff|
 |                                        |             |          |                                                            |ffffffffffffffffffffffffff                        |
 |                                        |             |          |                                                            |user=0x3fffffffffffffffffffffffffffffffffffffff   |
-|fixingUserDoesNotChangeSharePrice       |Violated     |4         |Assert message: share price should not change fixing use... |MockERC20=MockERC20 (0x2711)                      |
+|fixingUserDoesNotChangeSharePrice       |Violated     |3         |Assert message: share price should not change fixing use... |MockERC20=MockERC20 (0x2711)                      |
 |                                        |             |          |- certora/specs/SharePrice.spec line 78                     |MockMErc20DelegateFixer=MockMErc20DelegateFixer   |
 |                                        |             |          |                                                            |(0x2713)                                          |
 |                                        |             |          |                                                            |e.block.basefee=0                                 |
@@ -3847,14 +3814,14 @@ Results for all:
 |                                        |             |          |                                                            |startingSharePrice=2                              |
 |                                        |             |          |                                                            |user=0x2fb5                                       |
 |repayBadDebtWithReservesSuccess         |Not violated |3         |                                                            |no local variables                                |
-|fixingUserZeroUserBalance               |Not violated |3         |                                                            |no local variables                                |
+|fixingUserZeroUserBalance               |Not violated |2         |                                                            |no local variables                                |
 |repayBadDebtDecreasesBadDebt            |Not violated |2         |                                                            |no local variables                                |
 |repayBadDebtWithReservesDoesNotChangeSha|Not violated |2         |                                                            |no local variables                                |
 |rePrice                                 |             |          |                                                            |                                                  |
-|badDebtSymmetry                         |Violated     |3         |Assert message: borrows bad debt incorrect -                |no local variables                                |
+|badDebtSymmetry                         |Violated     |4         |Assert message: borrows bad debt incorrect -                |no local variables                                |
 |                                        |             |          |certora/specs/SharePrice.spec line 225                      |                                                  |
-|badDebtRulesCash                        |Not violated |2         |                                                            |no local variables                                |
 |allBadDebtRulesCash                     |Not violated |3         |                                                            |no local variables                                |
+|badDebtRulesCash                        |Not violated |3         |                                                            |no local variables                                |
 |badDebtRules                            |Violated     |4         |Assert message: share price should not change repaying b... |no local variables                                |
 |                                        |             |          |- certora/specs/SharePrice.spec line 115                    |                                                  |
 *---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*
@@ -3877,7 +3844,7 @@ Event reporter: all events were sent without errors
 [INFO]: Process returned with 100
 [INFO]: updated '41948e68b910f69c3218ad74de39b67e9de06ffa0d3fbf733cc48950b19227c8-optimisticTrue-iterNone-None--certora-cli-6.3.1' cache
 
-Job is completed! View the results at https://prover.certora.com/output/925723/46ee04f0fa074f00abe86f591dc28c08?anonymousKey=7421660d124cc4981f8508721de5ccb12e2a7b70
+Job is completed! View the results at https://prover.certora.com/output/925723/82d3d5fba0884dd08e5b64a9e77d4a1d?anonymousKey=afb132c8a064493fa316a49ed7f175fa58f047bd
 Finished verification request
 ERROR: Prover found violations:
 [rule] badDebtRules: 
@@ -3937,37 +3904,25 @@ Results for all:
 |Rule name                               |Verified     |Time (sec)|Description                                                 |Local vars                                        |
 |----------------------------------------|-------------|----------|------------------------------------------------------------|--------------------------------------------------|
 |envfreeFuncsStaticCheck                 |Not violated |0         |                                                            |no local variables                                |
-|fixUserIncreasesBadDebt                 |Violated     |4         |Assert message: bad debt not increased from fixing a use... |MockERC20=MockERC20                               |
-|                                        |             |          |- certora/specs/SharePrice.spec line 53                     |(0xbfffffffffffffffffffffffffffffffffffffff)      |
-|                                        |             |          |                                                            |MockMErc20DelegateFixer=MockMErc20DelegateFixer   |
-|                                        |             |          |                                                            |(0x7fffffffffffffffffffffffffffffffffffffff)      |
+|fixUserIncreasesBadDebt                 |Violated     |4         |Assert message: bad debt not increased from fixing a use... |MockERC20=MockERC20 (1)                           |
+|                                        |             |          |- certora/specs/SharePrice.spec line 53                     |MockMErc20DelegateFixer=MockMErc20DelegateFixer   |
+|                                        |             |          |                                                            |(2)                                               |
 |                                        |             |          |                                                            |badDebt=initialized to unknown                    |
 |                                        |             |          |                                                            |badDebtAfter=initialized to unknown               |
-|                                        |             |          |                                                            |e.block.basefee=0x7fffffffffffffffffffffffffffffff|
-|                                        |             |          |                                                            |ffffffffffffffffffffffffffffffff                  |
-|                                        |             |          |                                                            |e.block.coinbase=MockMErc20DelegateFixer          |
-|                                        |             |          |                                                            |(0x7fffffffffffffffffffffffffffffffffffffff)      |
-|                                        |             |          |                                                            |e.block.difficulty=0x7ffffffffffffffffffffffffffff|
-|                                        |             |          |                                                            |fffffffffffffffffffffffffffffffffff               |
-|                                        |             |          |                                                            |e.block.gaslimit=0x7ffffffffffffffffffffffffffffff|
-|                                        |             |          |                                                            |fffffffffffffffffffffffffffffffff                 |
-|                                        |             |          |                                                            |e.block.number=0x7ffffffffffffffffffffffffffffffff|
-|                                        |             |          |                                                            |fffffffffffffffffffffffffffffff                   |
-|                                        |             |          |                                                            |e.block.timestamp=0x7fffffffffffffffffffffffffffff|
-|                                        |             |          |                                                            |ffffffffffffffffffffffffffffffffff                |
-|                                        |             |          |                                                            |e.msg.sender=MockMErc20DelegateFixer              |
-|                                        |             |          |                                                            |(0x7fffffffffffffffffffffffffffffffffffffff)      |
+|                                        |             |          |                                                            |e.block.basefee=0                                 |
+|                                        |             |          |                                                            |e.block.coinbase=0                                |
+|                                        |             |          |                                                            |e.block.difficulty=0                              |
+|                                        |             |          |                                                            |e.block.gaslimit=0                                |
+|                                        |             |          |                                                            |e.block.number=0                                  |
+|                                        |             |          |                                                            |e.block.timestamp=0                               |
+|                                        |             |          |                                                            |e.msg.sender=MockMErc20DelegateFixer (2)          |
 |                                        |             |          |                                                            |e.msg.value=0                                     |
-|                                        |             |          |                                                            |e.tx.origin=MockMErc20DelegateFixer               |
-|                                        |             |          |                                                            |(0x7fffffffffffffffffffffffffffffffffffffff)      |
-|                                        |             |          |                                                            |interestIndex=0x7fffffffffffffffffffffffffffffffff|
-|                                        |             |          |                                                            |ffffffffffffffffffffffffffffff                    |
-|                                        |             |          |                                                            |liquidator=MockMErc20DelegateFixer                |
-|                                        |             |          |                                                            |(0x7fffffffffffffffffffffffffffffffffffffff)      |
-|                                        |             |          |                                                            |principle=0x7fffffffffffffffffffffffffffffffffffff|
-|                                        |             |          |                                                            |ffffffffffffffffffffffffff                        |
-|                                        |             |          |                                                            |user=0x3fffffffffffffffffffffffffffffffffffffff   |
-|fixingUserDoesNotChangeSharePrice       |Violated     |4         |Assert message: share price should not change fixing use... |MockERC20=MockERC20 (0x2714)                      |
+|                                        |             |          |                                                            |e.tx.origin=0                                     |
+|                                        |             |          |                                                            |interestIndex=0                                   |
+|                                        |             |          |                                                            |liquidator=0x2711                                 |
+|                                        |             |          |                                                            |principle=0                                       |
+|                                        |             |          |                                                            |user=0x2712                                       |
+|fixingUserDoesNotChangeSharePrice       |Violated     |3         |Assert message: share price should not change fixing use... |MockERC20=MockERC20 (0x2714)                      |
 |                                        |             |          |- certora/specs/SharePrice.spec line 78                     |MockMErc20DelegateFixer=MockMErc20DelegateFixer   |
 |                                        |             |          |                                                            |(0x2713)                                          |
 |                                        |             |          |                                                            |e.block.basefee=0                                 |
@@ -3982,15 +3937,15 @@ Results for all:
 |                                        |             |          |                                                            |liquidator=0x472e                                 |
 |                                        |             |          |                                                            |startingSharePrice=1                              |
 |                                        |             |          |                                                            |user=0x472f                                       |
-|repayBadDebtWithReservesSuccess         |Not violated |4         |                                                            |no local variables                                |
-|fixingUserZeroUserBalance               |Not violated |4         |                                                            |no local variables                                |
-|badDebtRulesCash                        |Not violated |3         |                                                            |no local variables                                |
-|repayBadDebtDecreasesBadDebt            |Not violated |3         |                                                            |no local variables                                |
-|repayBadDebtWithReservesDoesNotChangeSha|Not violated |4         |                                                            |no local variables                                |
+|repayBadDebtWithReservesSuccess         |Not violated |3         |                                                            |no local variables                                |
+|fixingUserZeroUserBalance               |Not violated |3         |                                                            |no local variables                                |
+|repayBadDebtDecreasesBadDebt            |Not violated |2         |                                                            |no local variables                                |
+|repayBadDebtWithReservesDoesNotChangeSha|Not violated |2         |                                                            |no local variables                                |
 |rePrice                                 |             |          |                                                            |                                                  |
-|badDebtSymmetry                         |Violated     |4         |Assert message: borrows bad debt incorrect -                |no local variables                                |
+|badDebtSymmetry                         |Violated     |3         |Assert message: borrows bad debt incorrect -                |no local variables                                |
 |                                        |             |          |certora/specs/SharePrice.spec line 225                      |                                                  |
-|allBadDebtRulesCash                     |Not violated |3         |                                                            |no local variables                                |
+|allBadDebtRulesCash                     |Not violated |2         |                                                            |no local variables                                |
+|badDebtRulesCash                        |Not violated |2         |                                                            |no local variables                                |
 |badDebtRules                            |Violated     |4         |Assert message: bad debt should only increase when fixin... |no local variables                                |
 |                                        |             |          |- certora/specs/SharePrice.spec line 123                    |                                                  |
 *---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*
@@ -4013,7 +3968,7 @@ Event reporter: all events were sent without errors
 [INFO]: Process returned with 100
 [INFO]: updated '41948e68b910f69c3218ad74de39b67e9de06ffa0d3fbf733cc48950b19227c8-optimisticTrue-iterNone-None--certora-cli-6.3.1' cache
 
-Job is completed! View the results at https://prover.certora.com/output/925723/0da00716e47740eb8dee37ef54aee0b0?anonymousKey=5fbfa562a7871e48247c696fd9cd8ace8e0de54a
+Job is completed! View the results at https://prover.certora.com/output/925723/cb64bbe7a57845d1b1258a0e0d9ca2a4?anonymousKey=c974452bfa40698f3b06207c0a8fb4769f97c78c
 Finished verification request
 ERROR: Prover found violations:
 [rule] badDebtRules: 
@@ -4073,63 +4028,49 @@ Results for all:
 |Rule name                               |Verified     |Time (sec)|Description                                                 |Local vars                                        |
 |----------------------------------------|-------------|----------|------------------------------------------------------------|--------------------------------------------------|
 |envfreeFuncsStaticCheck                 |Not violated |0         |                                                            |no local variables                                |
-|fixUserIncreasesBadDebt                 |Violated     |3         |Assert message: bad debt not increased from fixing a use... |MockERC20=MockERC20                               |
-|                                        |             |          |- certora/specs/SharePrice.spec line 53                     |(0xbfffffffffffffffffffffffffffffffffffffff)      |
-|                                        |             |          |                                                            |MockMErc20DelegateFixer=MockMErc20DelegateFixer   |
-|                                        |             |          |                                                            |(0x7fffffffffffffffffffffffffffffffffffffff)      |
-|                                        |             |          |                                                            |badDebt=0x8000000000000000000000000000000000000000|
-|                                        |             |          |                                                            |000000000000000000000000                          |
+|fixUserIncreasesBadDebt                 |Violated     |3         |Assert message: bad debt not increased from fixing a use... |MockERC20=MockERC20 (2)                           |
+|                                        |             |          |- certora/specs/SharePrice.spec line 53                     |MockMErc20DelegateFixer=MockMErc20DelegateFixer   |
+|                                        |             |          |                                                            |(0x2712)                                          |
+|                                        |             |          |                                                            |badDebt=1                                         |
 |                                        |             |          |                                                            |badDebtAfter=initialized to unknown               |
-|                                        |             |          |                                                            |e.block.basefee=0x7fffffffffffffffffffffffffffffff|
-|                                        |             |          |                                                            |ffffffffffffffffffffffffffffffff                  |
-|                                        |             |          |                                                            |e.block.coinbase=MockMErc20DelegateFixer          |
-|                                        |             |          |                                                            |(0x7fffffffffffffffffffffffffffffffffffffff)      |
-|                                        |             |          |                                                            |e.block.difficulty=0x7ffffffffffffffffffffffffffff|
-|                                        |             |          |                                                            |fffffffffffffffffffffffffffffffffff               |
-|                                        |             |          |                                                            |e.block.gaslimit=0x7ffffffffffffffffffffffffffffff|
-|                                        |             |          |                                                            |fffffffffffffffffffffffffffffffff                 |
-|                                        |             |          |                                                            |e.block.number=0x7ffffffffffffffffffffffffffffffff|
-|                                        |             |          |                                                            |fffffffffffffffffffffffffffffff                   |
-|                                        |             |          |                                                            |e.block.timestamp=0x7fffffffffffffffffffffffffffff|
-|                                        |             |          |                                                            |ffffffffffffffffffffffffffffffffff                |
-|                                        |             |          |                                                            |e.msg.sender=MockMErc20DelegateFixer              |
-|                                        |             |          |                                                            |(0x7fffffffffffffffffffffffffffffffffffffff)      |
-|                                        |             |          |                                                            |e.msg.value=0                                     |
-|                                        |             |          |                                                            |e.tx.origin=MockMErc20DelegateFixer               |
-|                                        |             |          |                                                            |(0x7fffffffffffffffffffffffffffffffffffffff)      |
-|                                        |             |          |                                                            |interestIndex=0x7fffffffffffffffffffffffffffffffff|
-|                                        |             |          |                                                            |ffffffffffffffffffffffffffffff                    |
-|                                        |             |          |                                                            |liquidator=0x3ffffffffffffffffffffffffffffffffffff|
-|                                        |             |          |                                                            |ffe                                               |
-|                                        |             |          |                                                            |principle=0x7fffffffffffffffffffffffffffffffffffff|
-|                                        |             |          |                                                            |ffffffffffffffffffffffffff                        |
-|                                        |             |          |                                                            |user=0x3fffffffffffffffffffffffffffffffffffffff   |
-|fixingUserDoesNotChangeSharePrice       |Violated     |3         |Assert message: share price should not change fixing use... |MockERC20=MockERC20 (0x2711)                      |
-|                                        |             |          |- certora/specs/SharePrice.spec line 78                     |MockMErc20DelegateFixer=MockMErc20DelegateFixer   |
-|                                        |             |          |                                                            |(0x2715)                                          |
 |                                        |             |          |                                                            |e.block.basefee=0                                 |
 |                                        |             |          |                                                            |e.block.coinbase=0                                |
 |                                        |             |          |                                                            |e.block.difficulty=0                              |
 |                                        |             |          |                                                            |e.block.gaslimit=0                                |
 |                                        |             |          |                                                            |e.block.number=0                                  |
 |                                        |             |          |                                                            |e.block.timestamp=0                               |
-|                                        |             |          |                                                            |e.msg.sender=0x2714                               |
+|                                        |             |          |                                                            |e.msg.sender=0x2711                               |
 |                                        |             |          |                                                            |e.msg.value=0                                     |
 |                                        |             |          |                                                            |e.tx.origin=0                                     |
-|                                        |             |          |                                                            |liquidator=0x2712                                 |
-|                                        |             |          |                                                            |startingSharePrice=0xfffffffffffffffffffffffffffff|
-|                                        |             |          |                                                            |ffffffffffffffffffff7e52fe5afe40000               |
-|                                        |             |          |                                                            |user=MockERC20 (0x2711)                           |
+|                                        |             |          |                                                            |interestIndex=0                                   |
+|                                        |             |          |                                                            |liquidator=0x2711                                 |
+|                                        |             |          |                                                            |principle=0                                       |
+|                                        |             |          |                                                            |user=MockMErc20DelegateFixer (0x2712)             |
+|fixingUserDoesNotChangeSharePrice       |Violated     |4         |Assert message: share price should not change fixing use... |MockERC20=MockERC20 (0x2715)                      |
+|                                        |             |          |- certora/specs/SharePrice.spec line 78                     |MockMErc20DelegateFixer=MockMErc20DelegateFixer   |
+|                                        |             |          |                                                            |(0x2716)                                          |
+|                                        |             |          |                                                            |e.block.basefee=0                                 |
+|                                        |             |          |                                                            |e.block.coinbase=0                                |
+|                                        |             |          |                                                            |e.block.difficulty=0                              |
+|                                        |             |          |                                                            |e.block.gaslimit=0                                |
+|                                        |             |          |                                                            |e.block.number=0                                  |
+|                                        |             |          |                                                            |e.block.timestamp=0                               |
+|                                        |             |          |                                                            |e.msg.sender=MockERC20 (0x2715)                   |
+|                                        |             |          |                                                            |e.msg.value=0                                     |
+|                                        |             |          |                                                            |e.tx.origin=0                                     |
+|                                        |             |          |                                                            |liquidator=0x472e                                 |
+|                                        |             |          |                                                            |startingSharePrice=2                              |
+|                                        |             |          |                                                            |user=0x472f                                       |
 |repayBadDebtWithReservesSuccess         |Not violated |3         |                                                            |no local variables                                |
 |fixingUserZeroUserBalance               |Not violated |3         |                                                            |no local variables                                |
-|badDebtSymmetry                         |Violated     |3         |Assert message: borrows bad debt incorrect -                |no local variables                                |
+|repayBadDebtDecreasesBadDebt            |Not violated |2         |                                                            |no local variables                                |
+|badDebtRulesCash                        |Not violated |2         |                                                            |no local variables                                |
+|badDebtSymmetry                         |Violated     |2         |Assert message: borrows bad debt incorrect -                |no local variables                                |
 |                                        |             |          |certora/specs/SharePrice.spec line 225                      |                                                  |
 |repayBadDebtWithReservesDoesNotChangeSha|Not violated |3         |                                                            |no local variables                                |
 |rePrice                                 |             |          |                                                            |                                                  |
-|repayBadDebtDecreasesBadDebt            |Not violated |2         |                                                            |no local variables                                |
-|allBadDebtRulesCash                     |Not violated |2         |                                                            |no local variables                                |
-|badDebtRulesCash                        |Not violated |2         |                                                            |no local variables                                |
-|badDebtRules                            |Violated     |2         |Assert message: bad debt should only increase when fixin... |no local variables                                |
+|allBadDebtRulesCash                     |Not violated |3         |                                                            |no local variables                                |
+|badDebtRules                            |Violated     |4         |Assert message: bad debt should only increase when fixin... |no local variables                                |
 |                                        |             |          |- certora/specs/SharePrice.spec line 123                    |                                                  |
 *---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*
 Failures summary:
@@ -4151,7 +4092,7 @@ Event reporter: all events were sent without errors
 [INFO]: Process returned with 100
 [INFO]: updated '41948e68b910f69c3218ad74de39b67e9de06ffa0d3fbf733cc48950b19227c8-optimisticTrue-iterNone-None--certora-cli-6.3.1' cache
 
-Job is completed! View the results at https://prover.certora.com/output/925723/849a533246554872b0cf14d3108bf52e?anonymousKey=99c8145f437f8238afd72119807ca81db979ce21
+Job is completed! View the results at https://prover.certora.com/output/925723/05c04105584b4e11b7cb8837d968a218?anonymousKey=3024c1ec8b6e5589799e9f1387359535094c4459
 Finished verification request
 ERROR: Prover found violations:
 [rule] badDebtRules: 
@@ -4212,9 +4153,7 @@ Results for all:
 |Rule name                               |Verified     |Time (sec)|Description                                                 |Local vars                                        |
 |----------------------------------------|-------------|----------|------------------------------------------------------------|--------------------------------------------------|
 |envfreeFuncsStaticCheck                 |Not violated |0         |                                                            |no local variables                                |
-|repayBadDebtWithReservesSuccess         |Not violated |3         |                                                            |no local variables                                |
-|fixUserIncreasesBadDebt                 |Not violated |3         |                                                            |no local variables                                |
-|fixingUserDoesNotChangeSharePrice       |Violated     |6         |Assert message: share price should not change fixing use... |MockERC20=MockERC20 (0x2712)                      |
+|fixingUserDoesNotChangeSharePrice       |Violated     |4         |Assert message: share price should not change fixing use... |MockERC20=MockERC20 (0x2712)                      |
 |                                        |             |          |- certora/specs/SharePrice.spec line 78                     |MockMErc20DelegateFixer=MockMErc20DelegateFixer   |
 |                                        |             |          |                                                            |(0x2713)                                          |
 |                                        |             |          |                                                            |e.block.basefee=0                                 |
@@ -4229,14 +4168,16 @@ Results for all:
 |                                        |             |          |                                                            |liquidator=0x4c4c                                 |
 |                                        |             |          |                                                            |startingSharePrice=0                              |
 |                                        |             |          |                                                            |user=0x4c4d                                       |
+|fixingUserZeroUserBalance               |Not violated |2         |                                                            |no local variables                                |
+|fixUserIncreasesBadDebt                 |Not violated |2         |                                                            |no local variables                                |
+|repayBadDebtWithReservesSuccess         |Not violated |3         |                                                            |no local variables                                |
 |repayBadDebtDecreasesBadDebt            |Not violated |2         |                                                            |no local variables                                |
-|fixingUserZeroUserBalance               |Not violated |3         |                                                            |no local variables                                |
+|repayBadDebtWithReservesDoesNotChangeSha|Not violated |2         |                                                            |no local variables                                |
+|rePrice                                 |             |          |                                                            |                                                  |
 |badDebtRulesCash                        |Not violated |2         |                                                            |no local variables                                |
 |badDebtSymmetry                         |Not violated |3         |                                                            |no local variables                                |
 |allBadDebtRulesCash                     |Not violated |3         |                                                            |no local variables                                |
-|repayBadDebtWithReservesDoesNotChangeSha|Not violated |2         |                                                            |no local variables                                |
-|rePrice                                 |             |          |                                                            |                                                  |
-|badDebtRules                            |Violated     |4         |Assert message: share price should not change repaying b... |no local variables                                |
+|badDebtRules                            |Violated     |3         |Assert message: share price should not change repaying b... |no local variables                                |
 |                                        |             |          |- certora/specs/SharePrice.spec line 115                    |                                                  |
 *---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*
 Failures summary:
@@ -4252,7 +4193,7 @@ Event reporter: all events were sent without errors
 [INFO]: Process returned with 100
 [INFO]: updated '41948e68b910f69c3218ad74de39b67e9de06ffa0d3fbf733cc48950b19227c8-optimisticTrue-iterNone-None--certora-cli-6.3.1' cache
 
-Job is completed! View the results at https://prover.certora.com/output/925723/b472853d97984affbc3779cc8c94cd16?anonymousKey=80e2c1b5edcf6650be1a1db1f8c4f4604a767f0f
+Job is completed! View the results at https://prover.certora.com/output/925723/038ca56e40094a3aa914e99a8dae4fca?anonymousKey=b50a03efeb4cf9fcccf7629e3c233a9ad8226831
 Finished verification request
 ERROR: Prover found violations:
 [rule] badDebtRules: 
@@ -4312,31 +4253,31 @@ Results for all:
 |Rule name                               |Verified     |Time (sec)|Description                                                 |Local vars                                        |
 |----------------------------------------|-------------|----------|------------------------------------------------------------|--------------------------------------------------|
 |envfreeFuncsStaticCheck                 |Not violated |0         |                                                            |no local variables                                |
-|fixingUserDoesNotChangeSharePrice       |Violated     |6         |Assert message: share price should not change fixing use... |MockERC20=MockERC20 (0x2714)                      |
+|repayBadDebtWithReservesSuccess         |Not violated |4         |                                                            |no local variables                                |
+|fixingUserDoesNotChangeSharePrice       |Violated     |4         |Assert message: share price should not change fixing use... |MockERC20=MockERC20 (0x2711)                      |
 |                                        |             |          |- certora/specs/SharePrice.spec line 78                     |MockMErc20DelegateFixer=MockMErc20DelegateFixer   |
-|                                        |             |          |                                                            |(0x2713)                                          |
+|                                        |             |          |                                                            |(0x2712)                                          |
 |                                        |             |          |                                                            |e.block.basefee=0                                 |
 |                                        |             |          |                                                            |e.block.coinbase=0                                |
 |                                        |             |          |                                                            |e.block.difficulty=0                              |
 |                                        |             |          |                                                            |e.block.gaslimit=0                                |
 |                                        |             |          |                                                            |e.block.number=0                                  |
 |                                        |             |          |                                                            |e.block.timestamp=0                               |
-|                                        |             |          |                                                            |e.msg.sender=0x2716                               |
+|                                        |             |          |                                                            |e.msg.sender=MockERC20 (0x2711)                   |
 |                                        |             |          |                                                            |e.msg.value=0                                     |
 |                                        |             |          |                                                            |e.tx.origin=0                                     |
 |                                        |             |          |                                                            |liquidator=0x3149                                 |
 |                                        |             |          |                                                            |startingSharePrice=0                              |
 |                                        |             |          |                                                            |user=0x314a                                       |
-|repayBadDebtWithReservesSuccess         |Not violated |4         |                                                            |no local variables                                |
-|fixingUserZeroUserBalance               |Not violated |4         |                                                            |no local variables                                |
-|repayBadDebtDecreasesBadDebt            |Not violated |3         |                                                            |no local variables                                |
-|badDebtSymmetry                         |Violated     |5         |Assert message: borrows bad debt incorrect -                |no local variables                                |
-|                                        |             |          |certora/specs/SharePrice.spec line 225                      |                                                  |
-|repayBadDebtWithReservesDoesNotChangeSha|Not violated |4         |                                                            |no local variables                                |
+|fixingUserZeroUserBalance               |Not violated |3         |                                                            |no local variables                                |
+|repayBadDebtDecreasesBadDebt            |Not violated |2         |                                                            |no local variables                                |
+|fixUserIncreasesBadDebt                 |Not violated |3         |                                                            |no local variables                                |
+|repayBadDebtWithReservesDoesNotChangeSha|Not violated |2         |                                                            |no local variables                                |
 |rePrice                                 |             |          |                                                            |                                                  |
-|badDebtRulesCash                        |Not violated |4         |                                                            |no local variables                                |
-|allBadDebtRulesCash                     |Not violated |6         |                                                            |no local variables                                |
-|fixUserIncreasesBadDebt                 |Not violated |1         |                                                            |no local variables                                |
+|badDebtSymmetry                         |Violated     |4         |Assert message: borrows bad debt incorrect -                |no local variables                                |
+|                                        |             |          |certora/specs/SharePrice.spec line 225                      |                                                  |
+|badDebtRulesCash                        |Not violated |2         |                                                            |no local variables                                |
+|allBadDebtRulesCash                     |Not violated |3         |                                                            |no local variables                                |
 |badDebtRules                            |Violated     |4         |Assert message: share price should not change repaying b... |no local variables                                |
 |                                        |             |          |- certora/specs/SharePrice.spec line 115                    |                                                  |
 *---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*
@@ -4357,7 +4298,7 @@ Event reporter: all events were sent without errors
 [INFO]: Process returned with 100
 [INFO]: updated '41948e68b910f69c3218ad74de39b67e9de06ffa0d3fbf733cc48950b19227c8-optimisticTrue-iterNone-None--certora-cli-6.3.1' cache
 
-Job is completed! View the results at https://prover.certora.com/output/925723/781fd4e6a8db4582947954db3b452ff6?anonymousKey=fdd24d0250ece9819f4bebfc40c7fa59fc474935
+Job is completed! View the results at https://prover.certora.com/output/925723/058138e3faf24d3ca8f78b73c8731939?anonymousKey=15918c83ba05f5fe998f80f2ab950b70e068f631
 Finished verification request
 ERROR: Prover found violations:
 [rule] badDebtRules: 
@@ -4419,30 +4360,30 @@ Results for all:
 |----------------------------------------|-------------|----------|------------------------------------------------------------|--------------------------------------------------|
 |envfreeFuncsStaticCheck                 |Not violated |0         |                                                            |no local variables                                |
 |repayBadDebtWithReservesSuccess         |Not violated |3         |                                                            |no local variables                                |
-|fixingUserDoesNotChangeSharePrice       |Violated     |5         |Assert message: share price should not change fixing use... |MockERC20=MockERC20 (0x2711)                      |
+|fixingUserDoesNotChangeSharePrice       |Violated     |5         |Assert message: share price should not change fixing use... |MockERC20=MockERC20 (0x2712)                      |
 |                                        |             |          |- certora/specs/SharePrice.spec line 78                     |MockMErc20DelegateFixer=MockMErc20DelegateFixer   |
-|                                        |             |          |                                                            |(0x2713)                                          |
+|                                        |             |          |                                                            |(0x2714)                                          |
 |                                        |             |          |                                                            |e.block.basefee=0                                 |
 |                                        |             |          |                                                            |e.block.coinbase=0                                |
 |                                        |             |          |                                                            |e.block.difficulty=0                              |
 |                                        |             |          |                                                            |e.block.gaslimit=0                                |
 |                                        |             |          |                                                            |e.block.number=0                                  |
 |                                        |             |          |                                                            |e.block.timestamp=0                               |
-|                                        |             |          |                                                            |e.msg.sender=0x2712                               |
+|                                        |             |          |                                                            |e.msg.sender=MockERC20 (0x2712)                   |
 |                                        |             |          |                                                            |e.msg.value=0                                     |
 |                                        |             |          |                                                            |e.tx.origin=0                                     |
-|                                        |             |          |                                                            |liquidator=0x2712                                 |
+|                                        |             |          |                                                            |liquidator=0x2b65                                 |
 |                                        |             |          |                                                            |startingSharePrice=0xde0b6b3a7640000              |
-|                                        |             |          |                                                            |user=MockERC20 (0x2711)                           |
+|                                        |             |          |                                                            |user=0x2b66                                       |
 |fixingUserZeroUserBalance               |Not violated |3         |                                                            |no local variables                                |
 |fixUserIncreasesBadDebt                 |Not violated |3         |                                                            |no local variables                                |
-|repayBadDebtDecreasesBadDebt            |Not violated |2         |                                                            |no local variables                                |
-|badDebtSymmetry                         |Violated     |3         |Assert message: borrows bad debt incorrect -                |no local variables                                |
-|                                        |             |          |certora/specs/SharePrice.spec line 225                      |                                                  |
-|badDebtRulesCash                        |Not violated |2         |                                                            |no local variables                                |
-|allBadDebtRulesCash                     |Not violated |3         |                                                            |no local variables                                |
-|repayBadDebtWithReservesDoesNotChangeSha|Not violated |3         |                                                            |no local variables                                |
+|repayBadDebtWithReservesDoesNotChangeSha|Not violated |2         |                                                            |no local variables                                |
 |rePrice                                 |             |          |                                                            |                                                  |
+|badDebtRulesCash                        |Not violated |2         |                                                            |no local variables                                |
+|repayBadDebtDecreasesBadDebt            |Not violated |2         |                                                            |no local variables                                |
+|allBadDebtRulesCash                     |Not violated |2         |                                                            |no local variables                                |
+|badDebtSymmetry                         |Violated     |4         |Assert message: borrows bad debt incorrect -                |no local variables                                |
+|                                        |             |          |certora/specs/SharePrice.spec line 225                      |                                                  |
 |badDebtRules                            |Violated     |4         |Assert message: share price should not change repaying b... |no local variables                                |
 |                                        |             |          |- certora/specs/SharePrice.spec line 115                    |                                                  |
 *---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*
@@ -4463,7 +4404,7 @@ Event reporter: all events were sent without errors
 [INFO]: Process returned with 100
 [INFO]: updated '41948e68b910f69c3218ad74de39b67e9de06ffa0d3fbf733cc48950b19227c8-optimisticTrue-iterNone-None--certora-cli-6.3.1' cache
 
-Job is completed! View the results at https://prover.certora.com/output/925723/c834f61a6dc54cd199cbfe8bb48abe43?anonymousKey=9d13bb2666a1b327ed8cb397607fd83b99332176
+Job is completed! View the results at https://prover.certora.com/output/925723/ad468bda57064108b30e13bb26ef74cc?anonymousKey=70194e156807bcf432d1e88847bf75967995d0d8
 Finished verification request
 ERROR: Prover found violations:
 [rule] badDebtRules: 
@@ -4522,52 +4463,39 @@ Results for all:
 |Rule name                               |Verified     |Time (sec)|Description                                                 |Local vars                                        |
 |----------------------------------------|-------------|----------|------------------------------------------------------------|--------------------------------------------------|
 |envfreeFuncsStaticCheck                 |Not violated |0         |                                                            |no local variables                                |
-|badDebtRulesCash                        |Violated     |3         |Assert message: bad debt should not increase when repayi... |MockERC20=MockERC20                               |
-|                                        |             |          |- certora/specs/SharePrice.spec line 147                    |(0xbfffffffffffffffffffffffffffffffffffffff)      |
-|                                        |             |          |                                                            |MockMErc20DelegateFixer=MockMErc20DelegateFixer   |
-|                                        |             |          |                                                            |(0x7fffffffffffffffffffffffffffffffffffffff)      |
-|                                        |             |          |                                                            |amount=0x80000000000000000000000000000000000000000|
-|                                        |             |          |                                                            |00000000000000000000000                           |
-|                                        |             |          |                                                            |e.block.basefee=0x7fffffffffffffffffffffffffffffff|
-|                                        |             |          |                                                            |ffffffffffffffffffffffffffffffff                  |
-|                                        |             |          |                                                            |e.block.coinbase=MockMErc20DelegateFixer          |
-|                                        |             |          |                                                            |(0x7fffffffffffffffffffffffffffffffffffffff)      |
-|                                        |             |          |                                                            |e.block.difficulty=0x7ffffffffffffffffffffffffffff|
-|                                        |             |          |                                                            |fffffffffffffffffffffffffffffffffff               |
-|                                        |             |          |                                                            |e.block.gaslimit=0x7ffffffffffffffffffffffffffffff|
-|                                        |             |          |                                                            |fffffffffffffffffffffffffffffffff                 |
-|                                        |             |          |                                                            |e.block.number=0x7ffffffffffffffffffffffffffffffff|
-|                                        |             |          |                                                            |fffffffffffffffffffffffffffffff                   |
-|                                        |             |          |                                                            |e.block.timestamp=0x7fffffffffffffffffffffffffffff|
-|                                        |             |          |                                                            |ffffffffffffffffffffffffffffffffff                |
-|                                        |             |          |                                                            |e.msg.sender=MockERC20                            |
-|                                        |             |          |                                                            |(0xbfffffffffffffffffffffffffffffffffffffff)      |
-|                                        |             |          |                                                            |e.msg.value=0                                     |
-|                                        |             |          |                                                            |e.tx.origin=MockMErc20DelegateFixer               |
-|                                        |             |          |                                                            |(0x7fffffffffffffffffffffffffffffffffffffff)      |
-|                                        |             |          |                                                            |endingBadDebt=0x4000000000000000000000000000000000|
-|                                        |             |          |                                                            |000000000000000000000000000000                    |
-|                                        |             |          |                                                            |startingBadDebt=0xc0000000000000000000000000000000|
-|                                        |             |          |                                                            |00000000000000000000000000000000                  |
-|                                        |             |          |                                                            |startingCash=0x3ffffffffffffffffffffffffffffffffff|
-|                                        |             |          |                                                            |ffffffffffffffffffffffffffffe                     |
-|repayBadDebtWithReservesDoesNotChangeSha|Violated     |3         |Assert message: share price should remain unchanged -       |MockERC20=MockERC20 (2)                           |
-|rePrice                                 |             |          |certora/specs/SharePrice.spec line 202                      |MockMErc20DelegateFixer=MockMErc20DelegateFixer   |
-|                                        |             |          |                                                            |(1)                                               |
+|badDebtRulesCash                        |Violated     |4         |Assert message: bad debt should not increase when repayi... |MockERC20=MockERC20 (1)                           |
+|                                        |             |          |- certora/specs/SharePrice.spec line 147                    |MockMErc20DelegateFixer=MockMErc20DelegateFixer   |
+|                                        |             |          |                                                            |(2)                                               |
+|                                        |             |          |                                                            |amount=0                                          |
 |                                        |             |          |                                                            |e.block.basefee=0                                 |
 |                                        |             |          |                                                            |e.block.coinbase=0                                |
 |                                        |             |          |                                                            |e.block.difficulty=0                              |
 |                                        |             |          |                                                            |e.block.gaslimit=0                                |
 |                                        |             |          |                                                            |e.block.number=0                                  |
 |                                        |             |          |                                                            |e.block.timestamp=0                               |
-|                                        |             |          |                                                            |e.msg.sender=0                                    |
+|                                        |             |          |                                                            |e.msg.sender=0x2711                               |
+|                                        |             |          |                                                            |e.msg.value=0                                     |
+|                                        |             |          |                                                            |e.tx.origin=0                                     |
+|                                        |             |          |                                                            |endingBadDebt=1                                   |
+|                                        |             |          |                                                            |startingBadDebt=1                                 |
+|                                        |             |          |                                                            |startingCash=0                                    |
+|allBadDebtRulesCash                     |Violated     |4         |Assert message: cash not correct -                          |no local variables                                |
+|                                        |             |          |certora/specs/SharePrice.spec line 171                      |                                                  |
+|repayBadDebtWithReservesDoesNotChangeSha|Violated     |4         |Assert message: share price should remain unchanged -       |MockERC20=MockERC20 (0x2711)                      |
+|rePrice                                 |             |          |certora/specs/SharePrice.spec line 202                      |MockMErc20DelegateFixer=MockMErc20DelegateFixer   |
+|                                        |             |          |                                                            |(0x2712)                                          |
+|                                        |             |          |                                                            |e.block.basefee=0                                 |
+|                                        |             |          |                                                            |e.block.coinbase=0                                |
+|                                        |             |          |                                                            |e.block.difficulty=0                              |
+|                                        |             |          |                                                            |e.block.gaslimit=0                                |
+|                                        |             |          |                                                            |e.block.number=0                                  |
+|                                        |             |          |                                                            |e.block.timestamp=0                               |
+|                                        |             |          |                                                            |e.msg.sender=MockERC20 (0x2711)                   |
 |                                        |             |          |                                                            |e.msg.value=0                                     |
 |                                        |             |          |                                                            |e.tx.origin=0                                     |
 |                                        |             |          |                                                            |endingSharePrice=0x1bc16d674ec80000               |
-|                                        |             |          |                                                            |startingSharePrice=0                              |
-|allBadDebtRulesCash                     |Violated     |5         |Assert message: cash not correct -                          |no local variables                                |
-|                                        |             |          |certora/specs/SharePrice.spec line 171                      |                                                  |
-|fixingUserDoesNotChangeSharePrice       |Violated     |5         |Assert message: share price should not change fixing use... |MockERC20=MockERC20 (0x2714)                      |
+|                                        |             |          |                                                            |startingSharePrice=0xde0b6b3a7640000              |
+|fixingUserDoesNotChangeSharePrice       |Violated     |4         |Assert message: share price should not change fixing use... |MockERC20=MockERC20 (0x2711)                      |
 |                                        |             |          |- certora/specs/SharePrice.spec line 78                     |MockMErc20DelegateFixer=MockMErc20DelegateFixer   |
 |                                        |             |          |                                                            |(0x2715)                                          |
 |                                        |             |          |                                                            |e.block.basefee=0                                 |
@@ -4576,45 +4504,45 @@ Results for all:
 |                                        |             |          |                                                            |e.block.gaslimit=0                                |
 |                                        |             |          |                                                            |e.block.number=0                                  |
 |                                        |             |          |                                                            |e.block.timestamp=0                               |
-|                                        |             |          |                                                            |e.msg.sender=MockERC20 (0x2714)                   |
+|                                        |             |          |                                                            |e.msg.sender=0x2714                               |
 |                                        |             |          |                                                            |e.msg.value=0                                     |
 |                                        |             |          |                                                            |e.tx.origin=0                                     |
-|                                        |             |          |                                                            |liquidator=0x2fb4                                 |
+|                                        |             |          |                                                            |liquidator=0x2712                                 |
 |                                        |             |          |                                                            |startingSharePrice=0x1bc16d674ec80000             |
-|                                        |             |          |                                                            |user=0x2fb5                                       |
-|repayBadDebtWithReservesSuccess         |Not violated |4         |                                                            |no local variables                                |
-|fixUserIncreasesBadDebt                 |Not violated |4         |                                                            |no local variables                                |
-|fixingUserZeroUserBalance               |Not violated |4         |                                                            |no local variables                                |
-|badDebtSymmetry                         |Not violated |3         |                                                            |no local variables                                |
+|                                        |             |          |                                                            |user=MockERC20 (0x2711)                           |
+|repayBadDebtWithReservesSuccess         |Not violated |3         |                                                            |no local variables                                |
+|fixUserIncreasesBadDebt                 |Not violated |3         |                                                            |no local variables                                |
+|fixingUserZeroUserBalance               |Not violated |3         |                                                            |no local variables                                |
 |repayBadDebtDecreasesBadDebt            |Not violated |2         |                                                            |no local variables                                |
+|badDebtSymmetry                         |Not violated |3         |                                                            |no local variables                                |
 |badDebtRules                            |Violated     |4         |Assert message: share price should not change repaying b... |no local variables                                |
 |                                        |             |          |- certora/specs/SharePrice.spec line 115                    |                                                  |
 *---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*
 Failures summary:
 Failed on badDebtRulesCash:
 Assert message: bad debt should not increase when repayi... - certora/specs/SharePrice.spec line 147
-Failed on repayBadDebtWithReservesDoesNotChangeSharePrice:
-Assert message: share price should remain unchanged - certora/specs/SharePrice.spec line 202
 Failed on allBadDebtRulesCash:
 Assert message: cash not correct - certora/specs/SharePrice.spec line 171
 Violated for: 
-repayBadDebtWithReserves(),
-repayBadDebtWithCash(uint256)
+repayBadDebtWithCash(uint256),
+repayBadDebtWithReserves()
+Failed on repayBadDebtWithReservesDoesNotChangeSharePrice:
+Assert message: share price should remain unchanged - certora/specs/SharePrice.spec line 202
 Failed on fixingUserDoesNotChangeSharePrice:
 Assert message: share price should not change fixing use... - certora/specs/SharePrice.spec line 78
 Failed on badDebtRules:
 Assert message: share price should not change repaying b... - certora/specs/SharePrice.spec line 115
 Violated for: 
 repayBadDebtWithCash(uint256),
-repayBadDebtWithReserves(),
-fixUser(address,address)
+fixUser(address,address),
+repayBadDebtWithReserves()
 Done 1m
 Done 1m
 Event reporter: all events were sent without errors
 [INFO]: Process returned with 100
 [INFO]: updated '41948e68b910f69c3218ad74de39b67e9de06ffa0d3fbf733cc48950b19227c8-optimisticTrue-iterNone-None--certora-cli-6.3.1' cache
 
-Job is completed! View the results at https://prover.certora.com/output/925723/f66ec66663814fa4bb575648c82ce529?anonymousKey=ebce97ba22f2cc74710ecdb26ecf2358051af50e
+Job is completed! View the results at https://prover.certora.com/output/925723/73311518a39f418ba51c34ce8fc913dd?anonymousKey=fd2665f180fd06e954a73ad376b688c1c795063f
 Finished verification request
 ERROR: Prover found violations:
 [rule] allBadDebtRulesCash: 
@@ -4692,38 +4620,26 @@ Results for all:
 |Rule name                               |Verified     |Time (sec)|Description                                                 |Local vars                                        |
 |----------------------------------------|-------------|----------|------------------------------------------------------------|--------------------------------------------------|
 |envfreeFuncsStaticCheck                 |Not violated |0         |                                                            |no local variables                                |
-|badDebtRulesCash                        |Violated     |3         |Assert message: bad debt should not increase when repayi... |MockERC20=MockERC20 (1)                           |
-|                                        |             |          |- certora/specs/SharePrice.spec line 147                    |MockMErc20DelegateFixer=MockMErc20DelegateFixer   |
-|                                        |             |          |                                                            |(2)                                               |
-|                                        |             |          |                                                            |amount=3                                          |
-|                                        |             |          |                                                            |e.block.basefee=0                                 |
-|                                        |             |          |                                                            |e.block.coinbase=0                                |
-|                                        |             |          |                                                            |e.block.difficulty=0                              |
-|                                        |             |          |                                                            |e.block.gaslimit=0                                |
-|                                        |             |          |                                                            |e.block.number=0                                  |
-|                                        |             |          |                                                            |e.block.timestamp=0                               |
-|                                        |             |          |                                                            |e.msg.sender=0x2711                               |
-|                                        |             |          |                                                            |e.msg.value=0                                     |
-|                                        |             |          |                                                            |e.tx.origin=0                                     |
-|                                        |             |          |                                                            |endingBadDebt=2                                   |
-|                                        |             |          |                                                            |startingBadDebt=5                                 |
-|                                        |             |          |                                                            |startingCash=0                                    |
-|allBadDebtRulesCash                     |Violated     |4         |Assert message: cash not correct -                          |no local variables                                |
+|allBadDebtRulesCash                     |Violated     |3         |Assert message: cash not correct -                          |no local variables                                |
 |                                        |             |          |certora/specs/SharePrice.spec line 171                      |                                                  |
-|repayBadDebtWithReservesDoesNotChangeSha|Violated     |5         |Assert message: share price should remain unchanged -       |MockERC20=MockERC20 (0x2711)                      |
-|rePrice                                 |             |          |certora/specs/SharePrice.spec line 202                      |MockMErc20DelegateFixer=MockMErc20DelegateFixer   |
-|                                        |             |          |                                                            |(1)                                               |
+|badDebtRulesCash                        |Violated     |4         |Assert message: bad debt should not increase when repayi... |MockERC20=MockERC20 (0x2712)                      |
+|                                        |             |          |- certora/specs/SharePrice.spec line 147                    |MockMErc20DelegateFixer=MockMErc20DelegateFixer   |
+|                                        |             |          |                                                            |(0x2713)                                          |
+|                                        |             |          |                                                            |amount=0                                          |
 |                                        |             |          |                                                            |e.block.basefee=0                                 |
 |                                        |             |          |                                                            |e.block.coinbase=0                                |
 |                                        |             |          |                                                            |e.block.difficulty=0                              |
 |                                        |             |          |                                                            |e.block.gaslimit=0                                |
 |                                        |             |          |                                                            |e.block.number=0                                  |
 |                                        |             |          |                                                            |e.block.timestamp=0                               |
-|                                        |             |          |                                                            |e.msg.sender=0                                    |
+|                                        |             |          |                                                            |e.msg.sender=MockERC20 (0x2712)                   |
 |                                        |             |          |                                                            |e.msg.value=0                                     |
 |                                        |             |          |                                                            |e.tx.origin=0                                     |
-|                                        |             |          |                                                            |endingSharePrice=0                                |
-|                                        |             |          |                                                            |startingSharePrice=1                              |
+|                                        |             |          |                                                            |endingBadDebt=0x8000000000000000000000000000000000|
+|                                        |             |          |                                                            |000000000000000000000000000c2a                    |
+|                                        |             |          |                                                            |startingBadDebt=0x80000000000000000000000000000000|
+|                                        |             |          |                                                            |00000000000000000000000000000c2a                  |
+|                                        |             |          |                                                            |startingCash=1                                    |
 |fixingUserDoesNotChangeSharePrice       |Violated     |4         |Assert message: share price should not change fixing use... |MockERC20=MockERC20 (2)                           |
 |                                        |             |          |- certora/specs/SharePrice.spec line 78                     |MockMErc20DelegateFixer=MockMErc20DelegateFixer   |
 |                                        |             |          |                                                            |(1)                                               |
@@ -4739,39 +4655,53 @@ Results for all:
 |                                        |             |          |                                                            |liquidator=0x4956                                 |
 |                                        |             |          |                                                            |startingSharePrice=1                              |
 |                                        |             |          |                                                            |user=0x4957                                       |
+|repayBadDebtWithReservesDoesNotChangeSha|Violated     |5         |Assert message: share price should remain unchanged -       |MockERC20=MockERC20 (0x2711)                      |
+|rePrice                                 |             |          |certora/specs/SharePrice.spec line 202                      |MockMErc20DelegateFixer=MockMErc20DelegateFixer   |
+|                                        |             |          |                                                            |(1)                                               |
+|                                        |             |          |                                                            |e.block.basefee=0                                 |
+|                                        |             |          |                                                            |e.block.coinbase=0                                |
+|                                        |             |          |                                                            |e.block.difficulty=0                              |
+|                                        |             |          |                                                            |e.block.gaslimit=0                                |
+|                                        |             |          |                                                            |e.block.number=0                                  |
+|                                        |             |          |                                                            |e.block.timestamp=0                               |
+|                                        |             |          |                                                            |e.msg.sender=0                                    |
+|                                        |             |          |                                                            |e.msg.value=0                                     |
+|                                        |             |          |                                                            |e.tx.origin=0                                     |
+|                                        |             |          |                                                            |endingSharePrice=0                                |
+|                                        |             |          |                                                            |startingSharePrice=1                              |
 |repayBadDebtWithReservesSuccess         |Not violated |3         |                                                            |no local variables                                |
 |fixUserIncreasesBadDebt                 |Not violated |3         |                                                            |no local variables                                |
 |fixingUserZeroUserBalance               |Not violated |3         |                                                            |no local variables                                |
 |repayBadDebtDecreasesBadDebt            |Not violated |2         |                                                            |no local variables                                |
-|badDebtSymmetry                         |Not violated |3         |                                                            |no local variables                                |
+|badDebtSymmetry                         |Not violated |2         |                                                            |no local variables                                |
 |badDebtRules                            |Violated     |4         |Assert message: share price should not change repaying b... |no local variables                                |
 |                                        |             |          |- certora/specs/SharePrice.spec line 115                    |                                                  |
 *---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*
 Failures summary:
-Failed on badDebtRulesCash:
-Assert message: bad debt should not increase when repayi... - certora/specs/SharePrice.spec line 147
 Failed on allBadDebtRulesCash:
 Assert message: cash not correct - certora/specs/SharePrice.spec line 171
 Violated for: 
-repayBadDebtWithCash(uint256),
-repayBadDebtWithReserves()
-Failed on repayBadDebtWithReservesDoesNotChangeSharePrice:
-Assert message: share price should remain unchanged - certora/specs/SharePrice.spec line 202
+repayBadDebtWithReserves(),
+repayBadDebtWithCash(uint256)
+Failed on badDebtRulesCash:
+Assert message: bad debt should not increase when repayi... - certora/specs/SharePrice.spec line 147
 Failed on fixingUserDoesNotChangeSharePrice:
 Assert message: share price should not change fixing use... - certora/specs/SharePrice.spec line 78
+Failed on repayBadDebtWithReservesDoesNotChangeSharePrice:
+Assert message: share price should remain unchanged - certora/specs/SharePrice.spec line 202
 Failed on badDebtRules:
 Assert message: share price should not change repaying b... - certora/specs/SharePrice.spec line 115
 Violated for: 
-repayBadDebtWithReserves(),
 fixUser(address,address),
-repayBadDebtWithCash(uint256)
+repayBadDebtWithCash(uint256),
+repayBadDebtWithReserves()
 Done 1m
 Done 1m
 Event reporter: all events were sent without errors
 [INFO]: Process returned with 100
 [INFO]: updated '41948e68b910f69c3218ad74de39b67e9de06ffa0d3fbf733cc48950b19227c8-optimisticTrue-iterNone-None--certora-cli-6.3.1' cache
 
-Job is completed! View the results at https://prover.certora.com/output/925723/f948b418da544257906512dd99ea1f11?anonymousKey=6adc2b13effce461d4633b14928c94a981a64931
+Job is completed! View the results at https://prover.certora.com/output/925723/06191e56b40042178579776c6e09ddf9?anonymousKey=0478f844a31cba22489dd576e76ef5885356ba6d
 Finished verification request
 ERROR: Prover found violations:
 [rule] allBadDebtRulesCash: 
@@ -4833,100 +4763,86 @@ Results for all:
 |Rule name                               |Verified     |Time (sec)|Description                                                 |Local vars                                        |
 |----------------------------------------|-------------|----------|------------------------------------------------------------|--------------------------------------------------|
 |envfreeFuncsStaticCheck                 |Not violated |0         |                                                            |no local variables                                |
-|repayBadDebtWithReservesDoesNotChangeSha|Violated     |3         |Assert message: share price should remain unchanged -       |MockERC20=MockERC20 (2)                           |
-|rePrice                                 |             |          |certora/specs/SharePrice.spec line 202                      |MockMErc20DelegateFixer=MockMErc20DelegateFixer   |
-|                                        |             |          |                                                            |(1)                                               |
-|                                        |             |          |                                                            |e.block.basefee=0xffffffffffffffffffffffffffffffff|
-|                                        |             |          |                                                            |ffffffffffffffffffffffffffffffff (MAX_UINT256)    |
-|                                        |             |          |                                                            |e.block.coinbase=0xfffffffffffffffffffffffffffffff|
-|                                        |             |          |                                                            |fffffffff (MAX_EVM_ADDRESS)                       |
-|                                        |             |          |                                                            |e.block.difficulty=0xfffffffffffffffffffffffffffff|
-|                                        |             |          |                                                            |fffffffffffffffffffffffffffffffffff (MAX_UINT256) |
-|                                        |             |          |                                                            |e.block.gaslimit=0xfffffffffffffffffffffffffffffff|
-|                                        |             |          |                                                            |fffffffffffffffffffffffffffffffff (MAX_UINT256)   |
-|                                        |             |          |                                                            |e.block.number=0xfffffffffffffffffffffffffffffffff|
-|                                        |             |          |                                                            |fffffffffffffffffffffffffffffff (MAX_UINT256)     |
-|                                        |             |          |                                                            |e.block.timestamp=0xffffffffffffffffffffffffffffff|
-|                                        |             |          |                                                            |ffffffffffffffffffffffffffffffffff (MAX_UINT256)  |
-|                                        |             |          |                                                            |e.msg.sender=0x2710                               |
-|                                        |             |          |                                                            |e.msg.value=0                                     |
-|                                        |             |          |                                                            |e.tx.origin=0xffffffffffffffffffffffffffffffffffff|
-|                                        |             |          |                                                            |ffff (MAX_EVM_ADDRESS)                            |
-|                                        |             |          |                                                            |endingSharePrice=0xf5e5a53f3df3e00000             |
-|                                        |             |          |                                                            |startingSharePrice=0                              |
-|allBadDebtRulesCash                     |Violated     |3         |Assert message: cash not correct -                          |no local variables                                |
-|                                        |             |          |certora/specs/SharePrice.spec line 171                      |                                                  |
-|badDebtRulesCash                        |Violated     |2         |Assert message: bad debt should not increase when repayi... |MockERC20=MockERC20 (1)                           |
+|badDebtRulesCash                        |Violated     |3         |Assert message: bad debt should not increase when repayi... |MockERC20=MockERC20 (1)                           |
 |                                        |             |          |- certora/specs/SharePrice.spec line 147                    |MockMErc20DelegateFixer=MockMErc20DelegateFixer   |
 |                                        |             |          |                                                            |(2)                                               |
 |                                        |             |          |                                                            |amount=0                                          |
-|                                        |             |          |                                                            |e.block.basefee=0xffffffffffffffffffffffffffffffff|
-|                                        |             |          |                                                            |ffffffffffffffffffffffffffffffff (MAX_UINT256)    |
-|                                        |             |          |                                                            |e.block.coinbase=0xfffffffffffffffffffffffffffffff|
-|                                        |             |          |                                                            |fffffffff (MAX_EVM_ADDRESS)                       |
-|                                        |             |          |                                                            |e.block.difficulty=0xfffffffffffffffffffffffffffff|
-|                                        |             |          |                                                            |fffffffffffffffffffffffffffffffffff (MAX_UINT256) |
-|                                        |             |          |                                                            |e.block.gaslimit=0xfffffffffffffffffffffffffffffff|
-|                                        |             |          |                                                            |fffffffffffffffffffffffffffffffff (MAX_UINT256)   |
-|                                        |             |          |                                                            |e.block.number=0xfffffffffffffffffffffffffffffffff|
-|                                        |             |          |                                                            |fffffffffffffffffffffffffffffff (MAX_UINT256)     |
-|                                        |             |          |                                                            |e.block.timestamp=0xffffffffffffffffffffffffffffff|
-|                                        |             |          |                                                            |ffffffffffffffffffffffffffffffffff (MAX_UINT256)  |
-|                                        |             |          |                                                            |e.msg.sender=0x2710                               |
-|                                        |             |          |                                                            |e.msg.value=0                                     |
-|                                        |             |          |                                                            |e.tx.origin=0xffffffffffffffffffffffffffffffffffff|
-|                                        |             |          |                                                            |ffff (MAX_EVM_ADDRESS)                            |
-|                                        |             |          |                                                            |endingBadDebt=1                                   |
-|                                        |             |          |                                                            |startingBadDebt=1                                 |
-|                                        |             |          |                                                            |startingCash=0                                    |
-|fixingUserDoesNotChangeSharePrice       |Violated     |4         |Assert message: share price should not change fixing use... |MockERC20=MockERC20 (2)                           |
-|                                        |             |          |- certora/specs/SharePrice.spec line 78                     |MockMErc20DelegateFixer=MockMErc20DelegateFixer   |
-|                                        |             |          |                                                            |(1)                                               |
 |                                        |             |          |                                                            |e.block.basefee=0                                 |
 |                                        |             |          |                                                            |e.block.coinbase=0                                |
 |                                        |             |          |                                                            |e.block.difficulty=0                              |
 |                                        |             |          |                                                            |e.block.gaslimit=0                                |
 |                                        |             |          |                                                            |e.block.number=0                                  |
 |                                        |             |          |                                                            |e.block.timestamp=0                               |
-|                                        |             |          |                                                            |e.msg.sender=0x2715                               |
+|                                        |             |          |                                                            |e.msg.sender=0x2711                               |
 |                                        |             |          |                                                            |e.msg.value=0                                     |
 |                                        |             |          |                                                            |e.tx.origin=0                                     |
-|                                        |             |          |                                                            |liquidator=0                                      |
-|                                        |             |          |                                                            |startingSharePrice=1                              |
-|                                        |             |          |                                                            |user=0x2710                                       |
+|                                        |             |          |                                                            |endingBadDebt=1                                   |
+|                                        |             |          |                                                            |startingBadDebt=1                                 |
+|                                        |             |          |                                                            |startingCash=0                                    |
+|allBadDebtRulesCash                     |Violated     |3         |Assert message: cash not correct -                          |no local variables                                |
+|                                        |             |          |certora/specs/SharePrice.spec line 171                      |                                                  |
+|repayBadDebtWithReservesDoesNotChangeSha|Violated     |4         |Assert message: share price should remain unchanged -       |MockERC20=MockERC20 (0x2711)                      |
+|rePrice                                 |             |          |certora/specs/SharePrice.spec line 202                      |MockMErc20DelegateFixer=MockMErc20DelegateFixer   |
+|                                        |             |          |                                                            |(0x2712)                                          |
+|                                        |             |          |                                                            |e.block.basefee=0                                 |
+|                                        |             |          |                                                            |e.block.coinbase=0                                |
+|                                        |             |          |                                                            |e.block.difficulty=0                              |
+|                                        |             |          |                                                            |e.block.gaslimit=0                                |
+|                                        |             |          |                                                            |e.block.number=0                                  |
+|                                        |             |          |                                                            |e.block.timestamp=0                               |
+|                                        |             |          |                                                            |e.msg.sender=MockERC20 (0x2711)                   |
+|                                        |             |          |                                                            |e.msg.value=0                                     |
+|                                        |             |          |                                                            |e.tx.origin=0                                     |
+|                                        |             |          |                                                            |endingSharePrice=1                                |
+|                                        |             |          |                                                            |startingSharePrice=0                              |
+|fixingUserDoesNotChangeSharePrice       |Violated     |4         |Assert message: share price should not change fixing use... |MockERC20=MockERC20 (0x2712)                      |
+|                                        |             |          |- certora/specs/SharePrice.spec line 78                     |MockMErc20DelegateFixer=MockMErc20DelegateFixer   |
+|                                        |             |          |                                                            |(0x2713)                                          |
+|                                        |             |          |                                                            |e.block.basefee=0                                 |
+|                                        |             |          |                                                            |e.block.coinbase=0                                |
+|                                        |             |          |                                                            |e.block.difficulty=0                              |
+|                                        |             |          |                                                            |e.block.gaslimit=0                                |
+|                                        |             |          |                                                            |e.block.number=0                                  |
+|                                        |             |          |                                                            |e.block.timestamp=0                               |
+|                                        |             |          |                                                            |e.msg.sender=MockERC20 (0x2712)                   |
+|                                        |             |          |                                                            |e.msg.value=0                                     |
+|                                        |             |          |                                                            |e.tx.origin=0                                     |
+|                                        |             |          |                                                            |liquidator=0x2ff7                                 |
+|                                        |             |          |                                                            |startingSharePrice=0xde0b6b3a7640000              |
+|                                        |             |          |                                                            |user=0x2ff8                                       |
 |repayBadDebtWithReservesSuccess         |Not violated |3         |                                                            |no local variables                                |
-|fixingUserZeroUserBalance               |Not violated |3         |                                                            |no local variables                                |
 |fixUserIncreasesBadDebt                 |Not violated |3         |                                                            |no local variables                                |
 |repayBadDebtDecreasesBadDebt            |Not violated |2         |                                                            |no local variables                                |
-|badDebtSymmetry                         |Not violated |3         |                                                            |no local variables                                |
-|badDebtRules                            |Violated     |2         |Assert message: share price should not change repaying b... |no local variables                                |
+|fixingUserZeroUserBalance               |Not violated |3         |                                                            |no local variables                                |
+|badDebtSymmetry                         |Not violated |2         |                                                            |no local variables                                |
+|badDebtRules                            |Violated     |3         |Assert message: share price should not change repaying b... |no local variables                                |
 |                                        |             |          |- certora/specs/SharePrice.spec line 115                    |                                                  |
 *---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*
 Failures summary:
-Failed on repayBadDebtWithReservesDoesNotChangeSharePrice:
-Assert message: share price should remain unchanged - certora/specs/SharePrice.spec line 202
+Failed on badDebtRulesCash:
+Assert message: bad debt should not increase when repayi... - certora/specs/SharePrice.spec line 147
 Failed on allBadDebtRulesCash:
 Assert message: cash not correct - certora/specs/SharePrice.spec line 171
 Violated for: 
-repayBadDebtWithCash(uint256),
-repayBadDebtWithReserves()
-Failed on badDebtRulesCash:
-Assert message: bad debt should not increase when repayi... - certora/specs/SharePrice.spec line 147
+repayBadDebtWithReserves(),
+repayBadDebtWithCash(uint256)
+Failed on repayBadDebtWithReservesDoesNotChangeSharePrice:
+Assert message: share price should remain unchanged - certora/specs/SharePrice.spec line 202
 Failed on fixingUserDoesNotChangeSharePrice:
 Assert message: share price should not change fixing use... - certora/specs/SharePrice.spec line 78
 Failed on badDebtRules:
 Assert message: share price should not change repaying b... - certora/specs/SharePrice.spec line 115
 Violated for: 
+repayBadDebtWithCash(uint256),
 repayBadDebtWithReserves(),
-fixUser(address,address),
-repayBadDebtWithCash(uint256)
+fixUser(address,address)
 Done 1m
 Done 1m
 Event reporter: all events were sent without errors
 [INFO]: Process returned with 100
 [INFO]: updated '41948e68b910f69c3218ad74de39b67e9de06ffa0d3fbf733cc48950b19227c8-optimisticTrue-iterNone-None--certora-cli-6.3.1' cache
 
-Job is completed! View the results at https://prover.certora.com/output/925723/f9709ecc65ba4f05bf4a0e7ecbd897af?anonymousKey=5e975a102793f2ebffc4728855e93d9d7d01ce81
+Job is completed! View the results at https://prover.certora.com/output/925723/b5f03cab626147f0b46307a4cd7fd9c0?anonymousKey=ca08a05ecf9165f6cef9d4cbf84463efccbee21e
 Finished verification request
 ERROR: Prover found violations:
 [rule] allBadDebtRulesCash: 
@@ -4988,22 +4904,6 @@ Results for all:
 |Rule name                               |Verified     |Time (sec)|Description                                                 |Local vars                                        |
 |----------------------------------------|-------------|----------|------------------------------------------------------------|--------------------------------------------------|
 |envfreeFuncsStaticCheck                 |Not violated |0         |                                                            |no local variables                                |
-|badDebtRulesCash                        |Violated     |2         |Assert message: bad debt should not increase when repayi... |MockERC20=MockERC20 (1)                           |
-|                                        |             |          |- certora/specs/SharePrice.spec line 147                    |MockMErc20DelegateFixer=MockMErc20DelegateFixer   |
-|                                        |             |          |                                                            |(2)                                               |
-|                                        |             |          |                                                            |amount=0                                          |
-|                                        |             |          |                                                            |e.block.basefee=0                                 |
-|                                        |             |          |                                                            |e.block.coinbase=0                                |
-|                                        |             |          |                                                            |e.block.difficulty=0                              |
-|                                        |             |          |                                                            |e.block.gaslimit=0                                |
-|                                        |             |          |                                                            |e.block.number=0                                  |
-|                                        |             |          |                                                            |e.block.timestamp=0                               |
-|                                        |             |          |                                                            |e.msg.sender=0x2711                               |
-|                                        |             |          |                                                            |e.msg.value=0                                     |
-|                                        |             |          |                                                            |e.tx.origin=0                                     |
-|                                        |             |          |                                                            |endingBadDebt=1                                   |
-|                                        |             |          |                                                            |startingBadDebt=1                                 |
-|                                        |             |          |                                                            |startingCash=0                                    |
 |repayBadDebtWithReservesDoesNotChangeSha|Violated     |3         |Assert message: share price should remain unchanged -       |MockERC20=MockERC20 (0x2711)                      |
 |rePrice                                 |             |          |certora/specs/SharePrice.spec line 202                      |MockMErc20DelegateFixer=MockMErc20DelegateFixer   |
 |                                        |             |          |                                                            |(0x2712)                                          |
@@ -5016,59 +4916,76 @@ Results for all:
 |                                        |             |          |                                                            |e.msg.sender=MockERC20 (0x2711)                   |
 |                                        |             |          |                                                            |e.msg.value=0                                     |
 |                                        |             |          |                                                            |e.tx.origin=0                                     |
-|                                        |             |          |                                                            |endingSharePrice=0xfffffffffffffffffffffffffffffff|
-|                                        |             |          |                                                            |ffffffffffffffffff7e52fe5afe40000                 |
+|                                        |             |          |                                                            |endingSharePrice=1                                |
 |                                        |             |          |                                                            |startingSharePrice=0                              |
-|allBadDebtRulesCash                     |Violated     |4         |Assert message: cash not correct -                          |no local variables                                |
+|repayBadDebtWithReservesSuccess         |Not violated |3         |                                                            |no local variables                                |
+|allBadDebtRulesCash                     |Violated     |3         |Assert message: cash not correct -                          |no local variables                                |
 |                                        |             |          |certora/specs/SharePrice.spec line 171                      |                                                  |
-|fixingUserDoesNotChangeSharePrice       |Violated     |4         |Assert message: share price should not change fixing use... |MockERC20=MockERC20 (0x2711)                      |
-|                                        |             |          |- certora/specs/SharePrice.spec line 78                     |MockMErc20DelegateFixer=MockMErc20DelegateFixer   |
-|                                        |             |          |                                                            |(0x2713)                                          |
+|badDebtRulesCash                        |Violated     |4         |Assert message: bad debt should not increase when repayi... |MockERC20=MockERC20 (0x2711)                      |
+|                                        |             |          |- certora/specs/SharePrice.spec line 147                    |MockMErc20DelegateFixer=MockMErc20DelegateFixer   |
+|                                        |             |          |                                                            |(0x282b)                                          |
+|                                        |             |          |                                                            |amount=0                                          |
 |                                        |             |          |                                                            |e.block.basefee=0                                 |
 |                                        |             |          |                                                            |e.block.coinbase=0                                |
 |                                        |             |          |                                                            |e.block.difficulty=0                              |
 |                                        |             |          |                                                            |e.block.gaslimit=0                                |
 |                                        |             |          |                                                            |e.block.number=0                                  |
 |                                        |             |          |                                                            |e.block.timestamp=0                               |
-|                                        |             |          |                                                            |e.msg.sender=0x2712                               |
+|                                        |             |          |                                                            |e.msg.sender=0x282a                               |
+|                                        |             |          |                                                            |e.msg.value=0                                     |
+|                                        |             |          |                                                            |e.tx.origin=0                                     |
+|                                        |             |          |                                                            |endingBadDebt=0xffffffffffffffffffffffffffffffffff|
+|                                        |             |          |                                                            |ffffffffffffffffffffffffffd222                    |
+|                                        |             |          |                                                            |startingBadDebt=0xffffffffffffffffffffffffffffffff|
+|                                        |             |          |                                                            |ffffffffffffffffffffffffffffd222                  |
+|                                        |             |          |                                                            |startingCash=0x1c67                               |
+|fixingUserDoesNotChangeSharePrice       |Violated     |4         |Assert message: share price should not change fixing use... |MockERC20=MockERC20 (0x2712)                      |
+|                                        |             |          |- certora/specs/SharePrice.spec line 78                     |MockMErc20DelegateFixer=MockMErc20DelegateFixer   |
+|                                        |             |          |                                                            |(0x2711)                                          |
+|                                        |             |          |                                                            |e.block.basefee=0                                 |
+|                                        |             |          |                                                            |e.block.coinbase=0                                |
+|                                        |             |          |                                                            |e.block.difficulty=0                              |
+|                                        |             |          |                                                            |e.block.gaslimit=0                                |
+|                                        |             |          |                                                            |e.block.number=0                                  |
+|                                        |             |          |                                                            |e.block.timestamp=0                               |
+|                                        |             |          |                                                            |e.msg.sender=MockERC20 (0x2712)                   |
 |                                        |             |          |                                                            |e.msg.value=0                                     |
 |                                        |             |          |                                                            |e.tx.origin=0                                     |
 |                                        |             |          |                                                            |liquidator=0x352a                                 |
 |                                        |             |          |                                                            |startingSharePrice=0                              |
 |                                        |             |          |                                                            |user=0x352b                                       |
-|repayBadDebtWithReservesSuccess         |Not violated |3         |                                                            |no local variables                                |
-|fixUserIncreasesBadDebt                 |Not violated |3         |                                                            |no local variables                                |
-|fixingUserZeroUserBalance               |Not violated |3         |                                                            |no local variables                                |
+|fixUserIncreasesBadDebt                 |Not violated |2         |                                                            |no local variables                                |
+|fixingUserZeroUserBalance               |Not violated |2         |                                                            |no local variables                                |
 |repayBadDebtDecreasesBadDebt            |Not violated |2         |                                                            |no local variables                                |
 |badDebtSymmetry                         |Not violated |3         |                                                            |no local variables                                |
 |badDebtRules                            |Violated     |2         |Assert message: share price should not change repaying b... |no local variables                                |
 |                                        |             |          |- certora/specs/SharePrice.spec line 115                    |                                                  |
 *---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*
 Failures summary:
-Failed on badDebtRulesCash:
-Assert message: bad debt should not increase when repayi... - certora/specs/SharePrice.spec line 147
 Failed on repayBadDebtWithReservesDoesNotChangeSharePrice:
 Assert message: share price should remain unchanged - certora/specs/SharePrice.spec line 202
 Failed on allBadDebtRulesCash:
 Assert message: cash not correct - certora/specs/SharePrice.spec line 171
 Violated for: 
-repayBadDebtWithReserves(),
-repayBadDebtWithCash(uint256)
+repayBadDebtWithCash(uint256),
+repayBadDebtWithReserves()
+Failed on badDebtRulesCash:
+Assert message: bad debt should not increase when repayi... - certora/specs/SharePrice.spec line 147
 Failed on fixingUserDoesNotChangeSharePrice:
 Assert message: share price should not change fixing use... - certora/specs/SharePrice.spec line 78
 Failed on badDebtRules:
 Assert message: share price should not change repaying b... - certora/specs/SharePrice.spec line 115
 Violated for: 
+repayBadDebtWithCash(uint256),
 repayBadDebtWithReserves(),
-fixUser(address,address),
-repayBadDebtWithCash(uint256)
+fixUser(address,address)
 Done 1m
 Done 1m
 Event reporter: all events were sent without errors
 [INFO]: Process returned with 100
 [INFO]: updated '41948e68b910f69c3218ad74de39b67e9de06ffa0d3fbf733cc48950b19227c8-optimisticTrue-iterNone-None--certora-cli-6.3.1' cache
 
-Job is completed! View the results at https://prover.certora.com/output/925723/dd6a1efc46dc4aba951d72ed939fcdbd?anonymousKey=645e7a42423b3a9150a16725000ce9f130abe448
+Job is completed! View the results at https://prover.certora.com/output/925723/85c9e2497cd94a618c067df4a801d46f?anonymousKey=9347bf56c40fa0a5b95f8de7cf96ddf4df5698c7
 Finished verification request
 ERROR: Prover found violations:
 [rule] allBadDebtRulesCash: 
@@ -5130,7 +5047,7 @@ Results for all:
 |Rule name                               |Verified     |Time (sec)|Description                                                 |Local vars                                        |
 |----------------------------------------|-------------|----------|------------------------------------------------------------|--------------------------------------------------|
 |envfreeFuncsStaticCheck                 |Not violated |0         |                                                            |no local variables                                |
-|badDebtRulesCash                        |Violated     |3         |Assert message: bad debt should not increase when repayi... |MockERC20=MockERC20 (0x2711)                      |
+|badDebtRulesCash                        |Violated     |2         |Assert message: bad debt should not increase when repayi... |MockERC20=MockERC20 (0x2711)                      |
 |                                        |             |          |- certora/specs/SharePrice.spec line 147                    |MockMErc20DelegateFixer=MockMErc20DelegateFixer   |
 |                                        |             |          |                                                            |(0x28d3)                                          |
 |                                        |             |          |                                                            |amount=0                                          |
@@ -5160,9 +5077,9 @@ Results for all:
 |                                        |             |          |                                                            |e.msg.sender=MockERC20 (0x2711)                   |
 |                                        |             |          |                                                            |e.msg.value=0                                     |
 |                                        |             |          |                                                            |e.tx.origin=0                                     |
-|                                        |             |          |                                                            |endingSharePrice=1                                |
-|                                        |             |          |                                                            |startingSharePrice=3                              |
-|fixingUserDoesNotChangeSharePrice       |Violated     |3         |Assert message: share price should not change fixing use... |MockERC20=MockERC20 (0x2711)                      |
+|                                        |             |          |                                                            |endingSharePrice=3                                |
+|                                        |             |          |                                                            |startingSharePrice=2                              |
+|fixingUserDoesNotChangeSharePrice       |Violated     |4         |Assert message: share price should not change fixing use... |MockERC20=MockERC20 (0x2711)                      |
 |                                        |             |          |- certora/specs/SharePrice.spec line 78                     |MockMErc20DelegateFixer=MockMErc20DelegateFixer   |
 |                                        |             |          |                                                            |(0x2713)                                          |
 |                                        |             |          |                                                            |e.block.basefee=0                                 |
@@ -5177,12 +5094,12 @@ Results for all:
 |                                        |             |          |                                                            |liquidator=0x45df                                 |
 |                                        |             |          |                                                            |startingSharePrice=0x6f05b59d3b20000              |
 |                                        |             |          |                                                            |user=0x45e0                                       |
-|repayBadDebtWithReservesSuccess         |Not violated |4         |                                                            |no local variables                                |
-|fixingUserZeroUserBalance               |Not violated |3         |                                                            |no local variables                                |
+|repayBadDebtWithReservesSuccess         |Not violated |3         |                                                            |no local variables                                |
 |fixUserIncreasesBadDebt                 |Not violated |3         |                                                            |no local variables                                |
+|fixingUserZeroUserBalance               |Not violated |3         |                                                            |no local variables                                |
 |repayBadDebtDecreasesBadDebt            |Not violated |2         |                                                            |no local variables                                |
-|badDebtSymmetry                         |Not violated |3         |                                                            |no local variables                                |
-|badDebtRules                            |Violated     |2         |Assert message: share price should not change repaying b... |no local variables                                |
+|badDebtSymmetry                         |Not violated |2         |                                                            |no local variables                                |
+|badDebtRules                            |Violated     |3         |Assert message: share price should not change repaying b... |no local variables                                |
 |                                        |             |          |- certora/specs/SharePrice.spec line 115                    |                                                  |
 *---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*
 Failures summary:
@@ -5200,8 +5117,8 @@ Assert message: share price should not change fixing use... - certora/specs/Shar
 Failed on badDebtRules:
 Assert message: share price should not change repaying b... - certora/specs/SharePrice.spec line 115
 Violated for: 
-repayBadDebtWithCash(uint256),
 fixUser(address,address),
+repayBadDebtWithCash(uint256),
 repayBadDebtWithReserves()
 Done 1m
 Done 1m
@@ -5209,7 +5126,7 @@ Event reporter: all events were sent without errors
 [INFO]: Process returned with 100
 [INFO]: updated '41948e68b910f69c3218ad74de39b67e9de06ffa0d3fbf733cc48950b19227c8-optimisticTrue-iterNone-None--certora-cli-6.3.1' cache
 
-Job is completed! View the results at https://prover.certora.com/output/925723/3c4cdb77986344a885c131de965acca7?anonymousKey=dcce29cd8cb587a3303e79ac3e39f64f15d95fac
+Job is completed! View the results at https://prover.certora.com/output/925723/f31d745639154130bd202fbd170cb101?anonymousKey=58e367d35a37143f544c3a53475b4788a4abcc49
 Finished verification request
 ERROR: Prover found violations:
 [rule] allBadDebtRulesCash: 
