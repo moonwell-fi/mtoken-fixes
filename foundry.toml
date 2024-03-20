@@ -4,8 +4,8 @@ out = "out"
 libs = ["lib"]
 auto_detect_solc = true
 block_timestamp     = 1709712000
-block_number        = 5664395
-fork_block_number   = 5664395
+block_number        = 5763196
+fork_block_number   = 5763196
 rpc_storage_caching = { chains = "all", endpoints = "all" }
 chain_id = 1284
 fs_permissions = [{ access = "read", path = "./"}]
