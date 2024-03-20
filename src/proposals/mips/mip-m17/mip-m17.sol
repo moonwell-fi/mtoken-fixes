@@ -262,8 +262,6 @@ contract mipm17 is Governor {
                 addresses.getAddress("MOONWELL_mFRAX")
             );
 
-            console.log("inside validate function");
-
             assertTrue(
                 mErc20Delegator.badDebt() != 0,
                 "mFRAX bad debt should not start at 0"
