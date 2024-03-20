@@ -60,3 +60,5 @@ Note that Elliot is a fully doxxed US person and will be using a hardware wallet
 By approving this proposal, the Moonwell community will take a significant step towards resolving the issues caused by the Nomad bridge exploit, restoring stability and liquidity to the FRAX market, and strengthening the protocol's resilience. The combination of mToken upgrades, .mad collateral reallocation, and bad debt write-offs will help ensure the long term health and sustainability of Moonwell’s deployment on Moonbeam network.
 
 I encourage all WELL tokenholders to thoroughly review this proposal and participate in the onchain vote. Together, we can overcome this challenge and emerge stronger as a community and protocol.
+
+*Please note: Due to the current limitations of the Moonwell Governor contract, which allows a proposal author to have only one Moonwell Improvement Proposal in flight at a time, I have requested that Moonwell delegate Coolhorsegirl submit MIP-M22 on my behalf.*
