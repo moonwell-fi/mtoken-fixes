@@ -61,4 +61,4 @@ By approving this proposal, the Moonwell community will take a significant step 
 
 I encourage all WELL tokenholders to thoroughly review this proposal and participate in the onchain vote. Together, we can overcome this challenge and emerge stronger as a community and protocol.
 
-*Please note: Due to the current limitations of the Moonwell Governor contract, which allows a proposal author to have only one Moonwell Improvement Proposal in flight at a time, I have requested that Moonwell delegate Coolhorsegirl submit MIP-M22 on my behalf.*
+*Please note: Due to the current limitations of the Moonwell Governor contract, which allows a proposal author to have only one Moonwell Improvement Proposal in flight at a time, I have requested that Moonwell delegate Curly submit MIP-M22 on my behalf.*
