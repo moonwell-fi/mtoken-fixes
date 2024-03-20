@@ -5,8 +5,7 @@ import {Script} from "@forge-std/Script.sol";
 import {mipm17} from "@protocol/proposals/mips/mip-m17/mip-m17.sol";
 import {Addresses} from "@addresses/Addresses.sol";
 
-// forge script script/DeployStkWellSolo.sol --rpc-url base -vvvv --broadcast -g 200 --slow
-contract DeployStkWell is Script, mipm17 {
+contract DeployModifiedMTokens is Script, mipm17 {
     /// @notice deployer private key
     uint256 private PRIVATE_KEY;
 
