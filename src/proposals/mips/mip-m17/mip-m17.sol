@@ -15,7 +15,7 @@ import {IComptroller as Comptroller} from "@protocol/Interfaces/IComptroller.sol
 contract mipm17 is Governor {
     /// @dev nomad balances
     uint256 public constant mwBTCCash = 4425696499;
-    uint256 public constant mUSDCCash = 10789300371738;
+    uint256 public constant mUSDCCash = 10789455560446;
     uint256 public constant mETHCash = 2269023504004122147416;
 
     /// @notice struct to read in JSON file
@@ -35,21 +35,37 @@ contract mipm17 is Governor {
     }
 
     function _deploy(Addresses addresses, address) internal override {
-        address mErc20DelegateFixerAddress = deployCode(
-            "MErc20DelegateFixer.sol:MErc20DelegateFixer"
-        );
-        addresses.addAddress(
-            "MERC20_BAD_DEBT_DELEGATE_FIXER_LOGIC",
-            mErc20DelegateFixerAddress
-        );
+        if (
+            addresses._addresses(
+                "MERC20_DELEGATE_FIXER_NOMAD_LOGIC",
+                block.chainid
+            ) == address(0)
+        ) {
+            address mErc20DelegateMadFixerAddress = deployCode(
+                "MErc20DelegateMadFixer.sol:MErc20DelegateMadFixer"
+            );
 
-        address mErc20DelegateMadFixerAddress = deployCode(
-            "MErc20DelegateMadFixer.sol:MErc20DelegateMadFixer"
-        );
-        addresses.addAddress(
-            "MERC20_DELEGATE_FIXER_NOMAD_LOGIC",
-            mErc20DelegateMadFixerAddress
-        );
+            addresses.addAddress(
+                "MERC20_DELEGATE_FIXER_NOMAD_LOGIC",
+                mErc20DelegateMadFixerAddress
+            );
+        }
+
+        if (
+            addresses._addresses(
+                "MERC20_BAD_DEBT_DELEGATE_FIXER_LOGIC",
+                block.chainid
+            ) == address(0)
+        ) {
+            address mErc20DelegateFixerAddress = deployCode(
+                "MErc20DelegateFixer.sol:MErc20DelegateFixer"
+            );
+
+            addresses.addAddress(
+                "MERC20_BAD_DEBT_DELEGATE_FIXER_LOGIC",
+                mErc20DelegateFixerAddress
+            );
+        }
     }
 
     function _build(Addresses addresses) internal override {

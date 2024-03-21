@@ -15,6 +15,16 @@
         "name": "TEMPORAL_GOVERNOR_GUARDIAN"
     },
     {
+        "addr": "0x47DFFebeF33719315bD5a91DB6BFb81691347914",
+        "chainId": 1284,
+        "name": "MERC20_BAD_DEBT_DELEGATE_FIXER_LOGIC"
+    },
+    {
+        "addr": "0xf19b9e20C24C8304b89373deC84b7C017e98B4fc",
+        "chainId": 1284,
+        "name": "MERC20_DELEGATE_FIXER_NOMAD_LOGIC"
+    },
+    {
         "addr": "0xfc4DFB17101A12C5CEc5eeDd8E92B5b16557666d",
         "chainId": 1284,
         "name": "ARTEMIS_GOVERNOR"
