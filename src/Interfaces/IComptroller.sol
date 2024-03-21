@@ -40,6 +40,12 @@ interface IComptroller {
     /// @notice claim reward
     function claimReward(uint8, address payable) external;
 
+    function claimReward(
+        uint8 rewardType,
+        address holder,
+        address[] memory mTokens
+    ) external;
+
     /// @notice accrued rewards
     function rewardAccrued(uint8, address) external returns (uint256);
 
